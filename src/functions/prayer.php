@@ -241,10 +241,10 @@ if ( ! function_exists( 'intercessor_get_prayer_attribute' ) ) {
 	 *
 	 * @param int $prayer_id The prayer ID to receive attributes for.
 	 *
-	 * @since 1.1.0
 	 * @return mixed
+	 * @since 1.1.0
 	 */
-	function intercessor_get_prayer_attribute( int $prayer_id, string $attribute = '' ) {
+	function intercessor_get_prayer_attribute( int $prayer_id ) {
 		// Bail if no valid prayer ID supplied.
 		if ( empty( $prayer_id ) ) {
 			return;
@@ -255,7 +255,7 @@ if ( ! function_exists( 'intercessor_get_prayer_attribute' ) ) {
 		$value  = '';
 
 		// Try to retrieve the different attributes of the prayer request.
-		switch ( $attribute ) {
+		switch ( $prayer ) {
 			// Prayer number.
 			case 'number':
 				$format   = intercessor_get_option( 'prayer_id_format' );
@@ -308,8 +308,14 @@ if ( ! function_exists( 'intercessor_get_prayer_attribute' ) ) {
 				}
 				break;
 
-			// 	
+			// Prayer date.
+			case 'date':
+				$value = intercessor_date_i18n( $prayer->date_created, 'mysql' );
+				break;
 		}
+
+		// Return the value.
+		return $value;
 	}
 }
 
@@ -800,22 +806,24 @@ if ( ! function_exists( 'intercessor_get_prayer_counts' ) ) :
 	}
 endif;
 
-/**
- * Checks whether a prayer request is answered
- *
- * @param int $prayer_id Prayer ID.
- *
- * @since  0.9.5
- * @return bool Whether or not the prayer is answered.
- */
-function intercessor_is_answered_prayer( int $prayer_id ) : bool {
-    // Retrieve prayer meta.
-    $answered = intercessor_update_item_meta( 'prayer', $prayer_id,'answered_prayer', true );
+if ( ! function_exists( 'intercessor_is_answered_prayer' ) ) {
+	/**
+	 * Checks whether a prayer request is answered
+	 *
+	 * @param int $prayer_id Prayer ID.
+	 *
+	 * @since  0.9.5
+	 * @return bool Whether or not the prayer is answered.
+	 */
+	function intercessor_is_answered_prayer( int $prayer_id ) : bool {
+		// Retrieve prayer meta.
+		$answered = intercessor_get_item_meta( 'prayer', $prayer_id, 'answered_prayer', true );
 
-    if ( '1' === $answered ) {
-		return true;
-	} else {
-		return false;
+		if ( '1' === $answered ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
 

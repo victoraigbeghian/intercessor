@@ -28,7 +28,7 @@ class Loader {
      * @since 1.0.0
      * @var string
      */
-    public $version = '1.1.0';
+    public $version = '1.1.1';
 
 	/**
 	 * The settings options of this plugin.
@@ -124,7 +124,7 @@ class Loader {
      * @since 1.0.0
      * @var string
      */
-    private $plugin_file = '';
+    protected $plugin_file = '';
 
     /**
      * Singleton instance
@@ -133,10 +133,11 @@ class Loader {
      * @var Loader
      */
     private static $instance;
+
 	/**
 	 * @var string
 	 */
-	private $file;
+	protected $file;
 
 	/**
      * Cloning is forbidden.
@@ -194,7 +195,7 @@ class Loader {
      *
      * @since 1.0.0
      */
-    private static function setup_instance( string $plugin_file = '' ) {
+    private static function setup_instance( $plugin_file = '' ) {
         self::$instance       = new Loader;
         self::$instance->file = $plugin_file;
     }
@@ -272,7 +273,7 @@ class Loader {
         new Shortcodes();
 
 	    // CLI.
-	    if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	    if ( defined( 'WP_CLI' ) && \WP_CLI ) {
 		    new CLI();
 	    }
     }

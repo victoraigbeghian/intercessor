@@ -32,24 +32,6 @@ class Admin {
 	 */
 	protected static $instance = null;
 
-    /**
-     * Constructor
-     *
-     * @since  1.0.0
-     * @access private
-     */
-    private function __construct() {
-        $plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( dirname( __FILE__ ) ) ) ) . 'intercessor.php' );
-        add_filter( 'plugin_action_links_' . $plugin_basename, [ $this, 'add_action_links' ] );
-
-		add_filter( 'plugin_row_meta', [ $this, 'row_meta' ], 10, 4 );
-
-        add_action( 'admin_menu', [ $this, 'menu' ] );
-        add_action( 'admin_menu', [ $this, 'upgrades_menu'] );
-		
-		$this->maybe_load();
-    }
-
 	/**
 	 * Return an instance of this class.
 	 *
@@ -61,14 +43,38 @@ class Admin {
 		// If the single instance hasn't been set, set it now.
 		if ( null === self::$instance ) {
 			self::$instance = new static();
-		//	self::$instance->init();
+			self::$instance->init();
 		}
 
 		return self::$instance;
 	}
 
+	/**
+	 * Initialize the plugin.
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 *
+	 * @return void
+	 */
+	public function init() {
+		// Plugin base name.
+		$plugin_basename = plugin_basename( plugin_dir_path( realpath( dirname( __FILE__, 2 ) ) ) . 'intercessor.php' );
+		add_filter( 'plugin_action_links_' . $plugin_basename, [ $this, 'add_action_links' ] );
+
+		// Row meta.
+		add_filter( 'plugin_row_meta', [ $this, 'row_meta' ], 10, 4 );
+
+		// Menus.
+		add_action( 'admin_menu', [ $this, 'menu' ] );
+		//add_action( 'admin_menu', [ $this, 'upgrades_menu'] );
+
+		// Load script only when necessary.
+		$this->maybe_load();
+	}
+
     /**
-	 * Add settings pages
+	 * Add plugin menu pages
 	 *
 	 * @access public
 	 * @since  1.0.0
@@ -76,7 +82,7 @@ class Admin {
 	 */
 	public function menu() {
 		global  $intercessor_prayers_page, $intercessor_settings_page, $intercessor_requesters_page,
-		        $intercessor_tools_page, $intercessor_reports_page;
+		        $intercessor_tools_page, $intercessor_reports_page, $intercessor_upgrades_page;
 
         // Bail if user is unauthorized.
         if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() ) {
@@ -150,7 +156,7 @@ class Admin {
 			esc_html__( 'Intercessor Upgrades', 'intercessor' ),
 			'manage_prayer_settings',
 			'intercessor-upgrades',
-			'intercessor_upgrades_screen'
+			[ $upgrades, 'screen' ]
 		);
     }
 
@@ -162,8 +168,7 @@ class Admin {
 	 * @return array
 	 * @since  0.9.5
 	 */
-    public function add_action_links( array $links ): array
-    {
+    public function add_action_links( array $links ): array {
         return array_merge(
             array(
                 'settings' => '<a href="' . admin_url( 'admin.php?page=intercessor-settings' ) . '">' . esc_html__( 'Settings', 'intercessor' ) . '</a>',
@@ -183,8 +188,7 @@ class Admin {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public function row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array
-    {
+	public function row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array {
 
 		if ( INTERCESSOR_BASENAME !== $plugin_file ) {
 			return $plugin_meta;
@@ -235,5 +239,5 @@ class Admin {
 	private function generate_pdf() {
 		return isset( $_GET['intercessor-action'] ) && 'generate_pdf' === \intercessor_clean( $_GET['intercessor-action'] );
 	}
-	
+
 }

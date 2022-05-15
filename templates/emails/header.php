@@ -2,7 +2,7 @@
 /**
  * Email Header
  *
- * This is the footer used if no others are available.
+ * This is the header used if no others are available.
  *
  * @author 	Intercessor
  * @package Intercessor/Templates/Emails

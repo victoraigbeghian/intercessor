@@ -1,54 +1,68 @@
-# Windows image file caches
-Thumbs.db
+# NPM #
+##########
+# Ignore all directories called node_modules in current folder and any subfolders.
+node_modules/
+/node_modules/
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.bz2
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.tgz
+*.map
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.env
+
+# OS generated files #
+######################
+**.DS_Store*
 ehthumbs.db
+Icon?
+Thumbs.db
+._*
 
-# Folder config file
-Desktop.ini
-.vscode
+# Vim generated files #
+######################
+*.un~
 
-# Numerous always-ignore extensions
-.diff
-.err
-.orig
-.log
-.rej
-.swo
-.swp
-.vi
-~
-.sass-cache
+# SASS #
+##########
+**/.sass-cache
+**/.sass-cache/*
+**/.map
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Composer #
+##########
+!assets/js/vendor/
+wpcs/
+/vendor/
 
-# Mac crap
-.DS_Store
+# Bower #
+##########
+assets/bower_components/*
 
-# Sublime
-*.sublime-project
-*.sublime-workspace
+# Codekit #
+##########
+/codekit-config.json
+*.codekit
+**.codekit-cache/*
 
-# PhpStorm
-.idea
+# Compiled Files and Build Dirs #
+##########
+/README.html
 
-# Eclipse
-*.pydevproject
-.project
-.metadata
-/build
-tmp/
-tests/clover.xml
-.cache
-
-# Grunt
-node_modules
-
-# Vendor
-vendor
-
-# PHPCS
-.phpcs.xml
-phpcs.xml
-
-# POT File
-languages/intercessor.pot
+# PhpStrom Project Files #
+.idea/
+library/vendors/composer
+assets/img/.DS_Store

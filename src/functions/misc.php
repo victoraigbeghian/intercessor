@@ -57,15 +57,29 @@ if ( ! function_exists( 'intercessor_update_db_version' ) ) {
     }
 }
 
+if ( ! function_exists( 'intercessor_get_current_version' ) ) {
+	/**
+	 * Gets the current live version.
+	 *
+	 * Used to compare the database version with the current version to verify if there is
+	 * an upgrade.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	function intercessor_get_current_version() {
+		return intercessor_format_db_version( INTERCESSOR_VERSION );
+	}
+}
+
 if ( ! function_exists( 'intercessor_format_db_version' ) ) {
 	/**
 	 * Format the database version.
 	 *
-	 * @param string $version
+	 * @param string $version Version number.
 	 *
+	 * @since 1.0.0
 	 * @return string
-	 *@since 1.0.0
-	 *
 	 */
 	function intercessor_format_db_version( string $version = '' ) : string {
 		return preg_replace( '/[^0-9.].*/', '', $version );
@@ -1661,3 +1675,4 @@ if ( ! function_exists( 'intercessor_date_format' ) ) {
 		return apply_filters( 'intercessor_date_format', $date_format );
 	}
 }
+

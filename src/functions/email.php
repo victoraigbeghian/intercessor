@@ -119,7 +119,7 @@ function intercessor_load_email_tags() {
 }
 
 /**
- * Add default IPR email template tags
+ * Add default Intercessor email template tags
  *
  * @since 0.9.5
  */
@@ -201,17 +201,23 @@ function intercessor_setup_email_tags() {
 			'function'    => 'intercessor_email_tag_prayer_link',
 		],
 		[
-				'tag'         => 'prayed_counts',
-				'label'       => esc_html__( 'Prayed Counts', 'intercessor' ),
-				'description' => esc_html__( 'The prayed counts for specified period in settings', 'intercessor' ),
-				'function'    => 'intercessor_email_tag_prayed_counts',
+			'tag'         => 'prayed_counts',
+			'label'       => esc_html__( 'Prayed Counts', 'intercessor' ),
+			'description' => esc_html__( 'The prayed counts for specified period in settings', 'intercessor' ),
+			'function'    => 'intercessor_email_tag_prayed_counts',
 		],
-			[
-					'tag'         => 'total_counts',
-					'label'       => esc_html__( 'Total Prayed Counts', 'intercessor' ),
-					'description' => esc_html__( 'The total lifetime prayed counts for a prayer request', 'intercessor' ),
-					'function'    => 'intercessor_email_tag_total_counts',
-			],
+		[
+			'tag'         => 'total_counts',
+			'label'       => esc_html__( 'Total Prayed Counts', 'intercessor' ),
+			'description' => esc_html__( 'The total lifetime prayed counts for a prayer request', 'intercessor' ),
+			'function'    => 'intercessor_email_tag_total_counts',
+		],
+		  [
+		  'tag'         => 'requester_reports',
+		  'label'       => esc_html__( 'Requester Prayer Report', 'intercessor' ),
+		  'description' => esc_html__( 'The requester prayer request report', 'intercessor' ),
+		  'function'    => 'intercessor_email_tag_requester_prayer_reports',
+		],
 	];
 
 	// Apply intercessor_email_tags filter.
@@ -442,6 +448,59 @@ if ( ! function_exists( 'intercessor_email_tag_total_counts' ) ) {
 	}
 }
 
+if ( ! function_exists( 'intercessor_email_tag_requester_prayer_reports' ) ) {
+	/**
+	 * @param array $prayer_ids Array of prayer IDs.
+	 *
+	 * @return false|string
+	 */
+	function intercessor_email_tag_requester_prayer_reports( array $prayer_ids ) {
+
+		// Bail if no prayer ID supplied.
+		if ( empty( $prayer_ids ) ) {
+			return;
+		}
+
+		// Set up variables.
+		$color  = 111111;
+		$args   = [
+			'id__in' => $prayer_ids,
+		];
+		$prayers = intercessor_get_items( 'prayer', $args );
+
+		ob_start();
+		echo '<ul>';
+		foreach ( $prayers as $prayer ) :
+			$prayer_id = absint( $prayer->id );
+			$attribute = intercessor_get_prayer_attribute( $prayer_id );
+
+			if ( intercessor_is_answered_prayer( $prayer_id ) ) {
+				$answered = esc_html__( 'Answered?: yes' );
+			} else {
+				$answered = '';
+			}
+
+			// Output message.
+			printf( '<li style="color: #%1$s; padding: 5px 0;"><span style="font-weight: bold;">%2$s</span> – %3$s (%4$s %5$s)</li>',
+					$color,
+					$prayer['title'],
+					intercessor_get_prayed_for_counts( $prayer_id ),
+					$answered,
+					$attribute['date']
+			);
+
+			// Checks that color is properly set.
+			if ( $color < 999999 ) {
+				$color += 111111;
+			}
+		endforeach;
+		echo '</ul>';
+
+		return ob_get_clean();
+
+	}
+}
+
 /** PRAYER NOTIFICATIONS */
 
 /**
@@ -567,7 +626,7 @@ function intercessor_admin_email_notice( int $prayer_id = 0, array $prayer_data 
 	$from_name   = intercessor_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
 	$from_name   = apply_filters( 'intercessor_prayer_from_name', $from_name, $prayer_id, $prayer_data );
 	$from_email  = intercessor_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
-	$from_email  = apply_filters( 'intercessor_admin_sale_from_address', $from_email, $prayer_id, $prayer_data );
+	$from_email  = apply_filters( 'intercessor_admin_prayer_from_address', $from_email, $prayer_id, $prayer_data );
 	$subject     = intercessor_get_option( 'prayer_notification_subject', sprintf( __( 'New prayer request - Prayer #%1$s', 'intercessor' ), $prayer_id ) );
 	$subject     = apply_filters( 'intercessor_admin_prayer_notification_subject', wp_strip_all_tags( $subject ), $prayer_id );
 	$subject     = wp_specialchars_decode( intercessor_do_email_tags( $subject, $prayer_id ) );
@@ -1065,11 +1124,11 @@ function intercessor_resend_prayer_notification( array $data = [] ) {
 
 	wp_safe_redirect(
 		add_query_arg(
-			array(
+			[
 				'intercessor-message' => 'email_sent',
 				'intercessor-action'  => false,
 				'prayer_id'           => false,
-			)
+			]
 		)
 	);
 
@@ -1248,4 +1307,129 @@ function intercessor_new_created_user_notification( int $new_user_id, array $new
 	$emails->__set( 'heading', $user_heading );
 
 	$emails->send( $new_requester_data['user_email'], $user_subject, $user_message );
+}
+
+if ( ! function_exists( 'intercessor_send_requester_reports' ) ) {
+	/**
+	 * send prayer records to requester
+	 *
+	 * @return void
+	 * @since 1.1.1
+	 */
+    function intercessor_send_requester_reports() {
+		// Check if v1.1.1 has been done. This function runs only from v1.1.1
+		if ( ! intercessor_did_v111_upgrade() ) {
+			return;
+		}
+
+		// Set up variables.
+		$args    = [
+		    'number' => 100000000,
+	    ];
+
+		$prayers = intercessor_get_prayers( $args );
+
+		// Process prayers and requesters, if available.
+		if ( $prayers ) {
+			$requesters = intercessor_get_items( 'requester', $args );
+
+			if ( $requesters) {
+				foreach ( $requesters as $requester ) {
+					// Set up variables.
+					$requester_id      = absint( $requester->id );
+
+					// Send prayer reports email.
+					intercessor_email_reports_notification( $requester_id );
+				}
+			}
+
+		}
+    }
+}
+
+if ( ! function_exists( 'intercessor_email_reports_notification' ) ) {
+	/**
+	 * Email prayer reports to requester.
+	 *
+	 * @param int   $requester_id Requester ID.
+	 *
+	 * @return void
+	 */
+	function intercessor_email_reports_notification( int $requester_id ) {
+		// Bail, if no requester ID supplied.
+		if ( 0 === $requester_id ) {
+			return;
+		}
+
+		// Set up variables.
+		$requester      = new Requester( $requester_id, false );
+		$requester_data = [
+			'first_name' => $requester->get_first_name(),
+			'email'      => $requester->email,
+			'prayer_ids' => $requester->get_prayer_ids(),
+		];
+		$prayer_reports = intercessor_email_tag_requester_prayer_reports( $requester_data['prayer_ids'] );
+
+		// Set up email values.
+		$from_name  = intercessor_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+		$from_name  = apply_filters( 'intercessor_prayer_from_name', $from_name, $requester_id );
+
+		$from_email = intercessor_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+		$from_email = apply_filters( 'intercessor_admin_prayer_from_address', $from_email );
+
+		$subject    = esc_html__( 'Prayer request reports', 'intercessor' );
+		$subject    = apply_filters( 'intercessor_admin_prayer_notification_subject', wp_strip_all_tags( $subject ), $requester_id );
+
+		$heading    = esc_html__( 'Your Prayer Records', 'intercessor' );
+		$heading    = apply_filters( 'intercessor_admin_requester_notification_heading', $heading, $requester_id );
+
+		$message    = sprintf( __( 'Dear %1$s ', 'intercessor' ), $requester_data['first_name'] ) . "\n\n";
+		$message   .= __( 'we have been praying for your request(s). This report shows you the number of times your prayer request(s) has been prayed for.', 'intercessor' ) . "\n\n" ;
+		$message   .= __( 'We will continue praying for your request, if it is not already answered. This is a one-time notification for all requesters on our website. But, it will be occasionally sent to those who asked to be notified.', 'intercessor' ) . "\n\n" ;
+		$message   .= $prayer_reports . "\n\n" ;
+
+		$emails      = new Emails();
+
+		// Add action to change email template.
+		add_action( 'intercessor_email_send_before', 'intercessor_email_report_template_change' );
+
+		$emails->__set( 'from_name', $from_name );
+		$emails->__set( 'from_email', $from_email );
+		$emails->__set( 'heading', $heading );
+
+		$headers = apply_filters( 'intercessor_admin_prayer_notification_headers', $emails->get_headers(), $requester_id );
+		$emails->__set( 'headers', $headers );
+
+		$emails->send( $requester_data['email'], $subject, $message, '' );
+
+		// Remove the action and filter to change email template.
+		remove_action( 'intercessor_email_send_before', 'intercessor_email_report_template_change' );
+		remove_filter( 'intercessor_email_template', 'intercessor_email_change_reports_email' );
+	}
+}
+
+if ( ! function_exists( 'intercessor_email_report_template_change' ) ) {
+	/**
+	 * Adds filter to change email template.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	function intercessor_email_report_template_change() {
+		add_filter( 'intercessor_email_template', 'intercessor_email_change_reports_email' );
+	}
+}
+
+if ( ! function_exists( 'intercessor_email_change_reports_email' ) ) {
+	/**
+	 * Change reports email template.
+	 *
+	 * @param string $template_name Template name.
+	 *
+	 * @since 1.1.0
+	 * @return string|void
+	 */
+	function intercessor_email_change_reports_email( string $template_name ) {
+		return esc_attr( 'prayed' );
+	}
 }

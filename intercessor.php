@@ -5,7 +5,7 @@
  * Description: A creative approach to handling prayer requests and requesters on WordPress
  * Author:      Victor Aigbeghian
  * Author URI:  https://github.com/victoraigbeghian
- * Version:     1.1.0
+ * Version:     1.1.1
  * License:     GNU General Public License v2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: intercessor

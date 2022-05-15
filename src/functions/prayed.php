@@ -141,7 +141,14 @@ if ( ! function_exists( 'intercessor_get_prayed_for_counts_range' ) ) {
 }
 
 if ( ! function_exists( 'intercessor_get_notify_period' ) ) {
-	function intercessor_get_notify_period() {
+	/**
+     * Get notification period.
+     *
+     * @since 1.1.0
+     *
+     * @return string
+     */
+    function intercessor_get_notify_period() : string {
 		// Configure start date.
 		$default_date = intercessor_get_option( 'notify_period', 'weekly' );
 		if ( 'daily' === $default_date ) {
@@ -155,4 +162,22 @@ if ( ! function_exists( 'intercessor_get_notify_period' ) ) {
 		// Return the filtered value.
 		return apply_filters( 'intercessor_notify_requester_period', $date_value );
 	}
+}
+
+if ( ! function_exists( 'intercessor_remove_prayed_counts_meta' ) ) {
+    /**
+     * Remove prayed counts meta
+     *
+     * Deletes prayed counts meta from the prayer meta database if not already removed.
+     *
+     * @since 1.1.1
+     * @return 
+     */
+    function intercessor_remove_prayed_counts_meta() {
+        $found = intercessor_get_item_meta( 'prayer', false, 'prayed_counts', false );
+
+        if ( ! empty( $found ) ) {
+           return  intercessor_delete_item_meta_by_key( 'prayer', 'prayed_counts' );
+        }
+    }
 }

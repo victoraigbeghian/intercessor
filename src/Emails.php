@@ -331,7 +331,7 @@ class Emails {
 	 * @param  string|array $attachments Attachments to the email in a format supported by wp_mail().
 	 *
 	 * @since 0.9.5
-	 * @return bool
+	 * @return bool Whether the email was sent or not.
 	 */
 	public function send( string $to, string $subject, string $message, $attachments = '' ) {
 
@@ -450,7 +450,6 @@ class Emails {
 	 * @param callable $func Hook to run when email tag is found.
 	 * @param string|null $label Human readable tag label.
 	 *
-	 * @return void
 	 * @since 0.9.5
 	 */
 	public function add( string $tag, string $description, callable $func, string $label = null ) {

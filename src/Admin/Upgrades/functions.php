@@ -24,17 +24,19 @@ if ( ! function_exists( 'intercessor_should_upgrade' ) ) {
      * @return bool
      */
     function intercessor_should_upgrade() : bool {
-	    $intercessor_version = intercessor_get_db_version();
-	    $current_version     = intercessor_format_db_version( INTERCESSOR_VERSION );
+	    // Set up variables.
+        $database_version = intercessor_get_db_version();
+	    $current_version  = intercessor_format_db_version( INTERCESSOR_VERSION );
+        $should_update    = false;
 
-	    // Bail if no new version.
-	    if ( (int) $current_version > (int) $intercessor_version ) {
-		    return true;
-	    } else {
-		    return false;
-	    }
+	    // New version available.
+        if ( version_compare( $database_version, $current_version, '<' ) ) {
+            $should_update = true;
+        }
+
+		// Return the product of version comparison.
+		return $should_update;
     }
-
 }
 
 if ( ! function_exists( 'intercessor_upgrades_screen' ) ) {
@@ -272,6 +274,12 @@ function intercessor_show_upgrade_notices() {
         return;
     }
 
+    // Bail if already upgraded to v1.1.0
+    $current_version  = intercessor_format_db_version( INTERCESSOR_VERSION );
+    if ( version_compare( '1.1.0', $current_version, '!=' ) ) {
+        return;
+    }
+
     // Possible upgrades.
     $upgrade_args = [
         'prayed_counts' => 'prayed_counts',
@@ -302,11 +310,11 @@ if ( ! function_exists( 'intercessor_get_v110_upgrade' ) ) {
     /**
      * Returns an array of upgrades for 1.1.0
      *
-     * Key is the name of the upgrade, which can be used in `intercessor_has_upgrade_completed()` functions.
+     * The key is the name of the upgrade, which can be used in `intercessor_has_upgrade_completed()` functions.
      * The value is the name of the associated batch processor class for that upgrade.
      *
      * @since 1.1.0
-     * @return array
+     * @return array Array of available upgrades.
      */
     function intercessor_get_v110_upgrade(): array {
         return [
@@ -661,4 +669,16 @@ function intercessor_load_batch_processors_for_v110_upgrade( string $class ) {
             require_once  INTERCESSOR_DIR . 'src/Admin/Upgrades/Prayed_Counts.php';
             break;
     }
+}
+
+if ( ! function_exists( 'intercessor_did_v111_upgrade' ) ) {
+	/**
+	 * Checks if version 1.1.1 upgrade has been carried out.
+	 *
+	 * @return bool True if version 1.1.1 upgrade has been done, otherwise false.
+	 * @since 1.1.1
+	 */
+	function intercessor_did_v111_upgrade() : bool {
+		return (bool) get_option( 'intercessor_requester_reports' );
+	}
 }

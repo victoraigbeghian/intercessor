@@ -255,7 +255,7 @@ if ( ! function_exists( 'intercessor_add_item' ) ) {
      * Add object item.
      *
      * @param string $object Type of object to create.
-     * @param array $data   Array of data to add or create item.
+     * @param array  $data   Array of data to add or create item.
      *
      * @since 1.0.0
      *
@@ -329,9 +329,9 @@ if ( ! function_exists( 'intercessor_get_item_meta' ) ) {
 	/**
 	 * Retrieve item meta field for a item.
 	 *
-     * @param string $item    The item to query for (rquired).
-	 * @param int    $item_id Item ID.
-	 * @param string $meta_key     Optional. The meta key to retrieve. By default, returns
+     * @param string $item     The item to query for (rquired).
+	 * @param int    $item_id  Item ID.
+	 * @param string $meta_key Optional. The meta key to retrieve. By default, returns
 	 *                           data for all keys. Default empty.
 	 * @param bool   $single  Optional, default is false.
 	 *                        If true, return only the first value of the specified meta_key.
@@ -360,7 +360,7 @@ if ( ! function_exists( 'intercessor_update_item_meta' ) ) {
 	 * If the meta field for the item does not exist, it will be added.
 	 *
      * @param string $item       Type of object meta item to update.
-	 * @param int $item_id    Item ID.
+	 * @param int    $item_id    Item ID.
 	 * @param string $meta_key   Meta data key.
 	 * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
 	 * @param mixed  $prev_value Optional. Previous value to check before removing.

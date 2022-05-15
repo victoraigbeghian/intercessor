@@ -94,7 +94,7 @@ if ( ! function_exists( 'intercessor_get_prayer_requester_id' ) ) {
  * @return void
  * @since   0.9.5
  */
-function intercessor_update_requester_email_on_user_update(int $user_id, WP_User $old_user_data ) {
+function intercessor_update_requester_email_on_user_update( int $user_id, WP_User $old_user_data ) {
 	$user = get_userdata( $user_id );
 
 	// Bail if the email address didn't actually change just now.
@@ -139,18 +139,21 @@ if ( ! function_exists( 'intercessor_get_requester_counts' ) ) {
 	 *                    accepted arguments.
 	 * @return array Requester counts keyed by status.
 	 */
-	function intercessor_get_requester_counts( $args = array() ) {
+	function intercessor_get_requester_counts( $args = [] ) {
 
-		// Parse arguments
-		$r = wp_parse_args( $args, array(
-			'count'   => true,
-			'groupby' => 'status',
-		) );
+		// Parse arguments.
+		$r = wp_parse_args(
+			$args,
+			[
+				'count'   => true,
+				'groupby' => 'status',
+			]
+		);
 
 		// Query for count.
 		$counts = new Intercessor\Database\Queries\Requester( $r );
 
-		// Format & return
+		// Format & return.
 		return intercessor_get_counts_format( $counts, $r['groupby'] );
 	}
 }

@@ -133,7 +133,7 @@ class Base extends Batch {
 
         if ( $had_data ) {
             $this->done = false;
-            // Save the *next* step to do.
+            // Save the *next* step to take.
             update_option( sprintf( 'intercessor_v3_migration_%s_step', sanitize_key( $this->upgrade ) ), $this->step + 1 );
             return true;
         } else {
@@ -179,9 +179,7 @@ class Base extends Batch {
      * @return \wpdb|\stdClass
      */
     protected static function get_db() {
-        return isset( $GLOBALS['wpdb'] )
-            ? $GLOBALS['wpdb']
-            : new \stdClass();
+        return $GLOBALS['wpdb'] ?? new \stdClass();
     }
 
     /**

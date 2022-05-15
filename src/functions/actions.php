@@ -30,7 +30,7 @@ add_action( 'intercessor_email_links', 'intercessor_resend_prayer_notification' 
 add_action( 'intercessor_view_notification', 'intercessor_render_notification_in_browser' );
 add_action( 'intercessor_add_email_tags', 'intercessor_setup_email_tags' );
 add_action( 'intercessor_notify_requester', 'intercessor_send_prayed_email', 10, 0 );
-
+add_action( 'init', 'intercessor_send_requester_reports' );
 add_action( 'intercessor_insert_user', 'intercessor_new_user_notification', 10, 2 );
 add_action( 'intercessor_created_user', 'intercessor_new_created_user_notification', 10, 2 );
 

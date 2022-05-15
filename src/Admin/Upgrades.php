@@ -209,7 +209,7 @@ class Upgrades {
         $current   = \intercessor_format_db_version( INTERCESSOR_VERSION );
 
         // Bail if no new version.
-        if ( version_compare( $current, $version, '=' ) ) {
+        if ( ! intercessor_should_upgrade() ) {
             return;
         }
 
@@ -219,12 +219,20 @@ class Upgrades {
 		}
 
         // Display notice for version 1.1.0 upgrade
-		if ( ! $this->upgraded( 'v_110' ) && version_compare( $version, $current, '<' ) ) {
+		if ( ! $this->upgraded( 'v_110' ) && '1.1.0' === $current ) {
 			printf(
 				'<div class="updated"><p>' . __( 'Intercessor needs to upgrade the prayed for database. Click <a href="%s">here</a> to start.', 'intercessor' ) . '</p></div>',
 				$this->url( [ 'upgrade' => 'v_110' ] )
 			);
+
+			// Display notice for version 1.1.0 upgrade
+		} elseif ( ! $this->upgraded( 'v_111' ) && '1.1.1' === $current ) {
+			printf(
+				'<div class="updated"><p>' . __( 'Intercessor needs to upgrade the prayed for database and send requester emails. Click <a href="%s">here</a> to start.', 'intercessor' ) . '</p></div>',
+				$this->url( [ 'upgrade' => 'v_111' ] )
+			);
 		}
+
 	}
 
 	/**
@@ -344,14 +352,8 @@ class Upgrades {
 	 * @since 1.1.0
 	 */
     public function do_v_110() {
-
-	    // Array of arguments to retrieve prayers.
-	    $args    = [
-		    'number' => 1000000,
-	    ];
-
-	    // Get all prayer requests.
-	    $prayers = intercessor_get_items( 'prayer', $args );
+		// Set up variables.
+		$prayers = $this->get_prayers();
 
 	    // Get prayed counts of prayers already prayed for.
 	    if ( $prayers ) {
@@ -403,4 +405,55 @@ class Upgrades {
             $this->upgraded = true;
 	    }
     }
+
+	/**
+	 * Upgrade to version v1.1.1
+	 *
+	 * @access public
+	 * @since 1.1.1
+	 *
+	 * @return void
+	 */
+	public function do_v_111() {
+		// Set up variables.
+		$prayers = $this->get_prayers();
+
+		// Process actions if prayer found.
+		if ( $prayers ) {
+
+			// Send requester emails.
+		//	do_action( 'intercessor_send_requesters_reports' );
+
+			// Remove prayed counts, if any still exist in prayer meta.
+			$done = \intercessor_remove_prayed_counts_meta();
+
+			// Mark upgrade as complete if above actions carried out.
+			if ( $done ) {
+				$this->upgraded = true;
+			}
+
+			// Set up action to send requester prayer reports if plugin updated.
+			if ( $this->upgraded ) {
+				\update_option( 'intercessor_requester_reports', true );
+			}
+		}
+	}
+
+	/**
+	 * Get available prayer requests.
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 *
+	 * @return array Array of prayer requests.
+	 */
+	protected function get_prayers() {
+		// Array of arguments to retrieve prayers.
+	    $args    = [
+		    'number' => 100000000,
+	    ];
+
+	    // Get all prayer requests.
+	    return \intercessor_get_prayers( $args );
+	}
 }
