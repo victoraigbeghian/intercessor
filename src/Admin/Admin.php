@@ -61,7 +61,6 @@ class Admin {
 		// If the single instance hasn't been set, set it now.
 		if ( null === self::$instance ) {
 			self::$instance = new static();
-		//	self::$instance->init();
 		}
 
 		return self::$instance;
@@ -76,16 +75,16 @@ class Admin {
 	 */
 	public function menu() {
 		global  $intercessor_prayers_page, $intercessor_settings_page, $intercessor_requesters_page,
-		        $intercessor_tools_page, $intercessor_reports_page;
+			$intercessor_tools_page, $intercessor_reports_page;
 
         // Bail if user is unauthorized.
-        if ( ! current_user_can( 'edit_posts' ) || wp_doing_ajax() ) {
-            wp_safe_redirect( esc_url( get_home_url() ) );
+        if ( ! \current_user_can( 'edit_posts' ) || \wp_doing_ajax() ) {
+            \wp_safe_redirect( esc_url( get_home_url() ) );
             exit;
         }
 
 		// Setup prayers page menu.
-        $intercessor_prayers_page = add_menu_page(
+        $intercessor_prayers_page = \add_menu_page(
             esc_html__( 'Prayer Requests', 'intercessor' ),
 			esc_html__( 'Prayers', 'intercessor' ),
             'edit_prayers',

@@ -12,6 +12,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Sets up Report page.
+ *
+ * @since 1.1.1
+ * @return void
+ */
 function intercessor_reports_page() {
 
 	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], intercessor_get_reports_tabs() ) ? $_GET[ 'tab' ] : 'prayers';

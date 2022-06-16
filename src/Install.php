@@ -5,7 +5,7 @@
  * The file that defines the core plugin installation functions and actions.
  *
  * @package     Intercessor
- * @subpackage  Classes/Loader
+ * @subpackage  Classes/Loade^r
  * @copyright   Copyright (c) 2020, Victor Aigbeghian
  * @license     http://opensource.org/licenses/GPL-2.0.php GNU Public License
  * @since       1.0.0
@@ -35,7 +35,7 @@ class Install {
 		if ( version_compare( \get_bloginfo( 'version' ), '5.1', '>=' ) ) {
 			add_action( 'wp_initialize_site', [ __CLASS__, 'new_blog' ] );
 		} else {
-			add_action( 'wpmu_new_blog', [ __CLASS__, 'new_blog' ], 10, 6 );
+			add_action( 'wpmu_new_blog', [ __CLASS__, 'new_blog' ] );
 		}
 
 		add_action( 'admin_init', [ __CLASS__, 'after_install' ] );
@@ -49,20 +49,12 @@ class Install {
 	 *
 	 * @return void
 	 * @since 1.0.0
-	 *
 	 */
 	public static function activate( bool $network_wide ) {
 
-		global $wpdb;
-
 		// On multi-site(s).
-		if ( \is_multisite() &&  $network_wide ) {
-			foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
-
-				switch_to_blog( $blog_id );
-				self::single_activation();
-				restore_current_blog();
-			}
+		if ( \is_multisite() && ! empty( $network_wide ) ) {
+			self::multisite_activation();
 
 			// On single site.
 		} else {
@@ -71,12 +63,63 @@ class Install {
 	}
 
 	/**
+	 * Run installation on multi-site.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public static function multisite_activation() {
+		global $wpdb;
+
+		// Get count of available sites.
+		$network_id = \get_current_network_id();
+		$query      = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->blogs} WHERE site_id = %d", $network_id );
+		$count      = $wpdb->get_var( $query );
+
+		// Bail, if no sites found.
+		if ( empty( $count ) || is_wp_error( $count ) ) {
+			return;
+		}
+
+		// Build the steps.
+		$per_step    = 100;
+		$total_steps = ceil( $count / $per_step );
+		$step        = 1;
+		$offset      = 0;
+
+		// Go through all sites in this network in groups of 100.
+		do {
+
+			// Get the next batch of site IDs.
+			$query    = $wpdb->prepare( "SELECT blog_id FROM {$wpdb->blogs} WHERE site_id = %d LIMIT %d, %d", $network_id, $offset, $per_step );
+			$site_ids = $wpdb->get_col( $query );
+
+			// Proceed if site IDs exist.
+			if ( ! empty( $site_ids ) ) {
+				foreach ( $site_ids as $site_id ) {
+					self::single_activation( $site_id );
+				}
+			}
+
+			// Bump the limit for the next iteration.
+			$offset = ( $step * $per_step ) - 1;
+
+			// Bump the step.
+			++$step;
+
+			// Bail when steps are greater than or equal to total steps.
+		} while ( $total_steps > $step );
+	}
+
+	/**
 	 * Setup single site activation.
 	 *
 	 * @return void
 	 * @since 1.0.0
 	 */
-	public static function single_activation() {
+	public static function single_activation( $site_id = false ) {
 		// Not changed.
 		$changed = false;
 
@@ -112,6 +155,11 @@ class Install {
 		// Update database version.
 		\intercessor_update_db_version();
 
+		// Install Intercessor roles.
+		$roles = new Roles();
+		$roles->add_roles();
+		$roles->add_caps();
+
 		// Bail if activating from network, or bulk.
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 			return;
@@ -119,6 +167,11 @@ class Install {
 
 		// Clear the permalinks.
 		\flush_rewrite_rules( false );
+
+		// Maybe switch back.
+		if ( true === $changed ) {
+			restore_current_blog();
+		}
 	}
 
 	/**
@@ -142,7 +195,7 @@ class Install {
 
 		// Activate plugin on new blog.
 		\switch_to_blog( $blog_id );
-		self::activate();
+		self::activate( $blog_id );
 		\restore_current_blog();
 	}
 
