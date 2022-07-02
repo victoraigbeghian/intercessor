@@ -630,7 +630,7 @@ if ( ! function_exists( 'intercessor_date_i18n' ) ) {
 	 *                          Default 'date' represents the value of the 'date_format' option.
 	 *
 	 * @return string The formatted date, translated if locale specifies it.
-	 *@since 1.0.0
+	 * @since 1.0.0
 	 *
 	 */
 	function intercessor_date_i18n( int $timestamp, string $format = 'date' ): string {
@@ -1428,9 +1428,9 @@ if ( ! function_exists( 'intercessor_allowed_tags' ) ) {
 	 * Get allowed HTML tags.
 	 *
 	 * @since 1.0.0
-	 * @return string
+	 * @return array $allowed_tags Array of allowed tags.
 	 */
-	function intercessor_allowed_tags() {
+	function intercessor_allowed_tags() : array {
 		$tags = [
 			'a' => [
 				'href'   => [],
@@ -1470,9 +1470,7 @@ if ( ! function_exists( 'intercessor_allowed_tags' ) ) {
 			],
 		];
 
-		$allowed_tags = apply_filters( 'intercessor_allowed_html_tags', $tags );
-
-		return trim( $allowed_tags );
+		return (array) apply_filters( 'intercessor_allowed_html_tags', $tags );
 	}
 }
 

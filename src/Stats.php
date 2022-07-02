@@ -901,12 +901,11 @@ class Stats {
 	 * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
 	 *                               Default is the current range as derived from the session.
 	 * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
-	 * @return \EDD\Utils\Date[] Array of start and end date objects.
+	 * @return  Array of start and end date objects.
 	 */
 	public function parse_dates_for_range( $range = null ) {
 
 		// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	//	$date = intercessor()->utils->date( $date, \intercessor_get_timezone_id(), false );
 		$date = intercessor_date_i18n( time(), 'mysql' );
 
 

@@ -61,8 +61,8 @@ class Table extends List_Table {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $item Contains all the data of the requesters
-	 * @param string $column_name The name of the column
+	 * @param array  $item        Contains all the data of the requesters.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -109,6 +109,7 @@ class Table extends List_Table {
 	 * @since 1.0.0
 	 *
 	 * @param array $item The requester item.
+	 *
 	 * @return string
 	 */
 	public function column_name( $item ) {
@@ -167,18 +168,23 @@ class Table extends List_Table {
 	}
 
 	/**
+	 * Message to be displayed when there are no requesters
+	 *
+	 * @since 1.1.0
+	 * @access public
+	 */
+	public function no_items() {
+		esc_html_e( 'No requester found.', 'intercessor' );
+	}
+
+	/**
 	 * Retrieve the requester counts
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
 	public function get_counts() {
-		$args = [
-			'count'   => true,
-			'groupby' => 'status',
-		];
 		$this->counts = \intercessor_get_requester_counts();
-    //    $this->counts = intercessor_get_item_counts( 'requester', $args );
 	}
 
 	/**
@@ -270,7 +276,7 @@ class Table extends List_Table {
 	public function get_data() {
 		$data   = [];
 		$search = $this->get_search();
-		$args   = array( 'status' => $this->get_status() );
+		$args   = [ 'status' => $this->get_status() ];
 
 		// Email search.
 		if ( is_email( $search ) ) {
@@ -291,7 +297,7 @@ class Table extends List_Table {
 			// Other.
 		} else {
 			$args['search']         = $search;
-			$args['search_columns'] = array( 'name', 'email' );
+			$args['search_columns'] = [ 'name', 'email' ];
 		}
 
 		// Parse pagination.
@@ -302,14 +308,14 @@ class Table extends List_Table {
 
 		if ( ! empty( $requesters ) ) {
 			foreach ( $requesters as $requester ) {
-				$data[] = array(
+				$data[] = [
 					'id'           => $requester->id,
 					'user_id'      => $requester->user_id,
 					'name'         => $requester->name,
 					'email'        => $requester->email,
 					'prayer_count' => $requester->prayer_count,
 					'date_created' => $requester->date_created,
-				);
+				];
 			}
 		}
 
@@ -323,11 +329,11 @@ class Table extends List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		$this->_column_headers = array(
+		$this->_column_headers = [
 			$this->get_columns(),
 			[],
 			$this->get_sortable_columns()
-		);
+		];
 
 		$this->items = $this->get_data();
 
@@ -337,11 +343,13 @@ class Table extends List_Table {
 		// If $this->per_page is 0, then set total pages to 1.
 		$total_pages = $this->per_page ? ceil( (int) $this->counts[ $status ] / (int) $this->per_page ) : 1;
 
-		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_pages' => $total_pages,
-			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page,
-		) );
+		// Setup pagination.
+		$this->set_pagination_args(
+			[
+				'total_pages' => $total_pages,
+				'total_items' => $this->counts[ $status ],
+				'per_page'    => $this->per_page,
+			]
+		);
 	}
 }

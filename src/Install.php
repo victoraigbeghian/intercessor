@@ -14,6 +14,7 @@
 namespace Intercessor;
 
 use function add_action;
+use function restore_current_blog;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -150,7 +151,7 @@ class Install {
 		$session->use_php_sessions();
 
 		// Set the transient for redirection.
-		set_transient( '_intercessor_redirect_activation', true, 30 );
+		\set_transient( '_intercessor_redirect_activation', true, 30 );
 
 		// Update database version.
 		\intercessor_update_db_version();
@@ -180,6 +181,7 @@ class Install {
 	 * @since 1.0.0
 	 *
 	 * @param int|\WP_Site $blog_id WP_Site object.
+	 *
 	 * @return void
 	 */
 	public static function new_blog( $blog_id ) {
@@ -196,7 +198,7 @@ class Install {
 		// Activate plugin on new blog.
 		\switch_to_blog( $blog_id );
 		self::activate( $blog_id );
-		\restore_current_blog();
+		restore_current_blog();
 	}
 
 	/**

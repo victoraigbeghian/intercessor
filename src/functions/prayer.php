@@ -290,26 +290,31 @@ if ( ! function_exists( 'intercessor_get_prayer_attribute' ) ) {
 				}
 				break;
 
-			// Prayer share;
+			// Prayer share.
 			case 'share':
 				$value = $prayer->share;
 				break;
 
 			// Prayer email.
 			case 'email':
-				$email        = $prayer->email;
-				$requester_id = $prayer->requester_id;
+				$email        = esc_attr( $prayer->email );
+				$requester_id = esc_attr( $prayer->requester_id );
 
 				if ( empty( $email ) && ! empty( $requester_id ) ) {
 					$requester = new Requester( $requester_id, false );
 					$value     = $requester->email;
 				} else {
-					$value     = $email;
+					$value = $email;
 				}
 				break;
 
-			// 	
+			case 'date':
+				$date  = esc_attr( $prayer->date_created );
+				$value = date_i18n( get_option( 'date_format' ), strtotime( $date ) );
+				break;
 		}
+		// Return attribute value.
+		return apply_filters( 'intercessor_prayer_attribute', $value );
 	}
 }
 

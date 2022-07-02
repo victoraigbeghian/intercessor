@@ -325,7 +325,7 @@ class Emails {
 	/**
 	 * Send the email
 	 *
-	 * @param  string       $to The To address to send to.
+	 * @param  mixed        $to The To address to send to.
 	 * @param  string       $subject The subject line of the email to send.
 	 * @param  string       $message The body of the email to send.
 	 * @param  string|array $attachments Attachments to the email in a format supported by wp_mail().
@@ -333,7 +333,7 @@ class Emails {
 	 * @since 0.9.5
 	 * @return bool
 	 */
-	public function send( string $to, string $subject, string $message, $attachments = '' ) {
+	public function send( $to, string $subject, string $message, $attachments = '' ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
 			_doing_it_wrong( __FUNCTION__, esc_html__( 'You cannot send email with Emails until init/admin_init has been reached', 'intercessor' ), null );

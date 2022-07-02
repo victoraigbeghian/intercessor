@@ -476,7 +476,7 @@ function intercessor_request_form_validate_new_user() {
 		}
 	}
 
-	// Cast as array and return
+	// Cast as array and return.
 	return (array) $valid_user_data;
 }
 

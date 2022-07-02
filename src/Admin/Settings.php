@@ -542,9 +542,9 @@ class Settings {
 	 *
 	 * @param string $input The value entered in the field.
 	 *
-	 * @return string $input The sanitized value
+	 * @return string|array $input The sanitized value
 	 */
-	public function text_field_sanitization( $input ) {
+	public function text_field_sanitization( string $input = '' ) {
 		// Get allowed tags.
 		$allowed_tags = \intercessor_allowed_tags();
 

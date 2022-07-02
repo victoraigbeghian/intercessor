@@ -21,7 +21,7 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 // Load Intercessor file.
-include_once( 'intercessor.php' );
+require_once 'intercessor.php';
 
 // Proccess actions, only if specified in plugin settings.
 if ( intercessor_get_option( 'uninstall_on_delete' ) ) {
