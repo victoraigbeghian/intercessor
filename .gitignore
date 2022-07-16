@@ -52,3 +52,5 @@ phpcs.xml
 
 # POT File
 languages/intercessor.pot
+src/Database/.DS_Store
+templates/.DS_Store
