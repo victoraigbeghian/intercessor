@@ -38,7 +38,8 @@ abstract class Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $key
+	 * @param string $key Key to use.
+	 *
 	 * @return mixed
 	 */
 	public function __isset( $key = '' ) {
@@ -55,7 +56,7 @@ abstract class Base {
 		if ( method_exists( $this, $method ) ) {
 			return true;
 
-            // Return get method results if exists.
+			// Return get method results if exists.
 		} elseif ( property_exists( $this, $key ) ) {
 			return true;
 		}
@@ -86,7 +87,7 @@ abstract class Base {
 		if ( method_exists( $this, $method ) ) {
 			return call_user_func( [ $this, $method ] );
 
-		    // Return get method results if exists.
+			// Return get method results if exists.
 		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		}
@@ -110,21 +111,22 @@ abstract class Base {
 	 * Set class variables from arguments.
 	 *
 	 * @since 1.0.0
-	 * @param array $args
+	 *
+	 * @param array $args Array of arguments.
 	 */
 	protected function set_vars( $args = [] ) {
 
-		// Bail if empty or not an array
+		// Bail if empty or not an array.
 		if ( empty( $args ) ) {
 			return;
 		}
 
-		// Cast to an array
+		// Cast to an array.
 		if ( ! is_array( $args ) ) {
 			$args = (array) $args;
 		}
 
-		// Set all properties
+		// Set all properties.
 		foreach ( $args as $key => $value ) {
 			$this->{$key} = $value;
 		}

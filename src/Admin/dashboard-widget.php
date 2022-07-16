@@ -22,7 +22,7 @@ function intercessor_register_dashboard_widgets() {
 	if ( current_user_can( apply_filters( 'intercessor_dashboard_stats_cap', 'edit_prayers' ) ) ) {
 		wp_add_dashboard_widget(
 			'intercessor_request_summary',
-			__( 'Intercessor Prayerss Summary', 'intercessor' ),
+			esc_html__( 'Intercessor Prayers Summary', 'intercessor' ),
 			'intercessor_requests_dashboard_widget'
 		);
 	}
@@ -50,7 +50,9 @@ function intercessor_requests_dashboard_widget() {
 	<ul class="intercessor_dashboard_list">	
 		<div class="intercessor-dashboard-daily intercessor-clearfix">
 			<h3 class="intercessor-dashboard-date-today">
-				<?php echo date_i18n( _x( 'F j, Y', 'dashboard widget', 'intercessor' ) ); ?>
+				<?php
+				echo date_i18n( _x( 'F j, Y', 'dashboard widget', 'intercessor' ) ); 
+				?>
 			</h3>
 			
 			<p class="intercessor-dashboard-blessed-day">

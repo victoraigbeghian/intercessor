@@ -12,6 +12,7 @@
 
 namespace Intercessor\Admin;
 
+use Intercessor\Admin\Emails\Emails;
 use Intercessor\Requester;
 use function intercessor_get_db_version;
 
@@ -209,10 +210,13 @@ class Upgrades {
         $current   = \intercessor_format_db_version( INTERCESSOR_VERSION );
 
         // Bail if no new version.
-        if ( version_compare( $current, $version, '=' ) ) {
+/*        if ( version_compare( $current, $version, '=' ) ) {
             return;
         }
-
+*/
+		if ( ! intercessor_should_upgrade() ) {
+			return;
+		}
 		// Show no notice on the upgrades page.
 		if ( $page || $upgrading ) {
 			return;
@@ -223,6 +227,21 @@ class Upgrades {
 			printf(
 				'<div class="updated"><p>' . __( 'Intercessor needs to upgrade the prayed for database. Click <a href="%s">here</a> to start.', 'intercessor' ) . '</p></div>',
 				$this->url( [ 'upgrade' => 'v_110' ] )
+			);
+		} elseif ( ! $this->upgraded( 'v_120' ) && intercessor_should_upgrade() ) {
+			// Set up arguments to pass to the upgrade url.
+			$emails   = new Requesters\Emails();
+			$url_vars = [
+				'upgrade' => 'v_120',
+				'step'    => $emails->step,
+				'total'   => $emails->total,
+				'steps'   => $emails->per_step,
+			];
+
+			// Print the values.
+			printf(
+				'<div class="updated"><p>' . __( 'Intercessor needs to upgrade the requester database and send prayer reports to all requesters. Click <a href="%s">here</a> to start.', 'intercessor' ) . '</p></div>',
+				$this->url( $url_vars )
 			);
 		}
 	}

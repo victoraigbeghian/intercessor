@@ -196,8 +196,17 @@ class Admin {
 		return array_merge( $plugin_meta, $new_meta );
     }
 
+	/**
+	 * Upgrades menu
+	 *
+	 * @access public
+	 * @since 1.1.0
+	 */
     public function upgrades_menu() {
         global $intercessor_upgrades_page;
+
+		// Instantialize the update class.
+		$upgrades = new Upgrades();
 
         // Add upgrades sub menu.
         $intercessor_upgrades_page = add_submenu_page(
@@ -206,6 +215,7 @@ class Admin {
             esc_html__( 'Intercessor Upgrades', 'intercessor' ),
             'manage_prayer_settings',
             'intercessor-upgrades',
+		//	$upgrades->screen()
             'intercessor_upgrades_screen'
         );
     }

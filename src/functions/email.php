@@ -1157,7 +1157,7 @@ if ( ! function_exists( 'intercessor_send_prayed_email' ) ) {
 	    if ( $prayed_for ) {
 			// Set up default variable values.
 			$ids_args = [
-				'id__in' => $prayed_for->prayer_id,
+				'prayer_id__in' => $prayed_for->prayer_id,
 			];
 
 			// Get array of prayers lifted within specified period.
@@ -1165,14 +1165,16 @@ if ( ! function_exists( 'intercessor_send_prayed_email' ) ) {
 
 			// Get each prayer.
 			foreach ( $prayers as $prayer ) {
+				// Set up variables.
 				$prayer_id = $prayer->id;
 				$email     = intercessor_get_prayer_email( $prayer_id );
 				$notify    = intercessor_get_prayer_notify( $prayer_id );
 				$answered  = intercessor_is_answered_prayer( $prayer_id );
 				$counts    = intercessor_get_prayed_for_counts_range( $prayer_id );
+				$no_email  = intercessor_get_option( 'disable_prayed_notices' );
 
 				// Send email to requesters who wish to be notified.
-				if ( $notify && $counts && ! $answered ) {
+				if ( $notify && $counts && ! $answered && ! $no_email ) {
 					intercessor_email_prayed_notification( $prayer_id, $counts, $email );
 				}
 			}
@@ -1315,7 +1317,7 @@ if ( ! function_exists( 'intercessor_send_requester_reports' ) ) {
 	 */
     function intercessor_send_requester_reports() {
 		// Bail if this action is not from the admin end.
-	/*	if ( ! intercessor_did_v111_upgrade() ) {
+	/*	if ( ! intercessor_did_v111_email() ) {
 			return;
 		}
 		*/
@@ -1469,4 +1471,48 @@ if ( ! function_exists( 'intercessor_email_change_reports_email' ) ) {
 	function intercessor_email_change_reports_email( string $template_name ) {
 		return esc_attr( 'prayed' );
 	}
+}
+
+if ( ! function_exists( 'intercessor_get_completed_batch_emails' ) ) {
+    /**
+     * Get's the array of completed email actions
+     *
+     * @since  1.1.0
+     * @return array The array of completed emails
+     */
+    function intercessor_get_completed_batch_emails(): array {
+
+        // Get the completed emails.
+        $completed_emails = get_option( 'intercessor_completed_emails', [] );
+
+        // Return array of completed emails.
+        return (array) $completed_emails;
+    }
+}
+
+if ( ! function_exists( 'intercessor_set_batch_email_sent' ) ) {
+    /**
+     * Adds an email action to the completed emails array
+     *
+     * @param  string $email_action The action to add to the completed emails array.
+     *
+     * @since  1.1.0
+     * @return bool If the function was successfully added
+     */
+    function intercessor_set_batch_email_sent( string $email_action = '' ): bool {
+
+		// Bail if no email action specified.
+        if ( empty( $email_action ) ) {
+            return false;
+        }
+
+		// Get completed batch mails.
+        $completed_emails   = intercessor_get_completed_batch_emails();
+        $completed_emails[] = $email_action;
+
+        // Remove any blanks, and only show unique values.
+        $completed_emails = array_unique( array_values( $completed_emails ) );
+
+        return update_option( 'intercessor_completed_emails', $completed_emails );
+    }
 }

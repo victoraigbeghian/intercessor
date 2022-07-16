@@ -38,8 +38,8 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * wp intercessor details
 	 *
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array $args       Array of arguments.
+	 * @param array $assoc_args Array of associated arguments.
 	 */
 	public function details( $args, $assoc_args ) {
 		$prayer_page  = intercessor_get_option( 'form_page', '' );
@@ -195,8 +195,8 @@ class CLI extends \WP_CLI_Command {
 	 *
 	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
 	 *
-	 * @param $args       Arguments.
-	 * @param $assoc_args Associated arguments.
+	 * @param mixed $args       Arguments.
+	 * @param mixed $assoc_args Associated arguments.
 	 */
 	public function v110_upgrade( $args, $assoc_args ) {
 

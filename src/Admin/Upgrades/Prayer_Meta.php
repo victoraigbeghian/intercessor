@@ -2,6 +2,7 @@
 /**
  * Intercessor Prayer Meta Upgrade
  *
+ * @package     Intercessor
  * @subpackage  Admin/Upgrades/Prayer_Meta
  * @copyright   Copyright (c) 2021, Victor Aigbeghian
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License

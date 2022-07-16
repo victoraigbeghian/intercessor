@@ -1,16 +1,16 @@
 <?php
 /**
- * Intercessor Upgrades
+ * Intercessor Emails
  *
  * @package     Intercessor
- * @subpackage  Admin/Upgrades
+ * @subpackage  Admin/Emails
  * @author      Victor Aigbeghian
  * @license     http://opensource.org/licenses/GPL-1.1.0.php GNU Public License
  * @copyright   Copyright (c) 2021 Victor Aigbeghian
  * @version     1.0.0
  */
 
-namespace Intercessor\Admin\Upgrades;
+namespace Intercessor\Admin\Requesters;
 
 use Intercessor\Admin\Tools\Export\Batch;
 
@@ -18,29 +18,21 @@ use Intercessor\Admin\Tools\Export\Batch;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin Upgrader class.
+ * Admin Emails class.
  *
- * Handles all the functions and actions related to plugin upgrades.
+ * Handles all the functions and actions related to batch emails.
  *
  * @since 1.1.0
  */
 class Base extends Batch {
 
     /**
-     * Prayers.
+     * Emails.
      *
      * @since 1.1.0
      * @var   string
      */
-    const PRAYERS = 'prayers';
-
-    /**
-     * Prayed.
-     *
-     * @since 1.1.0
-     * @var   string
-     */
-    const PRAYED = 'prayed';
+    const EMAILS = 'emails';
 
     /**
      * Our export type. Used for export-type specific filters/actions.
@@ -64,10 +56,10 @@ class Base extends Batch {
      * @since 1.1.0
      * @var   int
      */
-    public $per_step = 50;
+    public $per_step = 30;
 
     /**
-     * Is the upgrade done?
+     * Batch email done.
      *
      * @since 1.1.0
      * @var   bool
@@ -91,22 +83,21 @@ class Base extends Batch {
     public $completed_message;
 
     /**
-     * Upgrade routine.
+     * Sending email routine.
      *
      * @since 1.1.0
      * @var   string
      */
-    public $upgrade;
+    public $sending;
 
     /**
-     * Retrieve the data pertaining to the current step and migrate as necessary.
+     * Retrieve the data pertaining to the current step.
      *
      * @since 1.1.0
      *
-     * @return bool True if data was migrated, false otherwise.
+     * @return bool True if batch email sent, false otherwise.
      */
-    public function get_data(): bool
-    {
+    public function get_data(): bool {
         return false;
     }
 
@@ -117,11 +108,10 @@ class Base extends Batch {
      *
      * @return bool
      */
-    public function process_step(): bool
-    {
+    public function process_step(): bool {
         if ( ! $this->can_export() ) {
             wp_die(
-                esc_html__( 'You do not have permission to run this upgrade.', 'intercessor' ),
+                esc_html__( 'You do not have permission to send batch emails.', 'intercessor' ),
                 esc_html__( 'Error', 'intercessor' ),
                 array(
                     'response' => 403,
@@ -134,13 +124,13 @@ class Base extends Batch {
         if ( $had_data ) {
             $this->done = false;
             // Save the *next* step to do.
-            update_option( sprintf( 'intercessor_v3_migration_%s_step', sanitize_key( $this->upgrade ) ), $this->step + 1 );
+            \update_option( sprintf( 'intercessor_batch_email_%s_step', sanitize_key( $this->sending ) ), $this->step + 1 );
             return true;
         } else {
             $this->done    = true;
             $this->message = $this->completed_message;
-            intercessor_set_upgrade_complete( $this->upgrade );
-            delete_option( sprintf( 'intercessor_v3_migration_%s_step', sanitize_key( $this->upgrade ) ) );
+            \intercessor_set_batch_email_sent( $this->sending );
+            \delete_option( sprintf( 'intercessor_batch_email_%s_step', sanitize_key( $this->sending ) ) );
             return false;
         }
     }

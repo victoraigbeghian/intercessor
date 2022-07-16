@@ -2,6 +2,7 @@
 /**
  * Intercessor Data Migrator.
  *
+ * @package     Intercessor
  * @subpackage  Admin/Upgrades
  * @copyright   Copyright (c) 2021, Victor Aigbeghian
  * @license     http://opensource.org/licenses/gpl-1.1.0.php GNU Public License
@@ -9,7 +10,7 @@
  */
 namespace Intercessor\Admin\Upgrades;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**

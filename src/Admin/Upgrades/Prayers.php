@@ -1,23 +1,25 @@
 <?php
 /**
- * 3.0 Data Migration - Orders.
+ * Intercessor Prayer Meta Upgrade
  *
- * @subpackage  Admin/Upgrades/v3
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package     Intercessor
+ * @subpackage  Admin/Upgrades/Prayer_Meta
+ * @copyright   Copyright (c) 2021, Victor Aigbeghian
+ * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
+ * @since       1.0.0
  */
-namespace EDD\Admin\Upgrades\v3;
 
-// Exit if accessed directly
+namespace Intercessor\Admin\Upgrades;
+
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Orders Class.
+ * Prayers Class.
  *
- * @since 3.0
+ * @since 1.1.0
  */
-class Orders extends Base {
+class Prayers extends Base {
 
 	/**
 	 * Constructor.
@@ -27,14 +29,14 @@ class Orders extends Base {
 	public function __construct( $step = 1 ) {
 		parent::__construct( $step );
 
-		$this->completed_message = __( 'Orders migration completed successfully.', 'easy-digital-downloads' );
-		$this->upgrade           = 'migrate_orders';
+		$this->completed_message = __( 'Prayers migration completed successfully.', 'intercessor' );
+		$this->upgrade           = 'migrate_Prayers';
 	}
 
 	/**
 	 * Retrieve the data pertaining to the current step and migrate as necessary.
 	 *
-	 * @since 3.0
+	 * @since 1.1.0
 	 *
 	 * @return bool True if data was migrated, false otherwise.
 	 */
@@ -53,12 +55,12 @@ class Orders extends Base {
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
 
-				// Check if order has already been migrated.
-				if ( edd_get_order( $result->ID ) ) {
+				// Check if prayer has already been migrated.
+				if ( intercessor_process_item( 'prayer', 'get', $result->ipr_prayer_id, false ) ) {
 					continue;
 				}
 
-				Migrator::prayers( $result );
+			//	Migrator::prayers( $result );
 			}
 
 			return true;
@@ -70,12 +72,12 @@ class Orders extends Base {
 	/**
 	 * Calculate the percentage completed.
 	 *
-	 * @since 3.0
+	 * @since 1.1.0
 	 *
 	 * @return float Percentage.
 	 */
 	public function get_percentage_complete() {
-		$total = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT COUNT(id) AS count FROM {$this->get_db()->posts} WHERE post_type = %s", esc_sql( 'edd_payment' ) ) );
+		$total = $this->get_db()->get_var( $this->get_db()->prepare( "SELECT COUNT(id) AS count FROM {$this->get_db()->posts} WHERE post_type = %s", esc_sql( 'ipr_prayer' ) ) );
 
 		// Set total to 0 if nothing available.
 		if ( empty( $total ) ) {

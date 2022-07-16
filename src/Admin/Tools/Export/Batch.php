@@ -82,14 +82,14 @@ class Batch extends Base{
 	/**
 	 * Is the export file writable
 	 *
-	 * @since 0.9.5.4
+	 * @since 0.9.5
 	 */
 	public $is_writable = true;
 
 	/**
 	 *  Is the export file empty
 	 *
-	 * @since 0.9.5.4
+	 * @since 0.9.5
 	 */
 	public $is_empty = false;
 

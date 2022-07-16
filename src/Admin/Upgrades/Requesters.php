@@ -2,6 +2,7 @@
 /**
  * Intercessor Requesters Upgrade
  *
+ * @package     Intercessor
  * @subpackage  Admin/Upgrades/Requesters
  * @copyright   Copyright (c) 2021, Victor Aigbeghian
  * @license     http://opensource.org/licenses/gpl-3.0.php GNU Public License
