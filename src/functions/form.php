@@ -973,12 +973,10 @@ function intercessor_get_current_page_url(): string {
 	if ( get_option( 'permalink_structure' ) ) {
 
 		$base = trailingslashit( home_url( $wp->request ) );
-
 	} else {
 
 		$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
 		$base = remove_query_arg( array( 'post_type', 'name' ), $base );
-
 	}
 
 	$scheme = is_ssl() ? 'https' : 'http';

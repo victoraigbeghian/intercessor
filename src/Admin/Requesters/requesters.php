@@ -26,6 +26,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function intercessor_requesters_page() {
 	// Enqueue scripts.
+	wp_enqueue_script( 'intercessor-requesters' );
+	wp_enqueue_script( 'intercessor-admin-prayers' );
 
 	// Views.
 	$default_views  = intercessor_requester_views();
@@ -66,6 +68,9 @@ function intercessor_requester_tabs() {
  */
 function intercessor_requesters_list() {
 
+	// Enqueue scripts.
+	wp_enqueue_script( 'intercessor-requesters' );
+
 	$requesters_table = new Table();
 	$requesters_table->prepare_items();
 	?>
@@ -104,8 +109,6 @@ function intercessor_requesters_list() {
  * @return void
  */
 function intercessor_render_requester_view( $view, $callbacks ) {
-
-	wp_enqueue_script( 'admin-requester' );
 	
 	$render = true;
 
@@ -604,12 +607,24 @@ function intercessor_requesters_delete_view( $requester ) {
             <div class="requester-info delete-requester">
 				<span class="delete-requester-options">
 					<p>
-						<?php echo $html->checkbox( array( 'name' => 'intercessor-requester-delete-confirm' ) ); ?>
+						<?php echo $html->checkbox(
+							[
+								'name' => 'intercessor-requester-delete-confirm',
+								'id'   => 'intercessor-requester-delete-confirm',
+							]
+							);
+							?>
                         <label for="intercessor-requester-delete-confirm"><?php esc_html_e( 'Are you sure you want to delete this requester?', 'intercessor' ); ?></label>
 					</p>
 
 					<p>
-						<?php echo $html->checkbox( array( 'name' => 'intercessor-requester-delete-records', 'options' => array( 'disabled' => true ) ) ); ?>
+						<?php echo $html->checkbox(
+							[
+								'name'    => 'intercessor-requester-delete-records',
+								'id'      => 'intercessor-requester-delete-records',
+								'options' => [ 'disabled' => true ]
+							]
+						); ?>
                         <label for="intercessor-requester-delete-records"><?php esc_html_e( 'Delete all associated prayers and records?', 'intercessor' ); ?></label>
 					</p>
 

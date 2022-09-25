@@ -89,7 +89,12 @@ class Table extends List_Table {
 				break;
 
 			case 'date_created':
-				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . intercessor_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . intercessor_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
+				$start_date = $item['date_created'];
+				if ( $start_date ) {
+					$value = date_i18n( get_option( 'date_format' ), strtotime( $start_date ) );
+				} else {
+					$value = '&mdash;';
+				}
 				break;
 
 			default:

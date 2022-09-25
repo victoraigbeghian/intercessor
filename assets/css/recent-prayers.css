@@ -5,13 +5,11 @@
   display: block;
   margin-bottom: 10px;
 }
-
 .intercessor-recent-requests ul {
   list-style: none;
   margin-left: 0;
   padding-left: 0;
 }
-
 .intercessor-recent-requests ul li {
   background-color: inherit;
   border-bottom: 2px solid #efefef;
@@ -21,7 +19,6 @@
   padding: 5px;
   position: relative;
 }
-
 .intercessor-recent-requests ul li .prayer-title {
   color: inherit;
   font-size: 13px;
@@ -30,7 +27,6 @@
   margin: 10px 7px;
   text-transform: uppercase;
 }
-
 .intercessor-recent-requests ul li .recent-prayer-message {
   color: inherit;
   float: left;
@@ -38,21 +34,17 @@
   text-align: left;
   width: 100%;
 }
-
 .intercessor-recent-requests ul li:nth-of-type(even) {
   background-color: inherit;
   padding: -0.5em;
 }
-
 .intercessor-recent-requests ul li:last-child {
   border-bottom: none;
 }
-
 .intercessor-recent-requests .prayer-list-counter {
   margin: 10px 0;
   width: 100%;
 }
-
 .intercessor-recent-requests .intercessor-requester,
 .intercessor-recent-requests .prayed-for,
 .intercessor-recent-requests .recent-prayer-date {
@@ -62,29 +54,24 @@
   font-weight: 600;
   padding: 10px 5px 0 0;
 }
-
 .intercessor-recent-requests #intercessor_update_counts {
   float: left;
   width: 55%;
 }
-
 .intercessor-recent-requests .prayed-for {
   float: right;
   text-align: center;
   width: 42%;
 }
-
 .intercessor-recent-requests .recent-prayer-date {
   float: left;
   margin-bottom: 10px;
   width: 100%;
 }
-
 .intercessor-recent-requests .intercessor-show-more {
   background-color: inherit;
   border-radius: 5px;
   color: #fff !important;
   margin-top: 10px;
   padding: 0.375rem 0.75rem;
-}
-/*# sourceMappingURL=recent-prayers.css.map */
+}/*# sourceMappingURL=recent-prayers.css.map */

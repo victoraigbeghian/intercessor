@@ -8,13 +8,12 @@
  * @license:     http://opensource.org/licenses/gpl-3.0 GNU Public License
 */
 @font-face {
-  font-family: 'ipr-icomoon';
-  src: url("../fonts/ipr-icomoon.ttf?hrm5xq") format("truetype"), url("../fonts/ipr-icomoon.woff?hrm5xq") format("woff"), url("../fonts/ipr-icomoon.svg?hrm5xq#ipr-icon") format("svg");
+  font-family: "ipr-icomoon";
+  src: url("../assets/fonts/ipr-icomoon.ttf?hrm5xq") format("truetype"), url("../assets/fonts/ipr-icomoon.woff?hrm5xq") format("woff"), url("../assets/fonts/ipr-icomoon.svg?hrm5xq#ipr-icon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
-
-[class^="ipr-icon-"],
+[class^=ipr-icon-],
 [class*=" ipr-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "ipr-icomoon" !important;
@@ -162,7 +161,7 @@
 }
 
 #adminmenu #toplevel_page_intercessor-prayers div.wp-menu-image:before {
-  font-family: 'ipr-icomoon' !important;
+  font-family: "ipr-icomoon" !important;
   content: "\e901";
 }
 
@@ -177,7 +176,6 @@
 a.intercessor-delete {
   color: #a00;
 }
-
 a.intercessor-delete:hover {
   color: #f00;
 }
@@ -202,7 +200,6 @@ Intercessor Settings Styles
 .page_intercessor-settings .intercessor-check-wrapper {
   clear: both;
 }
-
 .page_intercessor-settings .intercessor-check-wrapper label {
   display: inline-block;
   margin: -2px 0 3px 0;
@@ -211,17 +208,14 @@ Intercessor Settings Styles
 
 .intercessor-sub-nav {
   border-bottom: 1px solid #ccc;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   margin-bottom: 10px;
   width: 100%;
 }
-
 .intercessor-sub-nav a {
   display: inline-block;
   padding: 13px;
 }
-
 .intercessor-sub-nav a .current {
   border-bottom: 4px solid #000;
   padding-bottom: 9px;
@@ -231,7 +225,6 @@ Intercessor Settings Styles
 .admin-color-fresh .intercessor-sub-nav a.current {
   border-bottom-color: #04a0d1;
 }
-
 .admin-color-fresh .intercessor-move-data .intercessor-progress div {
   background: #0173a8;
 }
@@ -243,7 +236,6 @@ Intercessor Settings Styles
 .admin-color-coffee .intercessor-sub-nav a.current {
   border-bottom-color: #c09f83;
 }
-
 .admin-color-coffee .intercessor-move-data .intercessor-progress div {
   background: #c09f83;
 }
@@ -251,7 +243,6 @@ Intercessor Settings Styles
 .admin-color-ectoplasm .intercessor-sub-nav a.current {
   border-bottom-color: #a0b641;
 }
-
 .admin-color-ectoplasm .intercessor-move-data .intercessor-progress div {
   background: #a0b641;
 }
@@ -259,7 +250,6 @@ Intercessor Settings Styles
 .admin-color-midnight .intercessor-sub-nav a.current {
   border-bottom-color: #242629;
 }
-
 .admin-color-midnight .intercessor-move-data .intercessor-progress div {
   background: #e0493e;
 }
@@ -271,7 +261,6 @@ Intercessor Settings Styles
 .admin-color-sunrise .intercessor-sub-nav a.current {
   border-bottom-color: #bf3a36;
 }
-
 .admin-color-sunrise .intercessor-move-data .intercessor-progress div {
   background: #df7f36;
 }
@@ -279,7 +268,6 @@ Intercessor Settings Styles
 .admin-color-light .intercessor-sub-nav a.current {
   border-bottom-color: #8d8a8a;
 }
-
 .admin-color-light .intercessor-move-data .intercessor-progress div {
   background: #8d8a8a;
 }
@@ -296,8 +284,7 @@ Intercessor Settings Styles
   background: #343434 !important;
   border-width: 1px !important;
   border-radius: 5px !important;
-  -webkit-box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
-          box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
+  box-shadow: 1px 1px 2px 1px rgba(214, 214, 214, 0.5) !important;
   color: #ededed !important;
   max-width: 300px !important;
   padding: 7px !important;
@@ -315,31 +302,26 @@ Intercessor Settings Styles
 .intercessor-from-to-wrapper {
   margin-right: 4px;
 }
-
 .intercessor-from-to-wrapper input {
   margin: 0;
   position: relative;
   width: 100px;
   z-index: 1;
 }
-
 .intercessor-from-to-wrapper input:focus {
   border-color: #eee;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   outline: auto 5px -webkit-focus-ring-color;
   z-index: 2;
 }
-
-.intercessor-from-to-wrapper input[name="filter_from"],
-.intercessor-from-to-wrapper input[name="start-date"],
-.intercessor-from-to-wrapper input[name="start"] {
+.intercessor-from-to-wrapper input[name=filter_from],
+.intercessor-from-to-wrapper input[name=start-date],
+.intercessor-from-to-wrapper input[name=start] {
   border-right-color: #eee;
 }
-
-.intercessor-from-to-wrapper input[name="end"],
-.intercessor-from-to-wrapper input[name="end-date"],
-.intercessor-from-to-wrapper input[name="filter_to"] {
+.intercessor-from-to-wrapper input[name=end],
+.intercessor-from-to-wrapper input[name=end-date],
+.intercessor-from-to-wrapper input[name=filter_to] {
   border-left-color: #eee;
   margin-left: -1px;
 }
@@ -352,17 +334,14 @@ Intercessor List Page Styles
   vertical-align: middle;
   width: 5%;
 }
-
 .prayerrequests .column-start_date,
 .prayerrequests .column-status {
   width: 15%;
 }
-
 .prayerrequests .column-details {
   vertical-align: middle;
   width: 35%;
 }
-
 .prayerrequests .column-requester {
   width: 25%;
 }
@@ -377,34 +356,29 @@ Intercessor List Page Styles
   color: green;
   font-weight: bold;
 }
-
 .prayerrequests .row-actions span.deactivate a {
   color: darkorange;
 }
-
 .prayerrequests .row-actions span.delete a:hover {
   color: red;
 }
-
 .prayerrequests .row-actions span.cancel a {
   color: #cc8c00;
 }
-
 .prayerrequests .row-actions span.cancel a:hover,
 .prayerrequests .row-actions span.deactivate a:hover {
   opacity: 0.8;
 }
-
 .prayerrequests .row-actions .row-actions {
   color: #999;
 }
 
 /* Prayer Add Styles
 ------------------------------------------------------------------------------*/
-#intercessor-add-prayer input[type="email"],
-#intercessor-edit-prayer input[type="email"],
-#intercessor-add-prayer input[type="text"],
-#intercessor-edit-prayer input[type="text"] {
+#intercessor-add-prayer input[type=email],
+#intercessor-edit-prayer input[type=email],
+#intercessor-add-prayer input[type=text],
+#intercessor-edit-prayer input[type=text] {
   width: 350px;
 }
 
@@ -416,54 +390,40 @@ Intercessor List Page Styles
 .intercessor-notes .intercessor-note {
   background-color: #fdedfc;
   border-left: 5px solid #cccc00;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
   margin-bottom: 15px;
   overflow: hidden;
   padding: 10px;
   position: relative;
   width: 100%;
 }
-
 .intercessor-notes .intercessor-note .intercessor-note-author {
   margin-right: 7px;
 }
-
 .intercessor-notes .intercessor-note time {
   color: #aaa;
   font-size: 11px;
 }
-
 .intercessor-notes .intercessor-note .intercessor-delete-note {
   color: #a00;
   font-weight: 700;
   margin-left: auto;
   text-decoration: none;
 }
-
 .intercessor-notes .intercessor-note .intercessor-delete-note:hover {
   color: #888;
 }
-
 .intercessor-notes .intercessor-note .deleting {
-  opacity: .5;
+  opacity: 0.5;
 }
-
 .intercessor-notes .intercessor-note p:last-child {
   margin-bottom: 0;
 }
-
 .intercessor-notes .intercessor-note__header {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  align-items: center;
   display: flex;
 }
-
 .intercessor-notes .intercessor-no-notes {
   margin: 4px 0 10px;
 }
@@ -473,7 +433,6 @@ Intercessor List Page Styles
   float: none;
   margin: 0;
 }
-
 .intercessor-add-note .spinner:before {
   content: "\e97a";
 }
@@ -492,19 +451,16 @@ textarea[name=intercessor-note] {
   float: right;
   margin: -35px 5px 15px;
 }
-
 .intercessor-note-pagination a,
 .intercessor-note-pagination span.page-numbers {
   margin: 2px;
   padding: 5px 8px;
   text-decoration: none;
 }
-
 .intercessor-note-pagination a {
   background: #fcfcfc;
   border: 1px solid #e4e4e4;
 }
-
 .intercessor-note-pagination a:last-child,
 .intercessor-note-pagination a span.page-numbers:last-child {
   margin-right: 0;
@@ -518,27 +474,23 @@ textarea[name=intercessor-note] {
   clear: both;
   padding: 12px 12px 0 12px;
 }
-
 .intercessor-filters:after {
   content: "";
   display: table;
   clear: both;
 }
-
 .intercessor-filters span:not(.intercessor-date-range-options) {
   display: inline-block;
   margin: 10px 4px 10px 0;
   max-width: 200px;
 }
-
 .intercessor-filters #intercessor_date_filters,
 .intercessor-filters .button-secondary,
-.intercessor-filters input[type="number"] {
+.intercessor-filters input[type=number] {
   vertical-align: middle;
 }
-
-.intercessor-filters input[type="text"].intercessor_datepicker,
-.intercessor-filters input[type="number"] {
+.intercessor-filters input[type=text].intercessor_datepicker,
+.intercessor-filters input[type=number] {
   max-width: 100px;
   padding: 5px;
 }
@@ -548,43 +500,35 @@ textarea[name=intercessor-note] {
   margin-bottom: 12px;
   width: 100%;
 }
-
 .intercessor-filter:after {
   content: "";
   display: table;
   clear: both;
 }
-
 .intercessor-filter label {
   display: block;
   margin-right: 4px;
 }
-
 .intercessor-filter input {
   margin: 0;
 }
-
-.intercessor-filter input[type="text"] {
+.intercessor-filter input[type=text] {
   height: 28px;
   width: 100%;
 }
-
-.intercessor-filter input[type="text"],
-.intercessor-filter input[type="search"] {
+.intercessor-filter input[type=text],
+.intercessor-filter input[type=search] {
   height: 28px;
 }
-
 .intercessor-filter .button {
   height: 28px;
   line-height: 26px;
   margin: 0;
   padding: 0 10px 1px;
 }
-
 .intercessor-filter select {
   width: 100%;
 }
-
 @media screen and (min-width: 783px) {
   .intercessor-filter {
     float: left;
@@ -594,31 +538,29 @@ textarea[name=intercessor-note] {
   .intercessor-filter label {
     display: inline-block;
   }
-  .intercessor-filter input[type="text"] {
+  .intercessor-filter input[type=text] {
     display: inline-block;
     width: 144px;
   }
 }
 
-.intercessor-filter-search input[type="search"] {
+.intercessor-filter-search input[type=search] {
   display: block;
   float: right;
   width: 30%;
 }
-
-.intercessor-filter-search input[type="submit"] {
+.intercessor-filter-search input[type=submit] {
   display: block;
   float: right;
   width: 80%;
 }
-
 @media screen and (min-width: 783px) {
-  .intercessor-filter-search input[type="search"] {
+  .intercessor-filter-search input[type=search] {
     display: inline-block;
     margin-right: 4px;
     width: 144px;
   }
-  .intercessor-filter-search input[type="submit"] {
+  .intercessor-filter-search input[type=submit] {
     display: inline-block;
     width: auto;
   }
@@ -633,7 +575,6 @@ textarea[name=intercessor-note] {
     float: right;
   }
 }
-
 @media screen and (min-width: 783px) {
   .intercessor-filter-half {
     width: auto;
@@ -641,7 +582,7 @@ textarea[name=intercessor-note] {
   .intercessor-filter-half:last-child {
     float: left;
   }
-  .intercessor-filter-half input[type="text"] {
+  .intercessor-filter-half input[type=text] {
     width: 96px;
   }
 }
@@ -674,15 +615,12 @@ textarea[name=intercessor-note] {
 .requesters .column-number {
   width: 8%;
 }
-
 .requesters .column-email {
   width: 39%;
 }
-
 .requesters .column-name {
   width: 30%;
 }
-
 .requesters .column-date_created {
   width: 15%;
 }
@@ -690,11 +628,9 @@ textarea[name=intercessor-note] {
 #intercessor-item-wrapper {
   background: #f5f5f5;
   border: 1px solid #dadada;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   max-width: 100%;
 }
-
 #intercessor-item-wrapper:after {
   clear: both;
   content: "";
@@ -720,7 +656,6 @@ textarea[name=intercessor-note] {
   background: #fff;
   margin: 0;
 }
-
 #intercessor-item-tab-wrapper-list li {
   display: block;
   background-color: #ececec;
@@ -734,30 +669,25 @@ textarea[name=intercessor-note] {
   hyphens: auto;
   word-wrap: break-word;
 }
-
 #intercessor-item-tab-wrapper-list li a {
   display: block;
   padding: 8px 10px 8px 6px;
 }
-
 #intercessor-item-tab-wrapper-list li .active {
   background-color: #fff;
   border-right-color: #fff;
   display: block;
   padding: 8px 10px 8px 6px;
 }
-
 #intercessor-item-tab-wrapper-list .inactive a,
 #intercessor-item-tab-wrapper-list .inactive a:visited {
   background-color: #f7f7f7;
   color: #444;
   text-decoration: none;
 }
-
 #intercessor-item-tab-wrapper-list .inactive a:hover {
   background-color: #fff;
 }
-
 #intercessor-item-tab-wrapper-list .dashicons {
   color: #444;
   font-size: 16px;
@@ -774,96 +704,76 @@ textarea[name=intercessor-note] {
   width: 700px;
   z-index: 2;
 }
-
 #intercessor-item-card-wrapper .left {
   float: left;
 }
-
 #intercessor-item-card-wrapper .right {
   float: right;
 }
-
 #intercessor-item-card-wrapper .requester-section {
   border-bottom: 1px solid #eee;
 }
-
 #intercessor-item-card-wrapper .requester-section table {
   margin-bottom: 20px;
 }
-
 #intercessor-item-card-wrapper .requester-id {
   font-size: 24px;
   font-weight: 600;
 }
-
 #intercessor-item-card-wrapper > div {
   padding: 0 20px;
 }
-
 #intercessor-item-card-wrapper > div:first-child {
   padding-top: 20px;
 }
-
 #intercessor-item-card-wrapper > div:last-child {
   border: none;
   padding-bottom: 20px;
 }
-
 #intercessor-item-card-wrapper .avatar-wrap {
   padding-right: 10px;
   text-align: center;
 }
-
 #intercessor-item-card-wrapper .requester-main-wrapper input[name="requesterinfo[name]"] {
   font-size: 24px;
 }
-
 #intercessor-item-card-wrapper .requester-info {
   margin-bottom: 10px;
   margin-top: 5px;
   min-height: 185px;
 }
-
 #intercessor-item-card-wrapper .info-wrapper {
   min-height: 125px;
   overflow: visible;
 }
-
 #intercessor-item-card-wrapper a.delete {
   color: #ff0000;
   margin-right: 5px;
   text-decoration: none;
 }
-
 #intercessor-item-card-wrapper .row-title {
   width: 30%;
 }
-
 #intercessor-item-card-wrapper .editable {
   display: block;
   padding: 3px;
 }
-
 #intercessor-item-card-wrapper .edit-item {
   display: none;
 }
-
 #intercessor-item-card-wrapper .intercessor_user_search_results {
   left: -2px;
   top: 18px;
 }
-
 #intercessor-item-card-wrapper .intercessor_user_search_results ul {
   width: 196px;
 }
-
 #intercessor-item-card-wrapper .notice-container {
   margin-left: -20px;
   margin-right: -20px;
   padding-left: 20px;
   padding-right: 20px;
 }
-
 #intercessor-item-card-wrapper .add-requester-email-wrapper > #add-requester-email {
   vertical-align: middle;
 }
@@ -871,12 +781,10 @@ textarea[name=intercessor-note] {
 #edit-requester-info input,
 #edit-requester-info select {
   border: 1px solid #ddd;
-  -webkit-box-shadow: none;
-          box-shadow: none;
+  box-shadow: none;
   font-size: 13px;
   margin: -5px 0 4px -2px;
   padding: 2px 4px;
-  -webkit-transition: none;
   transition: none;
   width: 200px;
 }
@@ -885,7 +793,6 @@ textarea[name=intercessor-note] {
   font-size: 24px;
   font-weight: 600;
 }
-
 .requester-info .requester-name .editable {
   margin-bottom: 6px;
 }
@@ -915,18 +822,15 @@ textarea[name=intercessor-note] {
   min-height: 30px;
   text-align: center;
 }
-
 #intercessor-item-stats-wrapper li {
   font-size: 14px;
   float: left;
   vertical-align: middle;
   width: 50%;
 }
-
 #intercessor-item-stats-wrapper a {
   text-decoration: none;
 }
-
 #intercessor-item-stats-wrapper .dashicons {
   color: #777;
   margin-top: -2px;
@@ -936,32 +840,26 @@ textarea[name=intercessor-note] {
   text-align: center;
   width: 100%;
 }
-
 #intercessor-item-tables-wrapper th {
   text-align: center;
 }
-
 #intercessor-item-tables-wrapper .emails tr > td:first-child,
 #intercessor-item-tables-wrapper .emails tr > th:first-child {
   text-align: left;
 }
-
 #intercessor-item-tables-wrapper .emails .add-requester-email-row td {
   background-color: #f9f9f9;
   border-top: 1px solid #e5e5e5;
 }
-
 #intercessor-item-tables-wrapper .emails .primary-email-icon {
   font-size: 13px;
   line-height: 1.5em;
   vertical-align: middle;
 }
-
 #intercessor-item-tables-wrapper .emails input {
   margin: 6px 0;
   vertical-align: middle;
 }
-
 #intercessor-item-tables-wrapper .emails .spinner {
   float: none;
 }
@@ -971,8 +869,7 @@ textarea[name=intercessor-note] {
 .intercessor-notes .intercessor-note {
   background-color: #ffffee;
   border-left: 5px solid #cccc00;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-          box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
   width: 80%;
   position: relative;
   margin-bottom: 10px;
@@ -1028,7 +925,7 @@ textarea[name=intercessor-note] {
   margin: 4px 0 10px 0;
 }
 
-textarea[name="intercessor-note"] {
+textarea[name=intercessor-note] {
   width: 80%;
   min-height: 70px;
 }
@@ -1051,7 +948,6 @@ textarea[name="intercessor-note"] {
   min-height: 38px;
   padding: 7px 0 7px 7px;
 }
-
 .requester-note-wrapper span {
   display: block;
 }
@@ -1067,19 +963,16 @@ textarea[name="intercessor-note"] {
 .intercessor-move-data {
   position: relative;
 }
-
 .intercessor-move-data .intercessor-progress {
   background: #b8d5b8;
   border-radius: 15px;
   height: 15px;
-  -ms-flex-preferred-size: 100% div;
-      flex-basis: 100% div;
+  flex-basis: 100% div;
   flex-basis-background: #ccc;
   flex-basis-border-radius: 15px;
   flex-basis-height: 100%;
   flex-basis-width: 0;
 }
-
 .intercessor-move-data .notice-wrap {
   background-color: #f3f3f3;
   border-color: #e9e9e9;
@@ -1090,17 +983,10 @@ textarea[name="intercessor-note"] {
   margin: 20px -12px -23px;
   position: relative;
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: space-between;
+  align-items: center;
 }
-
 .intercessor-move-data .notice-wrap .spinner {
   float: right;
   margin: 4px 10px 8px;
@@ -1120,10 +1006,9 @@ textarea[name="intercessor-note"] {
     display: table-cell;
   }
 }
-
 @media screen and (max-width: 781px) {
   #intercessor-item-tab-wrapper,
-  #intercessor-item-card-wrapper {
+#intercessor-item-card-wrapper {
     margin: 0;
     width: 100%;
   }
@@ -1132,12 +1017,11 @@ textarea[name="intercessor-note"] {
     margin: 0;
   }
   #intercessor-item-tab-wrapper-list li,
-  #intercessor-item-tab-wrapper-list li.active {
+#intercessor-item-tab-wrapper-list li.active {
     float: left;
     display: inline;
     font-size: 14px;
-    -webkit-box-sizing: border-box;
-            box-sizing: border-box;
+    box-sizing: border-box;
     border-width: 0 1px 1px 0;
     border-style: solid;
     border-color: #e5e5e5;
@@ -1156,7 +1040,6 @@ textarea[name="intercessor-note"] {
     width: 100%;
   }
 }
-
 @media screen and (max-width: 656px) {
   #intercessor-item-card-wrapper .requester-info {
     min-height: 220px;
@@ -1180,7 +1063,7 @@ textarea[name="intercessor-note"] {
     margin-bottom: 0;
   }
   #intercessor-item-card-wrapper .widefat td,
-  #intercessor-item-card-wrapper .widefat th {
+#intercessor-item-card-wrapper .widefat th {
     padding: 4px 6px;
     max-width: 100px !important;
     display: table-cell;
@@ -1190,7 +1073,6 @@ textarea[name="intercessor-note"] {
     font-size: 16px;
   }
 }
-
 @media screen and (max-width: 480px) {
   #intercessor-item-tab-wrapper-list li {
     width: 50%;
@@ -1202,24 +1084,20 @@ textarea[name="intercessor-note"] {
     border-width: 0 0 1px 0;
   }
 }
-
 /* Dashboard Widget Styles
 -----------------------------------------------------*/
 #intercessor_request_summary .inside {
   margin: 0;
   padding: 0;
 }
-
 #intercessor_request_summary .intercessor-dashboard-daily {
   padding: 0;
   text-align: center;
 }
-
 #intercessor_request_summary .intercessor-dashboard-daily h3 {
   font-size: 16px;
   color: #535c59;
 }
-
 #intercessor_request_summary .intercessor-dashboard-blessed-day {
   color: #21759b;
   font-size: 16px;
@@ -1227,45 +1105,37 @@ textarea[name="intercessor-note"] {
   padding: 5px;
   margin: 0;
 }
-
 #intercessor_request_summary .intercessor-dashboard-today-prayers {
   font-size: 18px;
   font-weight: 400;
   margin: 0 0 30px;
   padding: 4px 0 1px;
 }
-
 #intercessor_request_summary .most-prayed-this-month a strong {
   margin-right: 48px;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list {
   margin: 0;
   overflow: hidden;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li {
   border-right: 1px solid #ededed;
   border-top: 1px solid #ededed;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   color: #8e9595;
   float: left;
   margin: 0;
   padding: 0;
   width: 50%;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li span {
   color: #8e9595;
   display: block;
   font-size: 12px;
   padding: 9px 12px;
   position: relative;
-  -webkit-transition: all ease 0.5s;
   transition: all ease 0.5s;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li span strong {
   color: #21759b;
   display: block;
@@ -1273,17 +1143,13 @@ textarea[name="intercessor-note"] {
   font-weight: normal;
   line-height: 1.2em;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li span:hover {
   color: #2ea2cc;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li span:hover::before,
 #intercessor_request_summary .intercessor_dashboard_list li span:hover strong {
   color: #2ea2cc !important;
 }
-
 #intercessor_request_summary .intercessor_dashboard_list li:first-child {
   border-right: 0;
-}
-/*# sourceMappingURL=intercessor-admin.css.map */
+}/*# sourceMappingURL=intercessor-admin.css.map */

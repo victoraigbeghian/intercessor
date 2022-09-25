@@ -9,16 +9,14 @@
 }
 
 html {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   -ms-overflow-style: scrollbar;
 }
 
 *,
 *::before,
 *::after {
-  -webkit-box-sizing: inherit;
-          box-sizing: inherit;
+  box-sizing: inherit;
 }
 
 .intercessor {
@@ -27,7 +25,6 @@ html {
   margin-right: auto;
   width: 100%;
 }
-
 .intercessor #intercessor_request_form_wrap label {
   display: block;
   font-size: 95%;
@@ -36,7 +33,6 @@ html {
   margin: 0 0 5px;
   position: relative;
 }
-
 .intercessor #intercessor_request_form_wrap label:after {
   clear: both;
   content: ".";
@@ -46,92 +42,75 @@ html {
   text-indent: -9999px;
   visibility: hidden;
 }
-
 .intercessor #intercessor_request_form_wrap span.intercessor-description {
   color: #726f6f;
   display: block;
   font-size: 60%;
   margin: 0 0 5px;
 }
-
 .intercessor #intercessor_request_form_wrap input.intercessor-input,
 .intercessor #intercessor_request_form_wrap textarea.intercessor-input {
   display: inline-block;
   width: 100%;
 }
-
 .intercessor #intercessor_request_form_wrap [placeholder]:focus::-webkit-input-placeholder {
   -webkit-transition: opacity 0.5s 0.5s ease;
   transition: opacity 0.5s 0.5s ease;
   opacity: 0;
 }
-
 .intercessor #intercessor_request_form_wrap ::-webkit-input-placeholder {
   line-height: normal;
 }
-
 .intercessor #intercessor_request_form_wrap :-moz-placeholder {
   line-height: normal;
 }
-
 .intercessor #intercessor_request_form_wrap :-ms-input-placeholder {
   line-height: normal;
 }
-
 .intercessor #intercessor_request_form_wrap select.intercessor-select {
   border-radius: 3px;
   display: block;
   height: 60%;
   width: 100%;
 }
-
 .intercessor #intercessor_request_form_wrap select.intercessor-select .intercessor-select-small {
   display: inline;
 }
-
 .intercessor #intercessor_request_form_wrap input.intercessor-input.error,
 .intercessor #intercessor_request_form_wrap textarea.intercessor-input.error {
   border-color: #c4554e;
 }
-
 .intercessor #intercessor_request_form_wrap > p {
   margin: 0 0 21px;
 }
-
 .intercessor #intercessor_request_form_wrap span.intercessor-required-indicator {
   color: #b94a48;
   display: inline;
 }
-
-.intercessor #intercessor_request_form_wrap input[type="email"],
-.intercessor #intercessor_request_form_wrap input[type="password"],
-.intercessor #intercessor_request_form_wrap input[type="tel"],
-.intercessor #intercessor_request_form_wrap input[type="text"],
+.intercessor #intercessor_request_form_wrap input[type=email],
+.intercessor #intercessor_request_form_wrap input[type=password],
+.intercessor #intercessor_request_form_wrap input[type=tel],
+.intercessor #intercessor_request_form_wrap input[type=text],
 .intercessor #intercessor_request_form_wrap textarea {
   padding: 4px 6px;
 }
-
-.intercessor #intercessor_request_form_wrap input[type="radio"] {
+.intercessor #intercessor_request_form_wrap input[type=radio] {
   border: none;
   margin-right: 5px;
 }
-
-.intercessor #intercessor_request_form_wrap input[type="checkbox"] {
+.intercessor #intercessor_request_form_wrap input[type=checkbox] {
   display: inline-block;
   margin: 0 5px 0 0;
 }
-
-.intercessor #intercessor_request_form_wrap input[type="checkbox"] + label,
-.intercessor #intercessor_request_form_wrap input[type="checkbox"] + label:after {
+.intercessor #intercessor_request_form_wrap input[type=checkbox] + label,
+.intercessor #intercessor_request_form_wrap input[type=checkbox] + label:after {
   display: inline;
 }
-
 .intercessor #intercessor_request_form_wrap #intercessor_prayer_submit,
 .intercessor #intercessor_request_form_wrap #intercessor_register_account_fields {
   border: none;
   padding: 0;
 }
-
 .intercessor #intercessor_request_form_wrap #intercessor-login-account-wrap,
 .intercessor #intercessor_request_form_wrap #intercessor-new-account-wrap {
   background: #fafafa;
@@ -142,15 +121,12 @@ html {
   margin: 20px 0;
   padding: 0.5em 1.387em;
 }
-
 .intercessor #intercessor_request_form_wrap #intercessor_request_content {
   margin-top: 10px;
 }
 
 .intercessor-row {
   -ms-flex-wrap: wrap;
-  display: -ms-flexbox;
-  display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
   margin: 0px -15px 20px -15px;
@@ -169,46 +145,33 @@ html {
 }
 
 .col {
-  -ms-flex-preferred-size: 0;
-      flex-basis: 0;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 1;
   max-width: 100%;
 }
 
 .form-col3 {
-  -ms-flex: 0 0 25%;
-  -webkit-box-flex: 0;
-          flex: 0 0 25%;
+  flex: 0 0 25%;
   max-width: 25%;
 }
 
 .form-col4 {
-  -ms-flex: 0 0 33.333333%;
-  -webkit-box-flex: 0;
-          flex: 0 0 33.333333%;
+  flex: 0 0 33.333333%;
   width: 33.333333%;
 }
 
 .form-col5 {
-  -ms-flex: 0 0 41.666667%;
-  -webkit-box-flex: 0;
-          flex: 0 0 41.666667%;
+  flex: 0 0 41.666667%;
   max-width: 41.666667%;
 }
 
 .form-col6 {
-  -ms-flex: 0 0 50%;
-  -webkit-box-flex: 0;
-          flex: 0 0 50%;
+  flex: 0 0 50%;
   max-width: 50%;
 }
 
 .form-column {
-  -ms-flex: 0 0 100%;
-  -webkit-box-flex: 0;
-          flex: 0 0 100%;
+  flex: 0 0 100%;
   max-width: 100%;
 }
 
@@ -238,7 +201,6 @@ html {
 
 #intercessor_register_form .intercessor-input,
 #intercessor_login_form .intercessor-input {
-  -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
@@ -249,7 +211,7 @@ html {
 
 .intercessor-submit,
 #intercessor-prayer-button,
-input[type="submit"].intercessor-submit {
+input[type=submit].intercessor-submit {
   display: inline-block;
   padding: 6px 12px;
   margin: 20px 0;
@@ -262,7 +224,6 @@ input[type="submit"].intercessor-submit {
   cursor: pointer;
   border: 1px solid #cccccc;
   border-radius: 4px;
-  -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -271,7 +232,7 @@ input[type="submit"].intercessor-submit {
 }
 
 .intercessor-submit.button:focus,
-input[type="submit"].intercessor-submit:focus {
+input[type=submit].intercessor-submit:focus {
   outline: thin dotted #333;
   outline-offset: -2px;
 }
@@ -279,7 +240,6 @@ input[type="submit"].intercessor-submit:focus {
 .intercessor-submit.button:active {
   background-image: none;
   outline: 0;
-  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
@@ -294,7 +254,6 @@ input[type="submit"].intercessor-submit:focus {
   position: absolute;
   z-index: 1;
 }
-
 .intercessor_notices .notice-dismiss {
   -webkit-transform: translateY(-50%);
   background: 0 0;
@@ -309,24 +268,21 @@ input[type="submit"].intercessor-submit:focus {
   right: 0;
   transform: translateY(-50%);
 }
-
 .intercessor_notices .notice-dismiss:before {
   -webkit-font-smoothing: antialiased;
   background: 0 0;
   color: #72777c;
   content: "\ea0f";
   display: block;
-  font-family: 'intercessor' !important;
+  font-family: "intercessor" !important;
   font: 400 16px/20px;
   height: 20px;
   text-align: center;
   width: 20px;
 }
-
 .intercessor_notices .notice-dismiss:hover {
   background-color: transparent;
 }
-
 .intercessor_notices .notice-dismiss:hover:before {
   color: #dc2f2c;
 }
@@ -334,19 +290,16 @@ input[type="submit"].intercessor-submit:focus {
 .intercessor_error, .intercessor_success, .intercessor_warning {
   background: #F9F9F9;
   border-left: 4px solid;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
   clear: both;
   margin: 15px 0;
   padding: 1em 1.5em 1em 2em;
   position: relative;
 }
-
 .intercessor_error > p, .intercessor_success > p, .intercessor_warning > p {
   color: #333;
   margin: 0 !important;
 }
-
 .intercessor_error:before, .intercessor_success:before, .intercessor_warning:before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "ipr-icomoon" !important;
@@ -372,32 +325,26 @@ input[type="submit"].intercessor-submit:focus {
   top: 50%;
   width: 30px;
 }
-
 .intercessor_error {
   border-color: #a00;
 }
-
 .intercessor_error:before {
-  content: '\ea0f';
+  content: "\ea0f";
   background-color: #a00;
 }
-
 .intercessor_success {
   border-color: #7ad03a;
 }
-
 .intercessor_success:before {
   background-color: #7ad03a;
-  content: '\ea10';
+  content: "\ea10";
 }
-
 .intercessor_warning {
   border-color: #ffba00;
 }
-
 .intercessor_warning:before {
   background-color: #ffba00;
-  content: '\ea07';
+  content: "\ea07";
 }
 
 .intercessor-input-wrapper .input-text,
@@ -407,37 +354,32 @@ input[type="submit"].intercessor-submit:focus {
 
 @media screen and (max-width: 48em) {
   .intercessor .left,
-  .intercessor .middle,
-  .intercessor .right {
+.intercessor .middle,
+.intercessor .right {
     float: none;
   }
   .intercessor .intercessor-prayers-list .intercessor-requester,
-  .intercessor .intercessor-prayers-list .prayer-list-counter {
+.intercessor .intercessor-prayers-list .prayer-list-counter {
     width: 100%;
     float: none;
     display: block;
     margin-bottom: 15px;
   }
 }
-
 @media screen and (min-width: 576px) {
   .intercessor {
     max-width: 540px;
   }
 }
-
 @media screen and (min-width: 768px) {
   .intercessor {
     max-width: 720px;
   }
 }
-
 @media screen and (max-width: 767px) {
   .form-col4,
-  .form-col6 {
-    -ms-flex: 0 0 100%;
-    -webkit-box-flex: 0;
-            flex: 0 0 100%;
+.form-col6 {
+    flex: 0 0 100%;
     max-width: 100% !important;
   }
   .intercessor-answered {
@@ -446,19 +388,16 @@ input[type="submit"].intercessor-submit:focus {
     width: 100%;
   }
 }
-
 @media screen and (min-width: 992px) {
   .intercessor {
     max-width: 960px;
   }
 }
-
 @media screen and (min-width: 1200px) {
   .intercessor {
     max-width: 1140px;
   }
 }
-
 /* Notices */
 /* intercessor Frontend Notice Styles */
 .intercessor_notices {
@@ -466,7 +405,6 @@ input[type="submit"].intercessor-submit:focus {
   position: absolute;
   z-index: 1;
 }
-
 .intercessor_notices .notice-dismiss {
   -webkit-transform: translateY(-50%);
   background: 0 0;
@@ -481,25 +419,21 @@ input[type="submit"].intercessor-submit:focus {
   right: 0;
   transform: translateY(-50%);
 }
-
 .intercessor_notices .notice-dismiss:before {
   -webkit-font-smoothing: antialiased;
   background: 0 0;
   color: #72777c;
   content: "\ea0f";
   display: block;
-  font-family: 'ipr-icomoon' !important;
+  font-family: "ipr-icomoon" !important;
   font: 400 16px/20px;
   height: 20px;
   text-align: center;
   width: 20px;
 }
-
 .intercessor_notices .notice-dismiss:hover {
   background-color: transparent;
 }
-
 .intercessor_notices .notice-dismiss:hover:before {
   color: #dc2f2c;
-}
-/*# sourceMappingURL=intercessor.css.map */
+}/*# sourceMappingURL=intercessor.css.map */

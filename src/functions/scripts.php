@@ -258,9 +258,41 @@ function intercessor_load_admin_scripts() {
 	);
 
 	// Register import and export scripts and styles.
+//	wp_enqueue_script( 'intercessor-requesters', $js_dir . 'admin/requesters/requester' . $suffix . '.js', $admin_deps, $version, false );
 	wp_register_script( 'intercessor-export', $js_dir . 'admin/export/export' . $suffix . '.js', $admin_deps, $version, false );
 	wp_register_script( 'intercessor-import', $js_dir . 'admin/import/import' . $suffix . '.js', $admin_deps, $version, false );
 	wp_register_script( 'intercessor-settings', $js_dir . 'admin/settings/index' . $suffix . '.js', $admin_deps, $version, false );
 	wp_register_script( 'intercessor-reports', $js_dir . 'admin/reports/index' . $suffix . '.js', $admin_deps, $version, false );
 }
 add_action( 'admin_enqueue_scripts', 'intercessor_load_admin_scripts' );
+
+/**
+ * Admin head styles.
+ *
+ * @since 1.1.1
+ */
+function intercessor_admin_head() {
+	?>
+	<style type="text/css" media="screen">
+		@font-face {
+			font-family: 'ipr-icomoon';
+			src: url('<?php echo INTERCESSOR_URL . 'assets/fonts/icomoon.eot?ngjl88'; ?>');
+			src: url('<?php echo INTERCESSOR_URL . 'assets/fonts/ipr-icomoon.ttf?hrm5xq'; ?>') format('truetype'),
+			url('<?php echo INTERCESSOR_URL . 'assets/fonts/ipr-icomoon.woff?hrm5xq'; ?>') format('woff'),
+			url('<?php echo INTERCESSOR_URL . 'assets/fonts/ipr-icomoon.svg?hrm5xq#ipr-icon'; ?>') format('svg');
+			font-weight: normal;
+			font-style: normal;
+		}
+
+		.ipr-icon-praying:before, #adminmenu div.wp-menu-image.ipr-icon-praying:before {
+			font-family: 'ipr-icomoon';
+			font-size: 18px;
+			width: 18px;
+			height: 18px;
+			content: "\e901";
+			padding-top: 8px;
+		}
+	</style>
+	<?php
+}
+add_action( 'admin_head', 'intercessor_admin_head' );

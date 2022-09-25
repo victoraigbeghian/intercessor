@@ -1,6 +1,6 @@
 /** intercessor Setup Styles */
-[class^="dashboard_page_intercessor-"] .about-text,
-[class*="dashboard_page_intercessor-"] .about-text {
+[class^=dashboard_page_intercessor-] .about-text,
+[class*=dashboard_page_intercessor-] .about-text {
   min-height: 0;
 }
 
@@ -21,13 +21,11 @@
 }
 
 .about-wrap h3 {
-  margin: 1.5em 0 .6em;
+  margin: 1.5em 0 0.6em;
 }
-
 .about-wrap img {
   border: none;
 }
-
 .about-wrap .intercessor-badge {
   color: #FFF;
   font-size: 14px;
@@ -46,12 +44,10 @@
 .feature-section {
   margin-top: 30px;
 }
-
 .feature-section .feature-item {
   float: left;
   width: 48%;
 }
-
 .feature-section div.last-item {
   margin-left: 4%;
   margin-right: 0;
@@ -60,10 +56,8 @@
 .contributor img {
   border-radius: 50%;
 }
-
 .contributor a.web {
   font-style: italic;
   font-weight: bold;
   margin-top: 20px;
-}
-/*# sourceMappingURL=intecessor-setup.css.map */
+}/*# sourceMappingURL=intecessor-setup.css.map */

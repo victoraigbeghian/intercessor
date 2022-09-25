@@ -61,14 +61,34 @@ if ( ! function_exists( 'intercessor_format_db_version' ) ) {
 	/**
 	 * Format the database version.
 	 *
-	 * @param string $version
+	 * @param string $version Database version.
 	 *
 	 * @return string
-	 *@since 1.0.0
-	 *
+	 * @since 1.0.0
 	 */
 	function intercessor_format_db_version( string $version = '' ) : string {
 		return preg_replace( '/[^0-9.].*/', '', $version );
+	}
+}
+
+if ( ! function_exists( 'intercessor_version' ) ) {
+	/**
+	 * Gets the version of our plugin.
+	 *
+	 * @since 1.1.1
+	 * @return string $version The version of our plugin
+	 */
+	function intercessor_version() {
+		// Set up variables.
+		if ( defined( 'INTERCESSOR_VERSION' ) ) {
+            $value = INTERCESSOR_VERSION;
+		} else {
+			$class = new Intercessor\Loader();
+			$value = $class->version;
+		}
+
+		// Return version number.
+		return intercessor_setup_db_version( $value );
 	}
 }
 

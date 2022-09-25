@@ -28,7 +28,7 @@ function intercessor_reports_page() {
 
 	?>
 	<div class="wrap">
-        <h1><?php esc_html_e( 'Intercessor Reports', 'intercessor' ); ?></h1>
+        <h1 class="screen-reader-text"><?php esc_html_e( 'Intercessor Reports', 'intercessor' ); ?></h1>
 
 		<?php do_action( 'intercessor_reports_page_top' ); ?>
 

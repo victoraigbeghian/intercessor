@@ -71,14 +71,16 @@ function intercessor_is_admin_page() : bool {
 		'intercessor-tools',
 		'intercessor-settings',
         'intercessor-upgrades',
+		'intercessor-reports',
 	];
 
-	if ( ! empty( $page ) && in_array( $page, $admin_pages ) ) {
+	if ( ! empty( $page ) && in_array( $page, $admin_pages, true ) ) {
 		$ret = true;
 	} else {
-		$ret = in_array( $page, $admin_pages );
+		$ret = in_array( $page, $admin_pages, true );
 	}
 
+	// Return filtered admin page.
 	return apply_filters( 'intercessor_is_admin_page', $ret );
 
 }
@@ -105,31 +107,38 @@ function intercessor_get_admin_current_screen() {
  * Retrieve the admin page url.
  *
  * @param string $type The type of admin page ( 'prayer-requests', 'Requesters' )
- * @param array $query Array of arguments to query with.
+ * @param array  $query Array of arguments to query with.
  *
  * @return mixed|void $url, $type, $query sting
  * @since 0.9.5
  */
 function intercessor_get_admin_url( string $type = '', array $query = [] ) {
-	$page = 'intercessor';
-
-	$known = array(
+	// Set up pages slugs.
+	$page  = 'intercessor';
+	$known = [
 		'prayers',
         'requesters',
         'tools',
         'settings',
         'reports',
         'upgrades',
-	);
+	];
 
+	// Check if the page is in defined array.
 	if ( in_array( $type, $known, true ) ) {
 		$page = "intercessor-{$type}";
 	}
 
+	// Merge page arguments.
 	$admin_args = array_merge( array( 'page' => $page ), $query );
 
-	$url = add_query_arg( $admin_args, admin_url( 'admin.php' ) );
+	// Set up pages url.
+	$url = add_query_arg(
+		$admin_args,
+		admin_url( 'admin.php' )
+	);
 
+	// Return filtered url of admin pages.
 	return apply_filters( 'intercessor_get_admin_url', $url, $type, $query );
 }
 

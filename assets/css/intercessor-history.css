@@ -1,7 +1,5 @@
 .intercessor-row {
   -ms-flex-wrap: wrap;
-  display: -ms-flexbox;
-  display: -webkit-box;
   display: flex;
   flex-wrap: wrap;
   margin: 0px -15px 20px -15px;
@@ -20,47 +18,34 @@
 }
 
 .col {
-  -ms-flex-preferred-size: 0;
-      flex-basis: 0;
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  flex-basis: 0;
+  flex-grow: 1;
   max-width: 100%;
   padding: 10px;
 }
 
 .form-col3 {
-  -ms-flex: 0 0 25%;
-  -webkit-box-flex: 0;
-          flex: 0 0 25%;
+  flex: 0 0 25%;
   max-width: 25%;
 }
 
 .form-col4 {
-  -ms-flex: 0 0 33.333333%;
-  -webkit-box-flex: 0;
-          flex: 0 0 33.333333%;
+  flex: 0 0 33.333333%;
   width: 33.333333%;
 }
 
 .form-col5 {
-  -ms-flex: 0 0 41.666667%;
-  -webkit-box-flex: 0;
-          flex: 0 0 41.666667%;
+  flex: 0 0 41.666667%;
   max-width: 41.666667%;
 }
 
 .form-col6 {
-  -ms-flex: 0 0 50%;
-  -webkit-box-flex: 0;
-          flex: 0 0 50%;
+  flex: 0 0 50%;
   max-width: 50%;
 }
 
 .form-column {
-  -ms-flex: 0 0 100%;
-  -webkit-box-flex: 0;
-          flex: 0 0 100%;
+  flex: 0 0 100%;
   max-width: 100%;
 }
 
@@ -68,31 +53,26 @@
   display: block;
   width: 100%;
 }
-
 #intercessor_user_history_main .intercessor-prayer-details {
   text-align: left;
   width: 48%;
 }
-
 #intercessor_user_history_main .intercessor-prayer-details .prayer-title {
   color: #43a2a2;
   font-size: 16px;
   font-weight: 600;
 }
-
 #intercessor_user_history_main .prayer-history-actions {
-  font-size: .92em;
+  font-size: 0.92em;
   list-style: none !important;
   margin: 0;
   padding: 0;
 }
-
 #intercessor_user_history_main .prayer-history-actions li {
   float: left;
   display: inline-block;
   list-style: none !important;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a {
   float: left;
   display: inline-block;
@@ -101,36 +81,30 @@
   list-style: none !important;
   text-decoration: none;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main {
   display: block;
   width: 100%;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-details {
   text-align: left;
   width: 48%;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-details .prayer-title {
   color: #43a2a2;
   font-size: 16px;
   font-weight: 600;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .prayer-history-actions {
-  font-size: .92em;
+  font-size: 0.92em;
   list-style: none !important;
   margin: 0;
   padding: 0;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .prayer-history-actions li {
   float: left;
   display: inline-block;
   list-style: none !important;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .prayer-history-actions li a {
   float: left;
   display: inline-block;
@@ -139,46 +113,36 @@
   list-style: none !important;
   text-decoration: none;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .prayer-history-actions li a .prayer-history-action-delete {
   background-color: #8b0000;
   color: #ffffff;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-id {
   width: 9%;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-counts {
   width: 10%;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-date {
   width: 20%;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a #intercessor_user_history_main .intercessor-prayer-status {
   vertical-align: center;
   width: 13%;
   float: none;
 }
-
 #intercessor_user_history_main .prayer-history-actions li a .prayer-history-action-delete {
   color: red;
 }
-
 #intercessor_user_history_main .intercessor-prayer-id {
   width: 9%;
 }
-
 #intercessor_user_history_main .intercessor-prayer-counts {
   width: 10%;
 }
-
 #intercessor_user_history_main .intercessor-prayer-date {
   width: 20%;
 }
-
 #intercessor_user_history_main .intercessor-prayer-status {
   vertical-align: center;
   width: 13%;
@@ -186,7 +150,7 @@
 }
 
 .intercessor-submit,
-input[type="submit"].intercessor-submit {
+input[type=submit].intercessor-submit {
   display: inline-block;
   padding: 6px 12px;
   margin: 20px 0;
@@ -199,7 +163,6 @@ input[type="submit"].intercessor-submit {
   cursor: pointer;
   border: 1px solid #cccccc;
   border-radius: 4px;
-  -webkit-box-shadow: none;
   box-shadow: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -213,11 +176,8 @@ input[type="submit"].intercessor-submit {
 
 @media screen and (max-width: 767px) {
   .form-col4,
-  .form-col6 {
-    -ms-flex: 0 0 100%;
-    -webkit-box-flex: 0;
-            flex: 0 0 100%;
+.form-col6 {
+    flex: 0 0 100%;
     max-width: 100% !important;
   }
-}
-/*# sourceMappingURL=intercessor-history.css.map */
+}/*# sourceMappingURL=intercessor-history.css.map */

@@ -4,9 +4,9 @@ Contributors: Victor Aigbeghian
 Donate link: https://newgenerationchapel.org
 Tags: Prayer Request Plugin for WordPress
 Requires at least: 5.0
-Tested up to: 5.8.2 Stable tag: 5.8.2
-License: GPL V2.0
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tested up to: 6.0.1 Stable tag: 6.0.1
+License: GPL V3.0
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Description
 
@@ -40,5 +40,5 @@ First Release
 
 ## License
 
-This project is licensed under the GNU General Public License, Version 2.0.
+This project is licensed under the GNU General Public License, Version 3.0.
 See [LICENSE](LICENSE) for the full license text.

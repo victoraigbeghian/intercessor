@@ -141,7 +141,7 @@ class Install {
 		$settings->install();
 		\intercessor_setup_default_options();
 
-		// Maybe save the previous version, only if different than current
+		// Maybe save the previous version, only if different than current.
 		if ( ! empty( $current_version ) && ( \intercessor_format_db_version( INTERCESSOR_VERSION ) !== $current_version ) ) {
 			\update_option( 'intercessor_version_upgraded_from', $current_version );
 		}

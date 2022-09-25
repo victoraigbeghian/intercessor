@@ -7,8 +7,7 @@
   position: absolute;
   top: 50%;
   right: 0;
-  -webkit-transform: translate(0, -50%);
-          transform: translate(0, -50%);
+  transform: translate(0, -50%);
   border: none;
   margin: 0;
   padding: 5px;
@@ -17,7 +16,6 @@
   cursor: pointer;
   max-width: 28px !important;
 }
-
 .intercessor_notices .notice-dismiss:before {
   background: 0 0;
   color: #72777c;
@@ -30,11 +28,9 @@
   width: 20px;
   -webkit-font-smoothing: antialiased;
 }
-
 .intercessor_notices .notice-dismiss:hover {
   background-color: rgba(0, 0, 0, 0);
 }
-
 .intercessor_notices .notice-dismiss:hover:before {
   color: #dc3232;
 }
@@ -45,16 +41,13 @@
   background: #F9F9F9;
   padding: 1em 1.5em 1em 2em;
   border-left: 4px solid;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
-          box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.125);
   clear: both;
 }
-
 .intercessor_error > p, .intercessor_success > p, .intercessor_warning > p {
   margin: 0 !important;
   color: #333;
 }
-
 .intercessor_error:before, .intercessor_success:before, .intercessor_warning:before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "ipr-icomoon" !important;
@@ -80,32 +73,26 @@
   line-height: 30px;
   text-shadow: 1px 1px rgba(0, 0, 0, 0.5);
 }
-
 .intercessor_error {
   border-color: #a00;
 }
-
 .intercessor_error:before {
-  content: '\f02d';
+  content: "\f02d";
   background-color: #a00;
 }
-
 .intercessor_success {
   border-color: #7ad03a;
 }
-
 .intercessor_success:before {
   background-color: #7ad03a;
-  content: '\e601';
+  content: "\e601";
 }
-
 .intercessor_warning {
   border-color: #ffba00;
 }
-
 .intercessor_warning:before {
   background-color: #ffba00;
-  content: '\f02d';
+  content: "\f02d";
 }
 
 /* Alert Styles */
@@ -151,5 +138,4 @@
   color: #8a6d3b;
   background-color: #fcf8e3;
   border-color: #faebcc;
-}
-/*# sourceMappingURL=intercessor-notices.css.map */
+}/*# sourceMappingURL=intercessor-notices.css.map */

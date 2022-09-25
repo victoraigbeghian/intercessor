@@ -177,7 +177,7 @@ class Prayer_History {
 			}
 
 			// Process answered prayer.
-			$answered = (int) ! empty( $_POST['ipr_history_answered_prayer'] ) ? intercessor_clean( $_POST['ipr_history_answered_prayer'] ) : 0;
+			$answered = (int) ! empty( $_POST['ipr_history_answered_prayer'] ) ? \wp_unslash( intercessor_clean( $_POST['ipr_history_answered_prayer'] ) ) : 0;
 			if ( $answered ) {
 				$prayer = intercessor_process_item( 'prayer', 'get', $prayer_id, false );
 				intercessor_add_item_meta( 'prayer', $prayer->id, 'answered_prayer', 1, true );
@@ -185,7 +185,7 @@ class Prayer_History {
 
 			// Loop through required fields and display error message.
 			foreach ( $this->get_required_fields() as $field_name => $value ) {
-				$field = sanitize_text_field( $_POST[ $field_name ] );
+				$field = \sanitize_text_field( $_POST[ $field_name ] );
 
 				if ( empty( $field ) ) {
 					$this->add_error( $value['error_id'], $value['error_message'] );
@@ -202,7 +202,10 @@ class Prayer_History {
 				];
 
 				if ( empty( $history_data ['title'] ) ) {
-					intercessor_set_error( 343, esc_html__('Please specify the title of your prayer request.', 'intercessor' ) );
+					intercessor_set_error(
+						343,
+						esc_html__('Please specify the title of your prayer request.', 'intercessor' )
+					);
 				}
 
 				// Process prayer status. Defaults to 'pending'.
@@ -246,7 +249,7 @@ class Prayer_History {
 						);
 					}
 				} else {
-					$message = esc_html__( 'There was an error updating your prayer request. Please contact support.', 'intercessor' );
+					$message = esc_html__( 'There was an error updating your prayer request. Please contact support or refresh your browser and try again.', 'intercessor' );
 
 					return intercessor_display_frontend_notice(
 						$message,
@@ -259,7 +262,6 @@ class Prayer_History {
 			// Process delete prayer.
 			intercessor_process_item( 'prayer', 'delete', $prayer_id, false );
 		}
-
 	}
 
 	/**
@@ -291,13 +293,15 @@ class Prayer_History {
 	 * Process Registration Form on Prayer History Page
 	 *
 	 * @since 0.9.5
-	 * @param array $data Data sent from the register form
+	 *
+	 * @param array $data Data sent from the register form.
+	 *
 	 * @return void
 	*/
 	public function register( $data ) {
 
 		// Bailout if user is already logged in.
-		if ( is_user_logged_in() ) {
+		if ( \is_user_logged_in() ) {
 			return;
 		}
 
@@ -326,7 +330,6 @@ class Prayer_History {
 				$message = \intercessor_get_option( 'captcha_message'  );
 				intercessor_set_error( 'failed-captcha', $message );
 			}
-
 		}
 
 		// Bailout if it is spam registration.
@@ -391,7 +394,6 @@ class Prayer_History {
 		do_action( 'intercessor_process_register_form' );
 
 		// Check for errors and redirect if none present.
-		//$redirect  = apply_filters( 'intercessor_history_register_redirect', $data['intercessor_history_redirect'] );
 		$default_page = intercessor_is_prayer_history_page();
 		\intercessor_create_new_requester( $user_data );
 

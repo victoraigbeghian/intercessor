@@ -183,7 +183,6 @@ class Loader {
         // Activate Admin.
         if ( is_admin() ) {
             self::$instance->admin();
-
         }
     }
 
@@ -270,6 +269,7 @@ class Loader {
         $this->cron    = new Cron();
         $this->reports = new Reports();
         new Shortcodes();
+       // Assets::get_instance();
 
 	    // CLI.
 	    if ( defined( 'WP_CLI' ) && WP_CLI ) {

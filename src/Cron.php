@@ -11,6 +11,10 @@
 
 namespace Intercessor;
 
+use function wp_next_scheduled;
+use function wp_unschedule_event;
+use function wp_schedule_event;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -25,14 +29,14 @@ class Cron {
 	/**
 	 * Get things going
 	 *
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 * @see Cron::monthly_events() or Cron::weekly_events()
 	 * @since 1.0.0
 	 */
 	public function __construct() {
 		$this->setup_send_time();
-		add_filter( 'cron_schedules', [ $this, 'add_cron_schedules' ] );
-		add_action( 'wp', [ $this, 'intercessor_schedule_events' ] );
+		add_filter( 'cron_schedules', [ $this, 'add' ] );
+		add_action( 'wp', [ $this, 'events' ] );
 	}
 
 	/**
@@ -41,10 +45,9 @@ class Cron {
 	 * @param array $schedules Array of schedules.
 	 *
 	 * @return array
-	 *@since 1.0.0
-	 *
+	 * @since 1.0.0
 	 */
-	public function add_cron_schedules( array $schedules = [] ) : array {
+	public function add( $schedules ) : array {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = [
 			'interval' => 604800,
@@ -63,22 +66,22 @@ class Cron {
 	 * Schedules our events
 	 *
 	 * @return void
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 * @since 1.0.0
 	 */
-	public function intercessor_schedule_events() {
+	public function events() {
 		$notify_period = \intercessor_get_option( 'notify_period', 'weekly' );
-		$timestamp     = \wp_next_scheduled( 'intercessor_notify_requester' );
+		$timestamp     = wp_next_scheduled( 'intercessor_notify_requester' );
 
 		if ( ! defined( 'INTERCESSOR_DISABLE_NOTIFY_REQUESTER' ) ) {
 			if ( 'monthly' === $notify_period ) {
-				\wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
+				wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
 				$this->monthly_events();
 			} elseif ( 'daily' === $notify_period ) {
-				\wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
+				wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
 				$this->daily_events();
 			} else {
-				\wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
+				wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
 				$this->weekly_events();
 			}
 		}
@@ -89,7 +92,7 @@ class Cron {
 	 *
 	 * @access private
 	 * @return void
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 * @since 1.0.0
 	 */
 	private function monthly_events() {
@@ -107,7 +110,7 @@ class Cron {
 	 *
 	 * @access private
 	 * @return void
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 * @since 1.0.0
 	 */
 	private function weekly_events() {
@@ -125,7 +128,7 @@ class Cron {
 	 *
 	 * @access private
 	 * @return void
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 * @since 1.0.0
 	 */
 	private function daily_events() {
@@ -145,7 +148,7 @@ class Cron {
 	 * @since 1.0.0
 	 *
 	 * @return false|int
-	 * @throws \Exception
+	 * @throws \Exception Throws exception.
 	 */
 	private function setup_send_time() {
 		$current_timezone   = \get_option( 'timezone_string' );
