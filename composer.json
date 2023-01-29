@@ -1,7 +1,7 @@
 {
     "name": "victoraigbeghian/wordpress-plugin",
-    "type": "project",
-    "description": "Intercessor",
+    "type": "wordpress-plugin",
+    "description": "Intercessor - a WordPress prayer request management plugin",
     "version": "1.1.0",
     "authors": [
         {
@@ -12,7 +12,7 @@
     ],
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
-    "keywords": [ "wordpress", "plugin", "boilerplate" ],
+    "keywords": [ "wordpress", "plugin", "prayer request" ],
     "autoload": {
         "psr-4": {
             "Intercessor\\": "src/"
@@ -53,6 +53,7 @@
         "vendor-dir": "vendor/"
     },
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "tecnickcom/tcpdf": "^6.2"
     }
 }

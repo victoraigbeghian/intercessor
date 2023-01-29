@@ -16,7 +16,7 @@ namespace Intercessor\Admin\Tools;
 defined( 'ABSPATH' ) || exit;
 
 // Load autoloader.
-require_once INTERCESSOR_DIR . 'vendor/tcpdf/tcpdf.php';
+require_once INTERCESSOR_DIR . 'vendor/tecnickcom/tcpdf/tcpdf.php';
 
 /**
  * Class Pdf

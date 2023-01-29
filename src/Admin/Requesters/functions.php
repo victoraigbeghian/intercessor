@@ -23,12 +23,12 @@ defined( 'ABSPATH' ) || exit;
  */
 function intercessor_register_default_requester_views( $views ) {
 
-	$default_views = array(
+	$default_views = [
 		'overview' => 'intercessor_requesters_view',
 		'delete'   => 'intercessor_requesters_delete_view',
 		'notes'    => 'intercessor_requester_notes_view',
 		'tools'    => 'intercessor_requester_tools_view',
-	);
+	];
 
 	return array_merge( $views, $default_views );
 
@@ -44,20 +44,20 @@ add_filter( 'intercessor_requester_views', 'intercessor_register_default_request
  */
 function intercessor_register_default_requester_tabs( $tabs ) {
 
-	$default_tabs = array(
-		'overview' => array(
+	$default_tabs = [
+		'overview' => [
 			'dashicon' => 'dashicons-admin-users',
 			'title'    => esc_html_x( 'Requester Profile', 'intercessor' )
-		),
-		'notes'   => array(
+		],
+		'notes'   => [
 			'dashicon' => 'dashicons-admin-comments',
 			'title'    => esc_html_x( 'Requester Notes', 'intercessor' )
-		),
-		'tools'   => array(
+		],
+		'tools'   => [
 			'dashicon' => 'dashicons-admin-tools',
 			'title'    => esc_html_x( 'Requester Tools', 'intercessor' )
-		),
-	);
+		],
+	];
 
 	return array_merge( $tabs, $default_tabs );
 }
@@ -72,10 +72,10 @@ add_filter( 'intercessor_requester_tabs', 'intercessor_register_default_requeste
  */
 function intercessor_register_delete_requester_tab( $tabs ) {
 
-	$tabs['delete'] = array(
+	$tabs['delete'] = [
         'dashicon' => 'dashicons-trash',
         'title'    => esc_html_x( 'Delete', 'Delete Requester tab title', 'intercessor' ),
-    );
+    ];
 
 	return $tabs;
 }
@@ -133,7 +133,6 @@ add_action( 'manage_users_custom_column',  'intercessor_render_requester_column'
  *
  * @return array
  * @since 0.9.5
- *
  */
 function intercessor_connect_user_requester_profile( $requester, $requester_data ) {
 
@@ -150,7 +149,7 @@ function intercessor_connect_user_requester_profile( $requester, $requester_data
 	 */
 	do_action( 'intercessor_pre_edit_requester', $requester_id, $requester_data );
 
-	$output = array();
+	$output = [];
 
 	if ( $requester->update( $requester_data ) ) {
 
@@ -171,8 +170,8 @@ function intercessor_connect_user_requester_profile( $requester, $requester_data
 			$requester->delete_meta( '_intercessor_disconnected_user_id' );
 		}
 
-		$output['success']       = true;
-		$requester_data          = array_merge( $requester_data );
+		$output['success']        = true;
+		$requester_data           = array_merge( $requester_data );
 		$output['requester_info'] = $requester_data;
 
 	} else {
@@ -204,7 +203,7 @@ function intercessor_connect_user_requester_profile( $requester, $requester_data
  *
  * @return array|bool|void
  */
-function intercessor_edit_requester( $args = array() ) {
+function intercessor_edit_requester( $args = [] ) {
 	$requester_edit_role = apply_filters( 'intercessor_edit_requesters_role', 'edit_prayers' );
 
 	// Bail if there is nothing to edit
@@ -213,7 +212,9 @@ function intercessor_edit_requester( $args = array() ) {
 	}
 
 	if ( ! is_admin() || ! current_user_can( $requester_edit_role ) ) {
-		wp_die( esc_html__( 'You do not have permission to edit this requester.', 'intercessor' ) );
+		wp_die(
+			esc_html__( 'You do not have permission to edit this requester.', 'intercessor' )
+		);
 	}
 
 	$requester_info = $args['requesterinfo'];
@@ -222,37 +223,47 @@ function intercessor_edit_requester( $args = array() ) {
 
 	// Bail if nonce check fails.
 	if ( ! wp_verify_nonce( $nonce, 'edit-requester' ) ) {
-		wp_die( esc_html__( 'Cheatin\' eh?!', 'intercessor' ) );
+		wp_die(
+			esc_html__( 'Cheatin\' eh?!', 'intercessor' )
+		);
 	}
 
+	// Try to get requester.
+	$requester = interccessor_process_item( 'requester', 'get', $requester_id, false);
+	
 	// Bail if requester does not exist.
-	$requester = intercessor_get_item( 'requester', $requester_id );
 	if ( empty( $requester->id ) ) {
 		return false;
 	}
 
-	// Parse requester details with defaults
-	$defaults = array(
+	// Parse requester details with defaults.
+	$defaults = [
 		'name'    	   => '',
 		'email'   	   => '',
 		'user_id' 	   => 0,
-		'date_created' => ''
-	);
+		'date_created' => '',
+	];
 
 	$requester_info = wp_parse_args( $requester_info, $defaults );
 
 	if ( ! is_email( $requester_info['email'] ) ) {
-		intercessor_set_error( 'intercessor-invalid-email', esc_html__( 'Please enter a valid email address.', 'intercessor' ) );
+		intercessor_set_error(
+			'intercessor-invalid-email',
+			esc_html__( 'Please enter a valid email address.', 'intercessor' )
+		);
 	}
 
-	if ( (int) $requester_info['user_id'] != (int) $requester->user_id ) {
+	if ( (int) $requester_info['user_id'] !== (int) $requester->user_id ) {
 
-		// Make sure we don't already have this user attached to a requester
+		// Make sure we don't already have this user attached to a requester.
 		if ( ! empty( $requester_info['user_id'] )
-			&& false !== intercessor()->requesters->get_requester_by( 'user_id', $requester_info['user_id'] ) ) {
-			intercessor_set_error( 'intercessor-invalid-requester-user_id', sprintf(
-				esc_html__( 'The User ID %d is already associated with a different requester.', 'intercessor' ),
-				$requester_info['user_id'] )
+			&& false !== intercessor_get_item_by( 'requester', 'user_id', $requester_info['user_id'] ) ) {
+			intercessor_set_error(
+				'intercessor-invalid-requester-user_id',
+				sprintf(
+					esc_html__( 'The User ID %d is already associated with a different requester.', 'intercessor' ),
+					$requester_info['user_id']
+				)
 			);
 		}
 
@@ -267,16 +278,19 @@ function intercessor_edit_requester( $args = array() ) {
 
 	}
 
-	// Record this for later
-	$previous_user_id  = $requester->user_id;
+	// Record this for later.
+	$previous_user_id = $requester->user_id;
 
+	// Bail, if there is any error.
 	if ( intercessor_get_errors() ) {
 		return;
 	}
 
+	// Retrieve user data.
 	$user_id = intval( $requester_info['user_id'] );
+
 	if ( empty( $user_id ) && ! empty( $requester_info['user_login'] ) ) {
-		// See if email exists, otherwise use login
+		// See if email exists, otherwise use login.
 		$user_by_field = is_email( $requester_info['user_login'] )
 			? 'email'
 			: 'login';
@@ -285,15 +299,18 @@ function intercessor_edit_requester( $args = array() ) {
 		if ( $user ) {
 			$user_id = $user->ID;
 		} else {
-			intercessor_set_error( 'intercessor-invalid-user-string', sprintf(
-				esc_html__( 'Failed to attach user. The login or email address %s was not found.', 'intercessor' ),
-				$requester_info['user_login'] )
+			intercessor_set_error(
+				'intercessor-invalid-user-string',
+				sprintf(
+					esc_html__( 'Failed to attach user. The login or email address %s was not found.', 'intercessor' ),
+					$requester_info['user_login']
+				)
 			);
 		}
 	}
 
 	// Sanitize the inputs
-	$requester_data            	    = array();
+	$requester_data            	    = [];
 	$requester_data['name']    	    = strip_tags( stripslashes( $requester_info['name'] ) );
 	$requester_data['email']   	    = $requester_info['email'];
 	$requester_data['user_id'] 	    = $user_id;
@@ -303,33 +320,33 @@ function intercessor_edit_requester( $args = array() ) {
 	$requester_data = array_map( 'sanitize_text_field', $requester_data );
 
 	/**
-	 * Runs before a requester is edited
+	 * Runs before a requester is edited.
 	 *
 	 * @since 0.9.5
 	 */
 	do_action( 'intercessor_pre_edit_requester', $requester_id, $requester_data );
 
-	$output         = array();
+	$output         = [];
 	$previous_email = $requester->email;
 
 	if ( $requester->update( $requester_data ) ) {
 
-		// Update some prayer meta if necessary
+		// Update some prayer meta if necessary.
 		$prayers_array = explode( ',', $requester->prayer_ids );
 
-		if ( $requester->email != $previous_email ) {
+		if ( $requester->email !== $previous_email ) {
 			foreach ( $prayers_array as $prayer_id ) {
 				intercessor_update_item_meta( 'prayer', $prayer_id, 'email', $requester->email );
 			}
 		}
 
-		if ( $requester->user_id != $previous_user_id ) {
+		if ( $requester->user_id !== $previous_user_id ) {
 			foreach ( $prayers_array as $prayer_id ) {
 				intercessor_update_item_meta( 'prayer', $prayer_id, '_intercessor_prayer_user_id', $requester->user_id );
 			}
 		}
 
-		$output['success']       = true;
+		$output['success']        = true;
 		$output['requester_info'] = $requester_data;
 
 	} else {
@@ -362,7 +379,7 @@ add_action( 'intercessor_edit-requester', 'intercessor_edit_requester', 10, 1 );
  * @param  array $args  Array of arguments: nonce, requester id, and email address
  * @return mixed        If DOING_AJAX echos out JSON, otherwise returns array of success (bool) and message (string)
  */
-function intercessor_add_requester_email( $args = array() ) {
+function intercessor_add_requester_email( $args = [] ) {
 
 	$requester_edit_role = apply_filters( 'intercessor_edit_requesters_role', 'edit_prayers' );
 
@@ -370,7 +387,7 @@ function intercessor_add_requester_email( $args = array() ) {
 		wp_die( esc_html__( 'You do not have permission to edit this requester.', 'intercessor' ) );
 	}
 
-	$output       = array();
+	$output       = [];
 	$requester_id = 0;
 
 	if ( empty( $args ) || empty( $args['email'] ) || empty( $args['requester_id'] ) ) {
@@ -387,57 +404,59 @@ function intercessor_add_requester_email( $args = array() ) {
 
 	} else if ( ! wp_verify_nonce( $args['_wpnonce'], 'intercessor-add-requester-email' ) ) {
 
-		$output = array(
+		$output = [
 			'success' => false,
 			'message' => esc_html__( 'Nonce verification failed.', 'intercessor' ),
-		);
+		];
 
 	} else if ( ! is_email( $args['email'] ) ) {
 
-		$output = array(
+		$output = [
 			'success' => false,
 			'message' => esc_html__( 'Invalid email address.', 'intercessor' ),
-		);
+		];
 
 	} else {
-
+		// Get requester data.
 		$email        = sanitize_email( $args['email'] );
 		$requester_id = (int) $args['requester_id'];
 		$primary      = 'true' === $args['primary'] ? true : false;
-		$requester    = intercessor_get_item( 'requester', $requester_id );
+		$requester    = intercessor_process_item( 'requester', 'get', $requester_id, false );
+		
 
 		if ( false === $requester->add_email( $email, $primary ) ) {
 
 			if ( in_array( $email, $requester->emails ) ) {
 
-				$output = array(
+				$output = [
 					'success'  => false,
 					'message'  => esc_html__( 'Email already associated with this requester.', 'intercessor' ),
-				);
+				];
 
 			} else {
 
-				$output = array(
+				$output = [
 					'success' => false,
 					'message' => esc_html__( 'Email address is already associated with another requester.', 'intercessor' ),
-				);
+				];
 
 			}
 
 		} else {
 
 			$redirect = admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester_id . '&intercessor-message=email-added' );
-			$output = array(
+			$output   = [
 				'success'  => true,
 				'message'  => esc_html__( 'Email successfully added to requester.', 'intercessor' ),
 				'redirect' => $redirect,
-			);
+			];
 
 			$user           = wp_get_current_user();
 			$user_login     = ! empty( $user->user_login ) ? $user->user_login : 'IPRBot';
 			$requester_note = sprintf( esc_html__( 'Email address %s added by %s', 'intercessor' ), $email, $user_login );
 			$requester->add_note( $requester_note );
 
+			// Add note about the email change.
 			if ( $primary ) {
 				$requester_note =  sprintf( esc_html__( 'Email address %s set as primary by %s', 'intercessor' ), $email, $user_login );
 				$requester->add_note( $requester_note );
@@ -490,16 +509,25 @@ function intercessor_remove_requester_email() {
 
 	$nonce = $_GET['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'intercessor-remove-requester-email' ) ) {
-		wp_die( esc_html__( 'Nonce verification failed', 'intercessor' ), esc_html__( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+		wp_die(
+			esc_html__( 'Nonce verification failed', 'intercessor' ),
+			esc_html__( 'Error', 'intercessor' ),
+			[ 'response' => 403 ]
+		);
 	}
 
+	// Process email removal from requester.
 	$requester = new Requester( $_GET['id'] );
 	if ( $requester->remove_email( $_GET['email'] ) ) {
 
-		$url = add_query_arg( 'intercessor-message', 'email-removed', admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id ) );
+		$url = add_query_arg(
+			'intercessor-message',
+			'email-removed',
+			admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id )
+		);
 
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'IPRBot';
+		$user           = wp_get_current_user();
+		$user_login     = ! empty( $user->user_login ) ? $user->user_login : 'Intercessor Bot';
 		$requester_note = sprintf( esc_html__( 'Email address %s removed by %s', 'intercessor' ), sanitize_email( $_GET['email'] ), $user_login );
 		$requester->add_note( $requester_note );
 
@@ -507,6 +535,7 @@ function intercessor_remove_requester_email() {
 		$url = add_query_arg( 'intercessor-message', 'email-remove-failed', admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id ) );
 	}
 
+	// Redirect.
 	wp_safe_redirect( $url );
 	exit;
 }
@@ -534,23 +563,37 @@ function intercessor_set_requester_primary_email() {
 
 	$nonce = $_GET['_wpnonce'];
 	if ( ! wp_verify_nonce( $nonce, 'intercessor-set-requester-primary-email' ) ) {
-		wp_die( esc_html__( 'Nonce verification failed', 'intercessor' ), esc_html__( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+		wp_die(
+			esc_html__( 'Nonce verification failed', 'intercessor' ),
+			esc_html__( 'Error', 'intercessor' ),
+			[ 'response' => 403 ]
+		);
 	}
 
+	// Set requester primary email.
 	$requester = new Requester( $_GET['id'] );
 	if ( $requester->set_primary_email( $_GET['email'] ) ) {
 
-		$url = add_query_arg( 'intercessor-message', 'primary-email-updated', admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id ) );
+		$url = add_query_arg(
+			'intercessor-message',
+			'primary-email-updated',
+			admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id )
+		);
 
-		$user          = wp_get_current_user();
-		$user_login    = ! empty( $user->user_login ) ? $user->user_login : 'PrayerHouseBot';
+		$user           = wp_get_current_user();
+		$user_login     = ! empty( $user->user_login ) ? $user->user_login : 'Intercessor Bot';
 		$requester_note = sprintf( esc_html__( 'Email address %s set as primary by %s', 'intercessor' ), sanitize_email( $_GET['email'] ), $user_login );
 		$requester->add_note( $requester_note );
 
 	} else {
-		$url = add_query_arg( 'intercessor-message', 'primary-email-failed', admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id ) );
+		$url = add_query_arg(
+			'intercessor-message',
+			'primary-email-failed',
+			admin_url( 'admin.php?page=intercessor-requesters&view=overview&id=' . $requester->id )
+		);
 	}
 
+	// Redirect and exit.
 	wp_safe_redirect( $url );
 	exit;
 }
@@ -569,35 +612,50 @@ function intercessor_requester_save_note( $args ) {
 
 	$requester_view_role = apply_filters( 'intercessor_view_requesters_role', 'view_prayer_reports' );
 
+	// Bail, if current user has no rights to be here.
 	if ( ! is_admin() || ! current_user_can( $requester_view_role ) ) {
 		wp_die( esc_html__( 'You do not have permission to edit this requester.', 'intercessor' ) );
 	}
 
+	// Bail if no arguments passed to the function.
 	if ( empty( $args ) ) {
 		return;
 	}
 
+	// Sanitize inputs.
 	$requester_note = trim( sanitize_text_field( $args['requester_note'] ) );
 	$requester_id   = (int)$args['requester_id'];
-	$nonce         = $args['add_requester_note_nonce'];
+	$nonce          = $args['add_requester_note_nonce'];
 
+	// Bail if nonce did not verify.
 	if ( ! wp_verify_nonce( $nonce, 'add-requester-note' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'intercessor' ) );
 	}
 
+	// Display error if the note is empty.
 	if ( empty( $requester_note ) ) {
 		intercessor_set_error( 'empty-requester-note', esc_html__( 'A note is required', 'intercessor' ) );
 	}
 
+	// Bail if error found.
 	if ( intercessor_get_errors() ) {
 		return;
 	}
 
-	$requester = intercessor_get_item( 'requester', $requester_id );
-	$new_note = $requester->add_note( $requester_note );
+	$requester = intercessor_process_item( 'requester', 'get', $requester_id, false );
+	$new_note  = $requester->add_note( $requester_note );
 
+	/**
+	 * Fires before a new note is added to the requester.
+	 *
+	 * @param int    $requester_id Requester ID.
+	 * @param string $new_note Add new note to the requester.
+	 *
+	 * @since 0.9.5
+	 */
 	do_action( 'intercessor_pre_insert_requester_note', $requester_id, $new_note );
 
+	// Process addition of note to the requester.
 	if ( ! empty( $new_note ) && ! empty( $requester->id ) ) {
 
 		ob_start();
@@ -611,11 +669,12 @@ function intercessor_requester_save_note( $args ) {
 		$output = ob_get_contents();
 		ob_end_clean();
 
-
+		// Process output.
 		if ( intercessor_doing_ajax() ) {
 			wp_send_json( $output );
 		}
 
+		// Return the new note.
 		return $new_note;
 
 	}
@@ -634,7 +693,7 @@ add_action( 'intercessor_add-requester-note', 'intercessor_requester_save_note',
  *
  * @return void Whether it was a successful deletion
  */
-function intercessor_requester_delete( $args = array() ) {
+function intercessor_requester_delete( $args = [] ) {
 
 	$requester_edit_role = apply_filters( 'intercessor_edit_requesters_role', 'edit_prayers' );
 
@@ -646,10 +705,10 @@ function intercessor_requester_delete( $args = array() ) {
 		return;
 	}
 
-	$requester_id  = (int)$args['requester_id'];
-	$confirm       = ! empty( $args['intercessor-requester-delete-confirm'] ) ? true : false;
-	$remove_data   = ! empty( $args['intercessor-requester-delete-records'] ) ? true : false;
-	$nonce         = $args['_wpnonce'];
+	$requester_id = (int)$args['requester_id'];
+	$confirm      = ! empty( $args['intercessor-requester-delete-confirm'] ) ? true : false;
+	$remove_data  = ! empty( $args['intercessor-requester-delete-records'] ) ? true : false;
+	$nonce        = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-requester' ) ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'intercessor' ) );
@@ -664,7 +723,7 @@ function intercessor_requester_delete( $args = array() ) {
 		exit;
 	}
 
-	$requester = intercessor_get_item( 'requester', $requester_id );
+	$requester = intercessor_process_item( 'requester', 'get', $requester_id, false );
 
 	/**
 	 * Runs before a requester is deleted
@@ -716,7 +775,7 @@ add_action( 'intercessor_delete_requester', 'intercessor_requester_delete', 10, 
  *
  * @return void|bool        If the disconnect was sucessful
  */
-function intercessor_disconnect_requester_user_id( $args = array() ) {
+function intercessor_disconnect_requester_user_id( $args = [] ) {
 
 	$requester_edit_role = apply_filters( 'intercessor_edit_requesters_role', 'edit_prayers' );
 
@@ -735,7 +794,7 @@ function intercessor_disconnect_requester_user_id( $args = array() ) {
 		wp_die( esc_html__( 'Cheatin\' eh?!', 'intercessor' ) );
 	}
 
-	$requester = intercessor_get_item( 'requester', $requester_id );
+	$requester = intercessor_process_item( 'requester', 'get', $requester_id, false );
 	if ( empty( $requester->id ) ) {
 		return false;
 	}

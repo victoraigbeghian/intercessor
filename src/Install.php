@@ -150,9 +150,6 @@ class Install {
 		$session = intercessor()->session;
 		$session->use_php_sessions();
 
-		// Set the transient for redirection.
-		\set_transient( '_intercessor_redirect_activation', true, 30 );
-
 		// Update database version.
 		\intercessor_update_db_version();
 

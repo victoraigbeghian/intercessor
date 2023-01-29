@@ -220,7 +220,7 @@ class Admin {
 	private function maybe_load() {
 		// Maybe load pdf generation files.
 		if ( $this->generate_pdf() ) {
-			require_once INTERCESSOR_DIR . 'src/Admin/Tools/pdf-prayers.php';
+			require_once INTERCESSOR_DIR . '/src/Admin/Tools/Export/pdf-prayers.php';
 		}
 	}
 

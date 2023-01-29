@@ -125,8 +125,8 @@ class Requester extends \Intercessor\Database\Rows\Requester {
     /**
      * Get things going
      *
-     * @param bool $_id_or_email Get by requester ID or email.
-     * @param bool $by_user_id Get requester by user ID.
+     * @param mixed $_id_or_email Get by requester ID or email.
+     * @param bool  $by_user_id   Get requester by user ID.
      *
      * @since 0.9.5
      * @return mixed|void

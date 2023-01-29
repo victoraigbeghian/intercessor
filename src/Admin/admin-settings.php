@@ -85,21 +85,21 @@ add_filter( 'intercessor_main_sections', 'intercessor_setup_settings_sections' )
  *@since 1.0.0
  */
 function intercessor_plugin_settings_fields( array $settings ): array {
-	$intercessor_settings = array(
+	$intercessor_settings = [
 		/** General Settings */
 		'general' => apply_filters(
 			'intercessor_settings_general',
-			array(
-				'main' => array(
-					'page_settings' => array(
+			[
+				'main' => [
+					'page_settings' => [
 						'id'   => 'page_settings',
 						'name' => '<h3>' . esc_html__( 'Page Settings', 'intercessor' ) . '</h3>',
 						'desc' => '',
 						'type' => 'header',
 						'tooltip_title' => esc_html__( 'Page Settings', 'intercessor' ),
 						'tooltip_desc'  => esc_html__( 'Intercessor uses the pages below for handling the display of request form, prayer confirmation, prayer history, and prayer failures. If pages are deleted or removed in some way, they can be recreated manually from the Pages menu. When re-creating the pages, enter the shortcode shown in the page content area.', 'intercessor' ),
-					),
-					'form_page' => array(
+					],
+					'form_page' => [
 						'id'          => 'form_page',
 						'name'        => esc_html__( 'Request Page', 'intercessor' ),
 						'desc'        => esc_html__( 'This is the request form page where users will submit their prayer requests. The [intercessor_form] shortcode must be on this page.', 'intercessor' ),
@@ -107,8 +107,8 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'options'     => intercessor_get_pages(),
 						'chosen'      => true,
 						'placeholder' => esc_html__( 'Select a page', 'intercessor' ),
-					),
-					'prayers_page' => array(
+					],
+					'prayers_page' => [
 						'id'          => 'prayers_page',
 						'name'        => esc_html__( 'Prayer Listing Page', 'intercessor' ),
 						'desc'        => esc_html__( 'This is the page where all prayer requests are displayed. The [intercessor_prayers] shortcode must be on this page', 'intercessor' ),
@@ -116,8 +116,8 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'options'     => intercessor_get_pages(),
 						'chosen'      => true,
 						'placeholder' => esc_html__( 'Select a page', 'intercessor' ),
-					),
-					'history_page' => array(
+					],
+					'history_page' => [
 						'id'          => 'history_page',
 						'name'        => esc_html__( 'Prayer  Request History Page', 'intercessor' ),
 						'desc'        => esc_html__( 'This page shows a complete prayer history for the current user. The [intercessor_history] shortcode should be on this page.', 'intercessor' ),
@@ -125,29 +125,29 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'options'     => intercessor_get_pages(),
 						'chosen'      => true,
 						'placeholder' => esc_html__( 'Select a page', 'intercessor' ),
-					),
-					'hold_prayers' => array(
+					],
+					'hold_prayers' => [
 						'id'    => 'hold_prayers',
 						'name'  => esc_html__( 'Hold Prayers', 'intercessor' ),
 						'check' => esc_html__( 'Enable this to hold prayer requests until an admin allow them.', 'intercessor' ),
 						'desc'  => esc_html__( 'If enabled, all prayer requests will be in the pending state and must be activated by an admin before they are published on the front end.', 'intercessor' ),
 						'type'  => 'descriptive_checkbox',
 						'std'   => '1',
-					),
-					'notify_period' => array(
+					],
+					'notify_period' => [
 						'id'            => 'notify_period',
 						'name'          => esc_html__( 'Prayer Notify Interval', 'intercessor' ),
 						'desc'          => esc_html__( 'This option affects how often you want to inform users when prayed for.', 'intercessor' ),
 						'type'          => 'radio',
 						'std'           => 'weekly',
-						'options'       => array(
+						'options'       => [
 							'daily'   => esc_html__( 'Once Daily', 'intercessor' ),
 							'weekly'  => esc_html__( 'Once Weekly', 'intercessor' ),
 							'monthly' => esc_html__( 'Once Monthly', 'intercessor' ),
-						),
+						],
 						'tooltip_title' => __( 'Prayed Notification Period', 'intercessor' ),
 						'tooltip_desc'  => __( 'Specify how often you want to inform users when prayed for. This only works for Requesters who selected the option to be informed during prayer request submission.', 'intercessor' ),
-					),
+					],
 					'send_email_time' => [
 						'id'            => 'send_email_time',
 						'name'          => esc_html__( 'Time To Send Email', 'intercessor' ),
@@ -169,24 +169,24 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'tooltip_title' => __( 'Prayed Notification Period', 'intercessor' ),
 						'tooltip_desc'  => __( 'Specify how often you want to inform users when prayed for. This only works for Requesters who selected the option to be informed during prayer request submission.', 'intercessor' ),
 					],
-				),
-				'prayer_user' => array(
-					'user_settings' => array(
+				],
+				'prayer_user' => [
+					'user_settings' => [
 						'id'            => 'user_settings',
 						'name'          => '<h3>' . esc_html__( 'User Settings', 'intercessor' ) . '</h3>',
 						'desc'          => '',
 						'type'          => 'header',
 						'tooltip_title' => esc_html__( 'User Settings', 'intercessor' ),
 						'tooltip_desc'  => esc_html__( 'Configure the options for the users who submit prayer request on your website.', 'intercessor' ),
-					),
-					'enable_registration' => array(
+					],
+					'enable_registration' => [
 						'id'   => 'enable_registration',
 						'name' => esc_html__( 'Enable Registration', 'intercessor' ),
 						'desc' => esc_html__( 'If enabled new users can create an account while submitting a prayer request.', 'intercessor' ),
 						'type' => 'checkbox',
 						'std'  => 1,
-					),
-					'logged_in_only' => array(
+					],
+					'logged_in_only' => [
 						'id'            => 'logged_in_only',
 						'name'          => esc_html__( 'Disable Guest Prayer', 'intercessor' ),
 						'desc'          => esc_html__( 'Require that users be logged-in in order to submit prayer.', 'intercessor' ),
@@ -194,73 +194,73 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'tooltip_title' => esc_html__( 'Disabling Guest Submission', 'intercessor' ),
 						'tooltip_desc'  => esc_html__( 'You can require that Requesters create and login to user accounts prior to submitting prayer request by enabling this option. When unchecked, users can submit prayer without being logged in by using their name and email address.', 'intercessor' ),
                         'std'  => 0,
-					),
-					'generate_username' => array(
+					],
+					'generate_username' => [
 						'id'   => 'generate_username',
 						'name' => esc_html__( 'Generate Username', 'intercessor' ),
 						'desc' => esc_html__( 'Automatically generate username from user email.', 'intercessor' ),
 						'type' => 'checkbox',
 						'std'  => 1,
-					),
-					'generate_password' => array(
+					],
+					'generate_password' => [
 						'id'   => 'generate_password',
 						'name' => esc_html__( 'Generate Password', 'intercessor' ),
 						'desc' => esc_html__( 'Automatically generate password for user.', 'intercessor' ),
 						'type' => 'checkbox',
 						'std'  => 0,
-					),
-				),
-				'site_terms'     => array(
-					'terms_settings' => array(
+					],
+				],
+				'site_terms'     => [
+					'terms_settings' => [
 						'id'   => 'terms_settings',
 						'name' => '<h3>' . esc_html__( 'Agreement Settings', 'intercessor' ) . '</h3>',
 						'type' => 'header',
 						'tooltip_title' => esc_html__( 'Terms and Privacy Policy Settings', 'intercessor' ),
 						'tooltip_desc'  => esc_html__( 'Depending on legal and regulatory requirements, it may be necessary for your site to show checkboxes for Terms of Agreement and/or Privacy Policy.', 'intercessor' ),
-					),
-					'show_agree_to_terms' => array(
+					],
+					'show_agree_to_terms' => [
 						'id'   => 'show_agree_to_terms',
 						'name' => esc_html__( 'Agree to Terms', 'intercessor' ),
 						'desc' => esc_html__( 'Check this to show an agree to terms on the request form that users must agree to before submission.', 'intercessor' ),
 						'type' => 'checkbox',
 						'std'  => 1,
-					),
-					'agree_label' => array(
+					],
+					'agree_label' => [
 						'id'   => 'agree_label',
 						'name' => esc_html__( 'Agree to Terms Label', 'intercessor' ),
 						'desc' => esc_html__( 'Label shown next to the agree to terms check box.', 'intercessor' ),
 						'type' => 'text',
 						'size' => 'regular',
 						'std'  => esc_html__( 'Agree to Terms', 'intercessor' ),
-					),
-					'agree_text' => array(
+					],
+					'agree_text' => [
 						'id'   => 'agree_text',
 						'name' => esc_html__( 'Agreement Text', 'intercessor' ),
 						'desc' => esc_html__( 'If Agree to Terms is checked, enter the agreement terms here.', 'intercessor' ),
 						'type' => 'rich_editor',
 						'std'  => intercessor_get_default_terms(),
-					),
-					'show_privacy_policy' => array(
+					],
+					'show_privacy_policy' => [
 						'id'   => 'show_privacy_policy',
 						'name' => esc_html__( 'Privacy Policy', 'intercessor' ),
 						'desc' => esc_html__( 'Check this to show an agree to privacy policy on request form that users must agree to before purchasing.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-					'agree_privacy_label' => array(
+					],
+					'agree_privacy_label' => [
 						'id'   => 'agree_privacy_label',
 						'name' => esc_html__( 'Agree to Privacy Policy Label', 'intercessor' ),
 						'desc' => esc_html__( 'Label shown next to the agree to privacy policy check box.', 'intercessor' ),
 						'type' => 'text',
 						'size' => 'regular',
 						'std'  => esc_html__( 'Agree to Privacy Policy', 'intercessor' ),
-					),
-					'show_on_submission' => array(
+					],
+					'show_on_submission' => [
 						'id'   => 'show_on_submission',
 						'name' => esc_html__( 'Show privacy policy', 'intercessor' ),
 						'desc' => esc_html__( 'Display your privacy policy on request form.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-					'agree_privacy_page' => array(
+					],
+					'agree_privacy_page' => [
 						'id'   => 'agree_privacy_page',
 						'name' => esc_html__( 'Privacy Agreement Page', 'intercessor' ),
 						'desc' => esc_html__( 'If Agree to Privacy Policy is checked, select a page for the Privacy Agreement here.', 'intercessor' ),
@@ -268,36 +268,36 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'options'     => intercessor_get_pages(),
 						'chosen'      => true,
 						'placeholder' => esc_html__( 'Select a page', 'intercessor' ),
-					),
-				),
-				'security' => array(
-					'captcha_settings' => array(
+					],
+				],
+				'security' => [
+					'captcha_settings' => [
 						'id'            => 'captcha_settings',
 						'name'          => '<h3>' . esc_html__( 'Security Settings', 'intercessor' ) . '</h3>',
 						'desc'          => '',
 						'type'          => 'header',
 						'tooltip_title' => esc_html__( 'Security Settings', 'intercessor' ),
 						'tooltip_desc'  => esc_html__( 'Configure the security settings for the prayer request form and history page.', 'intercessor' ),
-					),
-					'captcha_type' => array(
+					],
+					'captcha_type' => [
 						'id'      => 'captcha_type',
 						'name'    => esc_html__( 'Captcha Type', 'intercessor' ),
 						'desc'    => esc_html__( 'Choose which type of captcha to use on prayer history page.', 'intercessor' ),
 						'type'    => 'select',
 						'std'     => 'simple',
-						'options' => array(
+						'options' => [
 							'simple'    => esc_html__( 'Simple captcha', 'intercessor' ),
 							'recaptcha' => esc_html__( 'Google reCaptcha', 'intercessor' ),
-						),
-					),
-					'use_captcha' => array(
+						],
+					],
+					'use_captcha' => [
 						'id'   => 'use_captcha',
 						'name' => esc_html__( 'Enable Captcha', 'intercessor' ),
 						'desc' => esc_html__( 'Enable the use of Google reCaptcha on the prayer request submission form.', 'intercessor' ),
 						'type' => 'checkbox',
 						'std'  => 0,
-					),
-					'captcha_help' => array(
+					],
+					'captcha_help' => [
 						'id'   => 'captcha_help',
 						'desc' => sprintf(
 							// Translators: to prevent spamming, navigate to the Google reCAPTCHA website and sign up for an API key.
@@ -305,62 +305,56 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 							'<a href="https://www.google.com/recaptcha/" target="_blank">',
 							'</a>' ),
 						'type' => 'descriptive_text',
-					),
-					'recaptcha_key' => array(
+					],
+					'recaptcha_key' => [
 						'id'   => 'recaptcha_key',
 						'name' => esc_html__( 'reCAPTCHA Site Key', 'intercessor' ),
 						'desc' => esc_html__( 'Please paste your reCaptcha site Key here from your manage reCAPTCHA API Keys panel.', 'intercessor' ),
 						'type' => 'text',
 						'std'  => ''
-					),
-					'recaptcha_secret' => array(
+					],
+					'recaptcha_secret' => [
 						'id'   => 'recaptcha_secret',
 						'name' => esc_html__( 'reCAPTCHA Secret Key', 'intercessor' ),
 						'desc' => esc_html__( 'Please paste the reCaptcha secret key here.', 'intercessor' ),
 						'type' => 'text',
 						'std'  => ''
-					),
-				),
-				'misc' => array(
-					'advanced_settings' => array(
+					],
+				],
+				'misc' => [
+					'advanced_settings' => [
 						'id'   => 'advanced_settings',
 						'name' => '<h3>' . esc_html__( 'Advanced Settings', 'intercessor' ) . '</h3>',
 						'type' => 'header',
-					),
-					'footer_scripts'    => array(
+					],
+					'footer_scripts'    => [
 						'id'    => 'footer_scripts',
 						'name'  => esc_html__( 'Scripts in Footer', 'intercessor' ),
 						'check' => esc_html__( 'Enable this option to load scripts in the footer.', 'intercessor' ),
 						'desc'  => esc_html__( 'By default, Intercessor scripts are loaded in the header. Enabling this option could improve page speed load.', 'intercessor' ),
 						'type'  => 'descriptive_checkbox',
 						'std'   => 0,
-					),
-					'disable_welcome_screen' => array(
-						'id'   => 'disable_welcome_screen',
-						'name' => esc_html__( 'Disable Welcome Screen', 'intercessor' ),
-						'desc' => esc_html__( 'Check this to disable the welcome screen.', 'intercessor' ),
-						'type' => 'checkbox',
-					),
-					'enforce_ssl' => array(
+					],
+					'enforce_ssl' => [
 						'id'   => 'enforce_ssl',
 						'name' => esc_html__( 'Enforce SSL', 'intercessor' ),
 						'desc' => esc_html__( 'Check this to force users to be redirected to the secure request form page. You must have an SSL certificate installed to use this option.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-					'banned_emails' => array(
+					],
+					'banned_emails' => [
 						'id'   => 'banned_emails',
 						'name' => esc_html__( 'Banned Emails', 'intercessor' ),
 						'desc' => esc_html__( 'Enter here the emails that should not be allowed to submit prayer request.', 'intercessor' ),
 						'type' => 'rich_editor',
-					),
-					'delete_on_uninstall' => array(
+					],
+					'delete_on_uninstall' => [
 						'id'   => 'uninstall_on_delete',
 						'name' => esc_html__( 'Remove Data on Uninstall?', 'intercessor' ),
 						'desc' => esc_html__( 'Check this box if you would like Intercessor to completely remove all of its data when the plugin is deleted.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-				),
-			)
+					],
+				],
+			]
 		),
 
 		'frontend' => apply_filters(
@@ -758,7 +752,7 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 				),
 			)
 		),
-	);
+	];
 
 	return array_merge( $settings, $intercessor_settings );
 }

@@ -36,7 +36,7 @@ function intercessor_generate_pdf() {
 		);
 	}
 
-	if ( ! file_exists( INTERCESSOR_DIR . 'src/Admin/Tools/Pdf.php' ) ) {
+	if ( ! file_exists( INTERCESSOR_DIR . '/src/Admin/Tools/Pdf.php' ) ) {
 		wp_die(
 			esc_html__( 'Main Dependency is Missing.', 'intercessor' ),
 			esc_html__( 'Error', 'intercessor' ),
@@ -58,8 +58,8 @@ function intercessor_generate_pdf() {
 	$custom_font  = 'dejavusans';
 	$font_style   = '';
 
-	if ( file_exists( INTERCESSOR_DIR . '/src/libraries/tcpdf/fonts/CODE2000.TTF' ) ) {
-		TCPDF_FONTS::addTTFfont( INTERCESSOR_DIR . '/src/libraries/tcpdf/fonts/CODE2000.TTF', '' );
+	if ( file_exists( INTERCESSOR_DIR . '/vendor/tecnickcom/tcpdf/fonts/CODE2000.TTF' ) ) {
+		TCPDF_FONTS::addTTFfont( INTERCESSOR_DIR . '/vendor/tecnickcom/tcpdf/fonts/CODE2000.TTF', '' );
 		$custom_font = 'CODE2000';
 		$font_style  = 'B';
 	}
@@ -104,9 +104,9 @@ function intercessor_generate_pdf() {
 	// Prayer request stats.
 	$prayer_stats = new Intercessor\Stats();
 
-	$args = array(
+	$args = [
 		'number' => 9999999999,
-	);
+	];
 
 	// Get available prayer requests.
 	$prayers = intercessor_get_prayers( $args );
@@ -118,7 +118,7 @@ function intercessor_generate_pdf() {
 			$pdf->SetFillColor( 255, 255, 255 );
 
 			$email      = esc_attr( $prayer->email );
-			$r_class    = new Intercessor\Requester( $email );
+			$r_class = intercessor_get_requester_by( "email", $email);
 			$first_name = $r_class->get_first_name();
 			$last_name  = $r_class->get_last_name();
 			$name       = esc_attr( $first_name. ' ' . $last_name );
@@ -144,7 +144,9 @@ function intercessor_generate_pdf() {
 		endforeach;
 	} else {
 		$no_found_width = 190;
-		$title = utf8_decode( esc_html__( 'No prayer request found.', 'intercessor' ) );
+		$title = utf8_decode(
+			esc_html__( 'No prayer request found.', 'intercessor' )
+		);
 		$pdf->MultiCell( $no_found_width, 5, $title, 1, 'C', false, 1, '', '', true, 0, false, true, 0, 'T', false );
 	} // End if().
 	$pdf->Ln();

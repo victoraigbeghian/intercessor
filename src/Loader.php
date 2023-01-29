@@ -250,7 +250,6 @@ class Loader {
         if ( is_admin() || ( defined( 'DOING_AJAX' ) && ! DOING_AJAX ) ) {
             Admin\Admin::instance();
             new Admin\Notices();
-            new Admin\Welcome();
         }
     }
 

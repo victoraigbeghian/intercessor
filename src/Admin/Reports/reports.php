@@ -19,8 +19,9 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function intercessor_reports_page() {
-
+	// Set up variables.
 	$active_tab = isset( $_GET[ 'tab' ] ) && array_key_exists( $_GET['tab'], intercessor_get_reports_tabs() ) ? $_GET[ 'tab' ] : 'prayers';
+	$tabs       = intercessor_get_reports_tabs();
 
 	// Enqueue necessary styles and scripts.
 	wp_enqueue_style( 'intercessor-reports' );
@@ -30,11 +31,17 @@ function intercessor_reports_page() {
 	<div class="wrap">
         <h1 class="screen-reader-text"><?php esc_html_e( 'Intercessor Reports', 'intercessor' ); ?></h1>
 
-		<?php do_action( 'intercessor_reports_page_top' ); ?>
+		<?php
+		/**
+		 * Fires before the reports page.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'intercessor_reports_page_top' ); ?>
 
 		<h2 class="nav-tab-wrapper">
 			<?php
-			foreach ( intercessor_get_reports_tabs() as $tab_id => $tab_name ) {
+			foreach ( $tabs as $tab_id => $tab_name ) {
 
 				$tab_url = add_query_arg(
 					[
@@ -53,31 +60,52 @@ function intercessor_reports_page() {
 			?>
 		</h2>
 
-		<?php do_action( 'intercessor_reports_page_middle' ); ?>
+		<?php
+		/**
+		 * Fires at the middle of the reports page.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'intercessor_reports_page_middle' ); ?>
 
 		<div id="tab_container">
-			<?php do_action( 'intercessor_reports_tab_' . $active_tab ); ?>
+			<?php
+		/**
+		 * Fires the active tab of the reports page.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'intercessor_reports_tab_' . $active_tab );
+		?>
 		</div><!-- #tab_container-->
 
-		<?php do_action( 'intercessor_reports_page_bottom' ); ?>
+		<?php
+		/**
+		 * Fires the the bottom of the reports page.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( 'intercessor_reports_page_bottom' ); ?>
 
 	</div>
 	<?php
 }
 
 /**
- * Retrieve reports tabs
+ * Retrieve reports tabs views
  *
- * @since 0.9.5
- * @return array $tabs
+ * @since 1.0.0
+ * @return array $tabs Report tab views.
  */
 function intercessor_get_reports_tabs(): array {
 
-	$tabs                = [];
-	$tabs['prayers']     = esc_html__( 'Prayers', 'intercessor' );
-	$tabs['prayed']      = esc_html__( 'Prayed Counts', 'intercessor' );
-	$tabs['requesters']  = esc_html__( 'Requesters', 'intercessor' );
+	$tabs                = [
+		'prayers'    => esc_html__( 'Prayers', 'intercessor' ),
+		'prayed'     => esc_html__( 'Prayed Counts', 'intercessor' ),
+		'requesters' => esc_html__( 'Requesters', 'intercessor' ),
 
+	];
+	
 	return apply_filters( 'intercessor_reports_tabs', $tabs );
 }
 

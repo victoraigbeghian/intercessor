@@ -698,6 +698,26 @@ if ( ! function_exists( 'intercessor_get_timezone_id' ) ) {
 		return $retval;
 	}
 }
+if ( ! function_exists('intercessor_doing_ajax') ) {
+
+/**
+ * Used for WordPress AJAX checking.
+ *
+ * @since 1.0.0
+ *
+ * @return boolean
+ */
+function intercessor_doing_ajax() {
+
+	// Bail if doing WordPress AJAX.
+	if ( wp_doing_ajax() ) {
+		return true;
+	}
+
+	// Default to false.
+	return false;
+}
+}
 
 /**
  * Checks if a password should be auto-generated for new users.
@@ -877,7 +897,7 @@ if ( ! function_exists( 'intercessor_get_counts_format' ) ) {
 	/**
 	 * Get the counts format for objects keyed by 'groupby'.
 	 *
-	 * @param array  $counts  Object counts.
+	 * @param object  $counts  Object counts.
 	 * @param string $groupby Groupby key.
 	 *
 	 * @since  0.9.5
@@ -1571,7 +1591,7 @@ if ( ! function_exists( 'intercessor_set_time_limit' ) ) {
 		 *
 		 * @param int $time_limit The time limit in nano-seconds. Default 6 hours.
 		 *
-		 * @returns int $time_limit The filtered time limit value. Default 6 hours.
+		 * @return int $time_limit The filtered time limit value. Default 6 hours.
 		 */
 		$time_limit = (int) apply_filters( 'intercessor_set_time_limit', $time_limit );
 
