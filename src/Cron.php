@@ -14,6 +14,7 @@ namespace Intercessor;
 use function wp_next_scheduled;
 use function wp_unschedule_event;
 use function wp_schedule_event;
+use function intercessor_get_option;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -70,10 +71,14 @@ class Cron {
 	 * @since 1.0.0
 	 */
 	public function events() {
-		$notify_period = \intercessor_get_option( 'notify_period', 'weekly' );
+		$notify_period = intercessor_get_notify_period();
 		$timestamp     = wp_next_scheduled( 'intercessor_notify_requester' );
 
-		if ( ! defined( 'INTERCESSOR_DISABLE_NOTIFY_REQUESTER' ) ) {
+		// Get notification setting.
+		$disabled = intercessor_get_option( 'disable_prayed_notices' );
+
+		// Set up notification times if allowed in the settings.
+		if ( ! $disabled ) {
 			if ( 'monthly' === $notify_period ) {
 				wp_unschedule_event( $timestamp, 'intercessor_notify_requester' );
 				$this->monthly_events();

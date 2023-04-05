@@ -153,7 +153,7 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'name'          => esc_html__( 'Time To Send Email', 'intercessor' ),
 						'desc'          => esc_html__( 'Specify the time the email should be sent to requesters who wished to be notified.', 'intercessor' ),
 						'type'          => 'radio',
-						'std'           => 'weekly',
+						'std'           => '1300',
 						'options'       => [
 							'1000' => esc_html__( '10:00 AM', 'intercessor' ),
 							'1100' => esc_html__( '11:00 AM', 'intercessor' ),
@@ -347,7 +347,7 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 						'desc' => esc_html__( 'Enter here the emails that should not be allowed to submit prayer request.', 'intercessor' ),
 						'type' => 'rich_editor',
 					],
-					'delete_on_uninstall' => [
+					'uninstall_on_delete' => [
 						'id'   => 'uninstall_on_delete',
 						'name' => esc_html__( 'Remove Data on Uninstall?', 'intercessor' ),
 						'desc' => esc_html__( 'Check this box if you would like Intercessor to completely remove all of its data when the plugin is deleted.', 'intercessor' ),
@@ -569,143 +569,143 @@ function intercessor_plugin_settings_fields( array $settings ): array {
 
 		/** Emails Settings */
 		'emails' => apply_filters( 'intercessor_settings_emails',
-			array(
-				'main'  => array(
-					'email_settings_header' => array(
+			[
+				'main'  => [
+					'email_settings_header' => [
 						'id'   => 'email_settings_header',
 						'name' => '<h3>' . esc_html__( 'Email Settings', 'intercessor' ) . '</h3>',
 						'type' => 'header',
-					),
-					'email_template'        => array(
+					],
+					'email_template'        => [
 						'id'      => 'email_template',
 						'name'    => esc_html__( 'Email Template', 'intercessor' ),
 						'desc'    => esc_html__( 'Choose a template. Click "Save Changes" then "Preview Prayer Request" to see the new template.', 'intercessor' ),
 						'type'    => 'select',
 						'options' => intercessor_get_email_templates(),
-					),
-					'email_logo'            => array(
+					],
+					'email_logo'            => [
 						'id'   => 'email_logo',
 						'name' => esc_html__( 'Logo', 'intercessor' ),
 						'desc' => esc_html__( 'Upload or choose a logo to be displayed at the top of the prayer notification emails. Displayed on HTML emails only.', 'intercessor' ),
 						'type' => 'upload',
-					),
-					'from_name'              => array(
+					],
+					'from_name'              => [
 						'id'   => 'from_name',
 						'name' => esc_html__( 'From Name', 'intercessor' ),
 						'desc' => esc_html__( 'The name prayer notifications are said to come from. Site prayer group name.', 'intercessor' ),
 						'type' => 'text',
 						'std'  => get_bloginfo( 'name' ),
-					),
-					'from_email'             => array(
+					],
+					'from_email'             => [
 						'id'   => 'from_email',
 						'name' => esc_html__( 'From Email', 'intercessor' ),
 						'desc' => esc_html__( 'Email to send prayer notifications from. This will act as the "from" and "reply-to" address.', 'intercessor' ),
 						'type' => 'email',
 						'std'  => get_bloginfo( 'admin_email' ),
-					),
-					'prayer_subject'         => array(
+					],
+					'prayer_subject'         => [
 						'id'   => 'prayer_subject',
 						'name' => esc_html__( 'Prayer  Request Email Subject', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the subject line for the prayer notification email', 'intercessor' ),
 						'type' => 'text',
 						'std'  => esc_html__( 'Prayer Request Received', 'intercessor' ),
-					),
-					'prayer_heading'         => array(
+					],
+					'prayer_heading'         => [
 						'id'   => 'prayer_heading',
 						'name' => esc_html__( 'Prayer  Request Email Heading', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the heading for the prayer notification email', 'intercessor' ),
 						'type' => 'text',
 						'std'  => esc_html__( 'We are praying for you', 'intercessor' ),
-					),
-					'preview_email_settings' => array(
+					],
+					'preview_email_settings' => [
 						'id'   => 'preview_email_settings',
 						'name' => '',
 						'desc' => '',
 						'type' => 'hook',
-					),
-				),
-				'prayer_notifications' => array(
-					'prayer_notification_settings' => array(
+					],
+				],
+				'prayer_notifications' => [
+					'prayer_notification_settings' => [
 						'id'   => 'prayer_notification_settings',
 						'name' => '<h3>' . esc_html__( 'Prayer  Notifications', 'intercessor' ) . '</h3>',
 						'type' => 'header',
-					),
-					'prayer_notification_email_settings' => array(
+					],
+					'prayer_notification_email_settings' => [
 						'id'   => 'prayer_notification_email_settings',
 						'name' => '',
 						'desc' => '',
 						'type' => 'hook',
-					),
-					'prayer_received_email' => array(
+					],
+					'prayer_received_email' => [
 						'id'   => 'prayer_received_email',
 						'name' => esc_html__( 'Prayer Request', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the text that is sent as prayer notification email to users after completion of a successful prayer. HTML is accepted. Available template tags:', 'intercessor' ) . '<br/>' . intercessor_get_emails_tags_list(),
 						'type' => 'rich_editor',
 						'std'  => esc_html__( 'Dear', 'intercessor' ) . ' {name},\n\n' . esc_html__( 'Thank you for your prayer. Please click on the link(s) below to edit your prayer request or add a praise report.', 'intercessor' ) . '\n\n{intercessor_list}\n\n{sitename}',
-					),
-					'prayer_notification_heading' => array(
+					],
+					'prayer_notification_heading' => [
 						'id'   => 'prayer_notification_heading',
 						'name' => esc_html__( 'Prayer  Notification Heading', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the heading for the prayer notification email', 'intercessor' ),
 						'type' => 'text',
 						'std'  => esc_html__( 'New Request submitted!', 'intercessor' ),
-					),
-					'prayer_notification_subject' => array(
+					],
+					'prayer_notification_subject' => [
 						'id'   => 'prayer_notification_subject',
 						'name' => esc_html__( 'Prayer  Notification Subject', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the subject line for the prayer notification email', 'intercessor' ),
 						'type' => 'text',
 						'std'  => esc_html__( 'New Prayer - Request #{prayer_id}', 'intercessor' ),
-					),
-					'prayer_notification' => array(
+					],
+					'prayer_notification' => [
 						'id'   => 'prayer_notification',
 						'name' => esc_html__( 'Prayer  Notification', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the text that is sent as prayer notification email after submission of a prayer. HTML is accepted. Available template tags:', 'intercessor' ) . '<br/>' . intercessor_get_emails_tags_list(),
 						'type' => 'rich_editor',
 						'std'  => intercessor_get_default_prayer_notification_email(),
-					),
-					'admin_notice_emails' => array(
+					],
+					'admin_notice_emails' => [
 						'id'   => 'admin_notice_emails',
 						'name' => esc_html__( 'Prayer  Notification Emails', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the email address(es) that should receive a notification anytime a prayer is made, one per line', 'intercessor' ),
 						'type' => 'textarea',
 						'std'  => get_bloginfo( 'admin_email' ),
-					),
-					'disable_admin_notices' => array(
+					],
+					'disable_admin_notices' => [
 						'id'   => 'disable_admin_notices',
 						'name' => esc_html__( 'Disable Admin Notifications', 'intercessor' ),
 						'desc' => esc_html__( 'Check this box if you do not want to receive prayers notification emails.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-				),
-				'prayed_notice' => array(
-					'prayed_notice_settings' => array(
+					],
+				],
+				'prayed_notice' => [
+					'prayed_notice_settings' => [
 						'id'   => 'prayed_notice_settings',
 						'name' => '<h3>' . esc_html__( 'Prayed For Notices', 'intercessor' ) . '</h3>',
 						'type' => 'header',
-					),
-					'prayed_notice_subject' => array(
+					],
+					'prayed_notice_subject' => [
 						'id'   => 'prayed_notice_subject',
 						'name' => esc_html__( 'Prayed For Subject', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the subject line for the prayed for notification email', 'intercessor' ),
 						'type' => 'text',
 						'std'  => esc_html__( 'You have been prayed for - Request #{prayer_id}', 'intercessor' ),
-					),
-					'prayed_notice_text' => array(
+					],
+					'prayed_notice_text' => [
 						'id'   => 'prayed_notice_text',
 						'name' => esc_html__( 'Prayed  Notice', 'intercessor' ),
 						'desc' => esc_html__( 'Enter the text that is sent as prayed notification email anyday a prayer request is lifted or prayed for. HTML is accepted. Available template tags:', 'intercessor' ) . '<br/>' . intercessor_get_emails_tags_list(),
 						'type' => 'rich_editor',
 						'std'  => intercessor_get_default_prayed_notice_email(),
-					),
-					'disable_prayed_notices' => array(
+					],
+					'disable_prayed_notices' => [
 						'id'   => 'disable_prayed_notices',
 						'name' => esc_html__( 'Disable Prayed Notifications', 'intercessor' ),
 						'desc' => esc_html__( 'Check this box if you want to disable the notification emails sent to Requesters when prayed for.', 'intercessor' ),
 						'type' => 'checkbox',
-					),
-				),
-			)
+					],
+				],
+			]
 		),
 
 		/** Styles Settings */

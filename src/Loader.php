@@ -184,6 +184,9 @@ class Loader {
         if ( is_admin() ) {
             self::$instance->admin();
         }
+        
+		// Return the instance.
+	    return self::$instance;
     }
 
     /**

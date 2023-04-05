@@ -138,19 +138,6 @@ class Admin {
 		add_action( 'load-' . $intercessor_prayers_page, 'intercessor_add_prayers_screen_options' );
 		add_action( 'load-' . $intercessor_prayers_page, 'intercessor_prayers_contextual_help' );
 		add_action( 'load-' . $intercessor_settings_page, [ $settings_page, 'sidebar' ] );
-
-		// Activate update class.
-		$upgrades = new Upgrades();
-
-		// Add upgrades sub menu.
-		$intercessor_upgrades_page = add_submenu_page(
-			null,
-			esc_html__( 'Intercessor Upgrades', 'intercessor' ),
-			esc_html__( 'Intercessor Upgrades', 'intercessor' ),
-			'manage_prayer_settings',
-			'intercessor-upgrades',
-			'intercessor_upgrades_screen'
-		);
     }
 
     /**
@@ -161,13 +148,12 @@ class Admin {
 	 * @return array
 	 * @since  0.9.5
 	 */
-    public function add_action_links( array $links ): array
-    {
+    public function add_action_links( array $links ): array {
         return array_merge(
-            array(
+            $links,
+            [
                 'settings' => '<a href="' . admin_url( 'admin.php?page=intercessor-settings' ) . '">' . esc_html__( 'Settings', 'intercessor' ) . '</a>',
-            ),
-            $links
+            ]
         );
     }
 
@@ -182,8 +168,7 @@ class Admin {
 	 * @return array
 	 * @since 1.0.0
 	 */
-	public function row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array
-    {
+	public function row_meta( array $plugin_meta, string $plugin_file, array $plugin_data, string $status ): array {
 
 		if ( INTERCESSOR_BASENAME !== $plugin_file ) {
 			return $plugin_meta;
@@ -196,12 +181,20 @@ class Admin {
 		return array_merge( $plugin_meta, $new_meta );
     }
 
+	/**
+	 * Upgrades menu
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * 
+	 * @return mixed
+	 */
     public function upgrades_menu() {
         global $intercessor_upgrades_page;
 
         // Add upgrades sub menu.
         $intercessor_upgrades_page = add_submenu_page(
-            null,
+            'admin.php',
             esc_html__( 'Intercessor Upgrades', 'intercessor' ),
             esc_html__( 'Intercessor Upgrades', 'intercessor' ),
             'manage_prayer_settings',
@@ -234,5 +227,4 @@ class Admin {
 	private function generate_pdf() {
 		return isset( $_GET['intercessor-action'] ) && 'generate_pdf' === \intercessor_clean( $_GET['intercessor-action'] );
 	}
-	
 }
