@@ -83,7 +83,7 @@ class Recent_Prayers extends \WP_Widget {
 
 		// Include frontend script and style.
 		if ( \is_active_widget( false, false, $this->id_base ) || \is_customize_preview() ) {
-			add_action( 'enqueue_block_assets', [ $this, 'frontend_scripts' ] );
+			add_action( 'wp_enqueue_scripts', [ $this, 'frontend_scripts' ] );
 		}
 
 		// Clear cache on save.
@@ -114,7 +114,17 @@ class Recent_Prayers extends \WP_Widget {
 	 * @since 0.9.5
 	 */
 	public function frontend_scripts() {
+		// Use minified libraries if SCRIPT_DEBUG is turned off.
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+
+		$styles_url = INTERCESSOR_URL . 'assets/css/recent-prayers' . $suffix . '.css';
+		$script_url = INTERCESSOR_URL . 'assets/js/frontend/intercessor-ajax' . $suffix . '.js';
+
+		// Register and enqueue widget style.
+		wp_register_style( 'intercessor-recent-prayers', $styles_url, [], INTERCESSOR_VERSION, true );
 		wp_enqueue_style( 'intercessor-recent-prayers' );
+	
+		// Enqueue widget script.
 		wp_enqueue_script( 'intercessor-ajax' );
 	}
 

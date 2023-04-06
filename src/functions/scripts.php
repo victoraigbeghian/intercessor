@@ -100,9 +100,6 @@ function intercessor_load_styles() {
 	// Register frontend notices style.
 	wp_register_style( 'intercessor-notices', $css_dir . 'intercessor-notices' . $suffix . '.css', [], INTERCESSOR_VERSION, 'all' );
 
-	// Register Widget styles.
-	wp_register_style( 'intercessor-recent-prayers', $css_dir . 'recent-prayers' . $suffix . '.css', [], INTERCESSOR_VERSION, 'all' );
-
 	// Register and conditionally enqueue necessary styles.
 	if ( intercessor_is_prayer_request_form_page() ) {
 		wp_register_style( 'intercessor-form', $css_dir . 'intercessor' . $suffix . '.css', [], INTERCESSOR_VERSION, 'all' );
