@@ -4,14 +4,13 @@
  *
  * @package     Database
  * @subpackage  Query
- * @copyright   Copyright (c) 2020
- * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @copyright   Copyright (c) 2021
+ * @license     https://opensource.org/licenses/MIT MIT
  * @since       1.0.0
  */
-
 namespace Intercessor\Database;
 
-// Exit if accessed directly.
+// Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -78,7 +77,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 * @var   string
 	 */
-	protected $table_schema = '\\BerlinDB\\Database\\Schema';
+	protected $table_schema = '\\Intercessor\\Database\\Schema';
 
 	/** Item ******************************************************************/
 
@@ -114,7 +113,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 * @var   mixed
 	 */
-	protected $item_shape = '\\BerlinDB\\Database\\Row';
+	protected $item_shape = '\\Intercessor\\Database\\Row';
 
 	/** Cache *****************************************************************/
 
@@ -615,7 +614,7 @@ class Query extends Base {
 				$this->found_items = intval( $item_ids );
 			}
 
-			// Not a count query
+		// Not a count query
 		} elseif ( is_array( $item_ids ) && ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) ) {
 
 			/**
@@ -899,7 +898,7 @@ class Query extends Base {
 			// Add value to the cache
 			$this->cache_add( $cache_key, $cache_value, $this->cache_group );
 
-			// Value exists in cache
+		// Value exists in cache
 		} else {
 			$item_ids          = $cache_value['item_ids'];
 			$this->found_items = intval( $cache_value['found_items'] );
@@ -1023,7 +1022,7 @@ class Query extends Base {
 		if ( ! empty( $this->query_vars['count'] ) || in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
 
-			// Ordering by something, so figure it out
+		// Ordering by something, so figure it out
 		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
 
 			// Array of keys, or comma separated
@@ -1048,7 +1047,7 @@ class Query extends Base {
 					$_orderby = $_value;
 					$_item    = $order;
 
-					// Key is string
+				// Key is string
 				} else {
 					$_orderby = $_key;
 					$_item    = $_value;
@@ -1179,7 +1178,7 @@ class Query extends Base {
 					// Add to where array
 					$where[ $column->name ] = $statement;
 
-					// Numeric/String/Float (prepared)
+				// Numeric/String/Float (prepared)
 				} else {
 					$pattern   = $this->get_column_field( array( 'name' => $column->name ), 'pattern', '%s' );
 					$where_id  = $this->query_vars[ $column->name ];
@@ -1204,7 +1203,7 @@ class Query extends Base {
 
 						$where[ $column->name ] = $this->get_db()->prepare( $statement, $column_value );
 
-						// Implode
+					// Implode
 					} else {
 						$where[ $where_id ] = "{$this->table_alias}.{$column->name} IN ( '" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $where_id ] ) ) . "' )";
 					}
@@ -1225,7 +1224,7 @@ class Query extends Base {
 
 						$where[ $column->name ] = $this->get_db()->prepare( $statement, $column_value );
 
-						// Implode
+					// Implode
 					} else {
 						$where[ $where_id ] = "{$this->table_alias}.{$column->name} NOT IN ( '" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $where_id ] ) ) . "' )";
 					}
@@ -1251,7 +1250,7 @@ class Query extends Base {
 					if ( is_string( $column_date ) ) {
 						$date_query[] = $defaults;
 
-						// Array query var
+					// Array query var
 					} elseif ( is_array( $column_date ) ) {
 
 						// Auto-fill column if empty
@@ -1267,7 +1266,7 @@ class Query extends Base {
 		}
 
 		// Maybe search if columns are searchable.
-		if ( ! empty( $searchable ) && strlen( $this->query_vars['search'] ) ) {
+		if ( ! empty( $searchable ) && ! empty( $this->query_vars['search'] ) && strlen( $this->query_vars['search'] ) ) {
 			$search_columns = array();
 
 			// Intersect against known searchable columns
@@ -1448,7 +1447,7 @@ class Query extends Base {
 		$columns   = array_flip( $this->get_column_names() );
 
 		// Get the intersection of allowed column names to groupby columns
-		$intersect = array_intersect( $columns, $groupby );
+		$intersect = array_intersect( $groupby, $columns );
 
 		// Bail if invalid column
 		if ( empty( $intersect ) ) {
@@ -1500,7 +1499,7 @@ class Query extends Base {
 
 			$parsed = "FIELD( {$this->table_alias}.{$column->name}, {$item_in} )";
 
-			// Specific column
+		// Specific column
 		} else {
 
 			// Orderby is a literal, sortable column name
@@ -1610,7 +1609,7 @@ class Query extends Base {
 				? wp_list_pluck( $items, $primary )
 				: wp_list_pluck( $items, $field, $primary );
 
-			// Arrays could be anything
+		// Arrays could be anything
 		} elseif ( is_array( $fields ) ) {
 			$new_items = array();
 			$fields    = array_flip( $fields );
@@ -1649,11 +1648,11 @@ class Query extends Base {
 		if ( is_numeric( $item ) ) {
 			$retval = $item;
 
-			// Object item
+		// Object item
 		} elseif ( is_object( $item ) && isset( $item->{$primary} ) ) {
 			$retval = $item->{$primary};
 
-			// Array item
+		// Array item
 		} elseif ( is_array( $item ) && isset( $item[ $primary ] ) ) {
 			$retval = $item[ $primary ];
 		}
@@ -2114,7 +2113,7 @@ class Query extends Base {
 					return false;
 				}
 
-				// Attempt to validate
+			// Attempt to validate
 			} elseif ( ! empty( $column->validate ) && is_callable( $column->validate ) ) {
 				$validated = call_user_func( $column->validate, $value );
 
@@ -2126,12 +2125,12 @@ class Query extends Base {
 				// Update the value
 				$item[ $key ] = $validated;
 
-				/**
-				 * Fallback to using the raw value.
-				 *
-				 * Note: This may change at a later date, so do not rely on this.
-				 *       Please always validate all data.
-				 */
+			/**
+			 * Fallback to using the raw value.
+			 *
+			 * Note: This may change at a later date, so do not rely on this.
+			 *       Please always validate all data.
+			 */
 			} else {
 				$item[ $key ] = $value;
 			}
@@ -2177,7 +2176,7 @@ class Query extends Base {
 					$item->{$key} = null;
 				}
 
-				// Set if explicitly allowed
+			// Set if explicitly allowed
 			} elseif ( is_array( $item ) ) {
 				$item[ $key ] = $value;
 			} elseif ( is_object( $item ) ) {
@@ -3093,7 +3092,7 @@ class Query extends Base {
 					$statement = " AND {$this->table_alias}.{$column} = {$pattern} ";
 					$query    .= $this->get_db()->prepare( $statement, $compare );
 
-					// More complex WHERE clause
+				// More complex WHERE clause
 				} else {
 					$value = isset( $compare['value'] )
 						? $compare['value']
@@ -3121,7 +3120,7 @@ class Query extends Base {
 						if ( 'IN' === $compare_clause || 'NOT IN' === $compare_clause ) {
 							$value = "('" . implode( "','", $this->get_db()->_escape( $compare['value'] ) ) . "')";
 
-							// Parse & escape for BETWEEN
+						// Parse & escape for BETWEEN
 						} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
 							$_this = $this->get_db()->_escape( $value[0] );
 							$_that = $this->get_db()->_escape( $value[1] );

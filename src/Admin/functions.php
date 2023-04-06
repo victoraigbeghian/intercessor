@@ -142,6 +142,35 @@ function intercessor_get_admin_url( string $type = '', array $query = [] ) {
 	return apply_filters( 'intercessor_get_admin_url', $url, $type, $query );
 }
 
+if ( ! function_exists( 'intercessor_get_base_admin_url' ) ) {
+	/**
+	 * Return the base admin-area URL.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return string
+	 */
+	function intercessor_get_base_admin_url(): string {
+
+		// Default args
+		$args = [
+			'page' => 'intercessor-prayers',
+		];
+
+		// Default URL
+		$admin_url = admin_url( 'admin.php' );
+
+		// Get the base admin URL
+		$url = add_query_arg( $args, $admin_url );
+
+		// Filter & return
+		return apply_filters( 'intercessor_get_base_admin_url', $url, $args, $admin_url );
+	}	
+}
+
+/******************************************
+ * Notes
+ */
 if ( ! function_exists( 'intercessor_admin_get_notes_html' ) ) {
 	/**
 	 * Get the HTML used to output all of the notes for a single object

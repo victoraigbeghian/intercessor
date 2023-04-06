@@ -51,7 +51,7 @@ class Table extends List_Table {
 
 		parent::__construct( $args );
 
-		$this->get_base_url();
+		$this->base_url = $this->get_base_url();
 		$this->filter_bar_hooks();
 		$this->get_prayers_counts();
 		$this->process_bulk_action();
@@ -62,23 +62,15 @@ class Table extends List_Table {
 	 *
 	 * @since 0.9.5
 	 *
-	 * @return void
+	 * @return string
 	 */
 	public function get_base_url() {
 
 		// Remove some query arguments.
-		$base = remove_query_arg(
+		return remove_query_arg(
 			\intercessor_admin_removable_query_args(),
-			admin_url( 'admin.php' )
+			\intercessor_get_base_admin_url()
 		);
-
-		$page = [
-			'page' => 'intercessor-prayers',
-		];
-
-		// Add base query args.
-		$this->base_url = add_query_arg( $page, $base );
-		// return add_query_arg( $page, $base );
 	}
 
 	/**
