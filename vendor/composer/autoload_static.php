@@ -25,16 +25,9 @@ class ComposerStaticInit886686ade4a0cc5f41ff5737f157e7b5
         'da4f3e412e2fe6157f634ec948348b92' => __DIR__ . '/../..' . '/src/Admin/views/settings-view.php',
         '315d5f323f69705097a0928cbaf91963' => __DIR__ . '/../..' . '/src/Admin/help.php',
         'b9e933f6e41329500be019a48a4f6381' => __DIR__ . '/../..' . '/src/Admin/functions.php',
-        '5b0cf167c6bd4e77d3b2e50f280779d9' => __DIR__ . '/../..' . '/src/Admin/dashboard-widget.php',
         '86c4fdf501289e0cf9c0052c90ff6ebf' => __DIR__ . '/../..' . '/src/Admin/Prayers/actions.php',
         'f09a8aab405a9042ce73a9777e8876c4' => __DIR__ . '/../..' . '/src/Admin/Prayers/functions.php',
         'ea76c787beab36cdf91baf591acd3c6a' => __DIR__ . '/../..' . '/src/Admin/Prayers/page.php',
-        'ab66a815912371b7232c92daf4385306' => __DIR__ . '/../..' . '/src/Admin/Requesters/functions.php',
-        '8a49238bf9881ea84608f6a0eea0ee08' => __DIR__ . '/../..' . '/src/Admin/Requesters/requesters.php',
-        '9f94eb386b74c048c5141a9ce068cdc2' => __DIR__ . '/../..' . '/src/Admin/Tools/tools.php',
-        'f3454040c1f87b02425f2a1ba591fdce' => __DIR__ . '/../..' . '/src/Admin/Tools/Export/functions.php',
-        '356deb61ffa7d06ca4ab775389bf40a2' => __DIR__ . '/../..' . '/src/Admin/Tools/Import/functions.php',
-        '7de5e8ce67ec32d1f95eae452f36bbd0' => __DIR__ . '/../..' . '/src/Admin/Reports/reports.php',
         '0741fb7d1759581dbec6fc3fb475ee23' => __DIR__ . '/../..' . '/src/Admin/Upgrades/functions.php',
     );
 

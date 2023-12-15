@@ -93,7 +93,7 @@ class Admin {
 			'',
 			25
 		);
-
+/*
 		// Setup requester page sub menu.
 		$intercessor_requesters_page = add_submenu_page(
 			'intercessor-prayers',
@@ -123,7 +123,7 @@ class Admin {
             'intercessor-tools',
             'intercessor_tools_page'
         );
-
+*/
         // Setup settings page sub menu.
         $settings_page = Settings::instance();
 		$intercessor_settings_page = add_submenu_page(

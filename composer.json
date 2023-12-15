@@ -36,16 +36,9 @@
             "src/Admin/views/settings-view.php",
             "src/Admin/help.php",
             "src/Admin/functions.php",
-            "src/Admin/dashboard-widget.php",
             "src/Admin/Prayers/actions.php",
             "src/Admin/Prayers/functions.php",
             "src/Admin/Prayers/page.php",
-            "src/Admin/Requesters/functions.php",
-            "src/Admin/Requesters/requesters.php",
-            "src/Admin/Tools/tools.php",
-            "src/Admin/Tools/Export/functions.php",
-            "src/Admin/Tools/Import/functions.php",
-            "src/Admin/Reports/reports.php",
             "src/Admin/Upgrades/functions.php"
         ]
     },
