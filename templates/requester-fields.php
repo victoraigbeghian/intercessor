@@ -4,10 +4,10 @@
  *
  * This template is used to display the requester fields.
  *
- * @package   	Intercessor
- * @copyright   Copyright (c) 2019, Victor Aigbeghian
- * @license     http://opensource.org/licenses/gpl-3.0 GNU Public License
- * @since       0.9.5
+ * @package   Intercessor
+ * @copyright Copyright (c) 2019, Victor Aigbeghian
+ * @license   http://opensource.org/licenses/gpl-3.0 GNU Public License
+ * @since     0.9.5
  */
 
 // Exit if accessed directly.

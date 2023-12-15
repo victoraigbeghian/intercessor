@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @return string
  */
 function intercessor_get_templates_dir() {
-    return INTERCESSOR_DIR . '/templates';
+    return INTERCESSOR_DIR . 'templates';
 }
 
 /**
@@ -30,7 +30,7 @@ function intercessor_get_templates_dir() {
  * @return string
  */
 function intercessor_get_templates_url() {
-    return INTERCESSOR_URL . '/templates';
+    return INTERCESSOR_URL . 'templates';
 }
 
 /**
@@ -208,7 +208,7 @@ function intercessor_get_locate_template( $template_name, $template_path = '', $
     }
 
     if ( ! $default_path ) {
-        $default_path = INTERCESSOR_DIR . '/templates/';
+        $default_path = INTERCESSOR_DIR . 'templates/';
     }
 
     // Look within passed path within the theme - this is priority.

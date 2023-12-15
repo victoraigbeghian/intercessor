@@ -4,17 +4,19 @@
  *
  * The file that defines the core plugin class
  *
- * @package     Intercessor
- * @subpackage  Classes/Loader
- * @copyright   Copyright (c) 2020, Victor Aigbeghian
- * @license     http://opensource.org/licenses/GPL-2.0.php GNU Public License
- * @since       1.0.0
+ * @package    Intercessor
+ * @subpackage Classes/Loader
+ * @copyright  Copyright (c) 2020, Victor Aigbeghian
+ * @license    http://opensource.org/licenses/GPL-2.0.php GNU Public License
+ * @since      1.0.0
  */
 
 namespace Intercessor;
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
 /**
  * Hook the WordPress plugin into the appropriate WordPress actions and filters.
@@ -25,78 +27,90 @@ class Loader {
     /**
      * Plugin version
      *
-     * @since 1.0.0
-     * @var string
+	 * @access public
+     * @since  1.0.0
+     * @var    string
      */
     public $version = '1.1.0';
+
+  /**
+     * This plugin object
+     *
+	 * @access public
+     * @since  1.0.0
+     * @var    object
+     */
+    public $loader;
 
 	/**
 	 * The settings options of this plugin.
 	 *
-	 * @since    1.0.0
-	 * @access   public
-	 * @var      object|Admin\Settings
+	 * @access public
+	 * @since  1.0.0
+	 * @var    object|Admin\Settings
 	 */
     public $settings;
 
     /**
      * Session
      *
-     * @since 1.0.0
-     * @var object|Session
+	 * @access public
+     * @since  1.0.0
+     * @var    object|Session
      */
     public $session;
 
     /**
      * HTML template helper class.
      *
-     * @since 1.0.0
-     * @var object|Html
+	 * @access public
+     * @since  1.0.0
+     * @var    object|Html
      */
     public $html;
     
 	/**
 	 * The Intercessor Roles Object.
 	 *
-	 * @since    0.9.5
-	 * @access   public
-	 * @var      object|Roles
+	 * @access public
+	 * @since  0.9.5
+	 * @var    object|Roles
 	 */
 	public $roles;
 
 	/**
 	 * The Intercessor Database tables.
 	 *
-	 * @since    0.9.5
-	 * @access   public
-	 * @var      array Array of database tables.
+	 * @access public
+	 * @since  0.9.5
+	 * @var    array Array of database tables.
 	 */
     public $tables = [];
 
 	/**
 	 * The Intercessor Reports.
 	 *
-	 * @since    1.0.0
-	 * @access   public
-	 * @var      object|Reports
+	 * @access public
+	 * @since  1.0.0
+	 * @var    object|Reports
 	 */
 	public $reports;
 
 	/**
 	 * The Intercessor Emails.
 	 *
-	 * @since    0.9.5
-	 * @access   public
-	 * @var      object|Emails
+	 * @access public
+	 * @since  0.9.5
+	 * @var    object|Emails
 	 */
 	public $emails;
 
 	/**
 	 * The Intercessor Cron class.
 	 *
-	 * @since    0.9.5
-	 * @access   public
-	 * @var      object|Cron
+	 * @access public
+	 * @since  0.9.5
+	 * @var    object|Cron
 	 */
     public $cron;
 
@@ -119,10 +133,10 @@ class Loader {
 	public $history;
 
     /**
-     * The path to a plugin main file
+     * The path to this plugin main file
      *
      * @since 1.0.0
-     * @var string
+     * @var   string
      */
     private $plugin_file = '';
 
@@ -132,12 +146,9 @@ class Loader {
      * @since 1.0.0
      * @var Loader
      */
-    private static $instance;
-	/**
-	 * @var string
-	 */
-	private $file;
 
+    private static $instance;
+	
 	/**
      * Cloning is forbidden.
      *
@@ -161,19 +172,34 @@ class Loader {
     }
 
     /**
+     * Constructor with dependency injection
+     *
+     * @param mixed $plugin_file This plugin file.
+     *
+     * @access public
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    public function __construct( $plugin_file ) {
+        $this->plugin_file = $plugin_file;
+    }
+
+    /**
      * The singleton method.
      *
      * @param object $plugin_file This plugin file.
-     * @return Loader
+     * 
      * @since 1.0.0
      *
+     * @return Loader
      */
-    public static function instance( $plugin_file ) {
+    public static function setup_instance( $plugin_file ) {
         if ( self::already_instantiated() ) {
             return self::$instance;
         }
 
-        self::setup_instance( $plugin_file );
+        self::$instance = new Loader( $plugin_file );
 
         self::$instance->define_constants();
         self::$instance->setup_options();
@@ -187,18 +213,6 @@ class Loader {
         
 		// Return the instance.
 	    return self::$instance;
-    }
-
-    /**
-     * Setup instance.
-     *
-     * @param object $plugin_file This loader.
-     *
-     * @since 1.0.0
-     */
-    private static function setup_instance( string $plugin_file = '' ) {
-        self::$instance       = new Loader;
-        self::$instance->file = $plugin_file;
     }
 
     /**
@@ -221,6 +235,7 @@ class Loader {
      * Setup and instantiate database tables.
      *
      * @since 1.1.0
+     *
      * @access public
      */
     public function setup_tables() : array {
@@ -296,7 +311,8 @@ class Loader {
     /**
      * Define necessary constants.
      *
-     * @since 1.0.0
+     * @access public
+     * @since  1.0.0
      *
      * @return void
      */
@@ -308,17 +324,17 @@ class Loader {
 
 		// Plugin Folder Path.
 		if ( ! defined( 'INTERCESSOR_DIR' ) ) {
-            define( 'INTERCESSOR_DIR', plugin_dir_path( INTERCESSOR_FILE ) );
+            define( 'INTERCESSOR_DIR', plugin_dir_path( $this->plugin_file ) );
 		}
 
 		// Plugin Folder URL.
 		if ( ! defined( 'INTERCESSOR_URL' ) ) {
-			define( 'INTERCESSOR_URL', plugin_dir_url( INTERCESSOR_FILE ) );
+			define( 'INTERCESSOR_URL', plugin_dir_url( $this->plugin_file ) );
 		}
 
 		// Plugin Basename.
 		if ( ! defined( 'INTERCESSOR_BASENAME' ) ) {
-			define( 'INTERCESSOR_BASENAME', plugin_basename( INTERCESSOR_FILE ) );
+			define( 'INTERCESSOR_BASENAME', plugin_basename( $this->plugin_file ) );
 		}
 
     }

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Intercessor
  * Plugin URI:  https://github.com/victoraigbeghian/intercessor
- * Description: A creative approach to handling prayer requests and requesters on WordPress
+ * Description: A creative approach to handle prayer requests and requesters.
  * Author:      Victor Aigbeghian
  * Author URI:  https://github.com/victoraigbeghian
  * Version:     1.1.1
@@ -14,15 +14,18 @@
  * @package   Intercessor
  * @author    Victor Aigbeghian
  * @copyright 2020 Victor Aigbeghian
- * @license   GPL-2.0-or-later
+ * @license   GPL-2.0-or-later http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-use \Intercessor\Loader;
-use \Intercessor\Install;
+use Intercessor\Loader;
+use Intercessor\Install;
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+// If this file is called directly, abort.
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
+// Define Intercessor file.
 if ( ! defined( 'INTERCESSOR_FILE' ) ) {
 	define( 'INTERCESSOR_FILE', __FILE__ );
 }
@@ -34,79 +37,93 @@ if ( ! defined( 'INTERCESSOR_FILE' ) ) {
  */
 final class Intercessor_Requirements {
 
-	/**
-	 * Plugin basename
-	 *
-	 * @since 1.0.0
-	 * @var string
-	 */
-	private $base = '';
+    
+    /**
+     * Plugin basename
+     *
+     * @since 1.0.0
+     * @var   string
+     */
+    private $base = '';
 
-	/**
-	 * Requirements array
-	 *
-	 * @var array
-	 * @since 1.0.0
-	 */
-	private $requirements = [
+    /**
+     * Requirements array
+     *
+     * @var   array
+     * @since 1.0.0
+     */
+    private $requirements;
 
-		// WordPress values.
-		'wp'  => [
-			'minimum' => '5.0',
-			'name'    => 'WordPress',
-			'exists'  => true,
-			'current' => false,
-			'checked' => false,
-			'met'     => false,
-		],
+    /**
+     * Setup plugin requirements
+     *
+     * @param object $loader  Loader class object.
+     * @param object $install Install class object.
+     *
+     * @access public
+     * @since  1.0.0
+     *
+     * @return void
+     */
+    public function __construct(/* Loader $loader, Install $install */) {
+        // Set up variables.
+    /*  $this->loader       = $loader;
+        $this->install      = $install;
+		*/
+        $this->base         = plugin_basename( INTERCESSOR_FILE );
+        $this->requirements = [
+            'wp'  => [
+                'minimum' => '5.0',
+                'name'    => 'WordPress',
+                'exists'  => true,
+                'current' => false,
+                'checked' => false,
+                'met'     => false,
+            ],
+            'php' => [
+                'minimum' => '7.0.0',
+                'name'    => 'PHP',
+                'exists'  => true,
+                'current' => false,
+                'checked' => false,
+                'met'     => false,
+            ],
+        ];
 
-		// PHP values.
-		'php' => [
-			'minimum' => '7.0.0',
-			'name'    => 'PHP',
-			'exists'  => true,
-			'current' => false,
-			'checked' => false,
-			'met'     => false,
-		],
-	];
+        // Load translations.
+        add_action( 'plugins_loaded', [ $this, 'load_textdomain' ] );
 
-	/**
-	 * Setup plugin requirements
-	 *
-	 * @since 1.0.0
-	 */
-	public function __construct() {
+        // Run autoload only when requirements are met.
+        if ( $this->met()) {
+            $this->setup();
+        } else {
+            $this->quit();
+        }
+    }
 
-		// Setup the base.
-		$this->base = plugin_basename( INTERCESSOR_FILE );
+    /**
+     * Quit without loading
+     *
+     * @access private
+     * @since  1.0.0
+     *
+     * @return void
+     */
+    private function quit() {
+        add_action( 'admin_head', [ $this, 'adminHead' ] );
+        add_filter( "plugin_action_links_{$this->base}", [ $this, 'plugin_row_links' ] );
+        add_action( "after_plugin_row_{$this->base}", [ $this, 'plugin_row_notice' ] );
+    }
 
-		// Load translations.
-		add_action( 'plugins_loaded', [ $this, 'load_textdomain' ] );
-
-		// Autoload when requirements met otherwise quit.
-		$this->met()
-			? $this->setup()
-			: $this->quit();
-	}
-
-	/**
-	 * Quit without loading
-	 *
-	 * @since 1.0.0
-	 */
-	private function quit() {
-		add_action( 'admin_head', [ $this, 'admin_head' ] );
-		add_filter( "plugin_action_links_{$this->base}", [ $this, 'plugin_row_links' ] );
-		add_action( "after_plugin_row_{$this->base}", [ $this, 'plugin_row_notice' ] );
-	}
-
-	/**
-	 * Load normally
-	 *
-	 * @since 1.0.0
-	 */
-	private function setup() {
+    /**
+     * Normal loading.
+     *
+     * @access private
+     * @since  1.0.0
+     *
+     * @return void
+     */
+    private function setup() {
 
 		// Autoload files.
 		require_once dirname( INTERCESSOR_FILE ) . '/vendor/autoload.php';
@@ -117,50 +134,60 @@ final class Intercessor_Requirements {
 		// Register the activation hook.
 		register_activation_hook( INTERCESSOR_FILE, [ $this, 'install' ] );
 	}
+    
+    /**
+     * Install on an activation hook
+     *
+     * @access public
+     * @since  1.0.0
+     *
+     * @return void
+     */
+    public function install() {
 
-	/**
-	 * Install, usually on an activation hook.
-	 *
-	 * @since 1.0.0
-	 */
-	public function install() {
+        // Bootstrap to include all of the necessary files.
+        $this->load();
 
-		// Bootstrap to include all of the necessary files.
-		$this->load();
+        // Check if installation is network wide.
+        $network_wide = ! empty( $_GET['networkwide'] )
+            ? (bool) $_GET['networkwide']
+            : false;
 
-		// Check if installation is network wide.
-		$network_wide = ! empty( $_GET['networkwide'] )
-			? (bool) $_GET['networkwide']
-			: false;
+        // Run installer directly during the activation hook.
+        Install::activate( $network_wide );
+    }
 
-		// Run installer directly during the activation hook.
-		Install::activate( $network_wide );
+    /**
+     * Run the Bootstrapper.
+     *
+     * @access public
+     * @since  1.0.0
+     *
+     * @return void
+     */
+    public function load() {
+		Loader::setup_instance( $this->base );
 	}
-
-	/**
-	 * Run the Bootstrapper.
-	 *
-	 * @since 1.0.0
-	 */
-	public function load() {
-		Loader::instance( $this->base );
-	}
-
+    
 	/**
 	 * Plugin specific URL for an external requirements page.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_url() {
-		// Change site url to page on your plugin site for minimum requirements.
+		// URL of the unmet requirements.
 		return 'https://github.com/victoraigbeghian/minimum-requirements';
 	}
 
 	/**
 	 * Plugin specific text to quickly explain what's wrong.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return void
 	 */
 	private function unmet_requirements_text() {
@@ -170,7 +197,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific text to describe a single unmet requirement.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_description_text() {
@@ -181,7 +210,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific text to describe a single missing requirement.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_missing_text() {
@@ -192,7 +223,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific text used to link to an external requirements page.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_link() {
@@ -202,7 +235,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific aria label text to describe the requirements link.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_label() {
@@ -212,7 +247,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific text used in CSS to identify attribute IDs and classes.
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
 	 * @return string
 	 */
 	private function unmet_requirements_name() {
@@ -222,7 +259,10 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin method to output the additional plugin row.
 	 *
-	 * @since 1.0.0
+     * @access public
+	 * @since  1.0.0
+     *
+     * @return void
 	 */
 	public function plugin_row_notice() {
 		?>
@@ -243,7 +283,10 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin method used to output all unmet requirement information
 	 *
-	 * @since 1.0.0
+     * @access private
+	 * @since  1.0.0
+     *
+     * @return void
 	 */
 	private function unmet_requirements_description() {
 		foreach ( $this->requirements as $properties ) {
@@ -256,8 +299,12 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin method to output specific unmet requirement information
 	 *
-	 * @since 1.0.0
 	 * @param array $requirement Array of requirements.
+     *
+     * @access private
+	 * @since  1.0.0
+     *
+     * @return void
 	 */
 	private function unmet_requirement_description( $requirement = [] ) {
 
@@ -286,7 +333,10 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin agnostic method to output unmet requirements styling
 	 *
-	 * @since 1.0.0
+     * @access public
+	 * @since  1.0.0
+     *
+     * @return void
 	 */
 	public function admin_head() {
 
@@ -326,8 +376,11 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin agnostic method to add the "Requirements" link to row actions
 	 *
-	 * @since 1.0.0
 	 * @param array $links Links.
+     *
+     * @access public
+	 * @since  1.0.0
+     *
 	 * @return array
 	 */
 	public function plugin_row_links( $links = [] ) {
@@ -345,7 +398,10 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin specific requirements checker
 	 *
+     * @access public
 	 * @since 1.0.0
+     * 
+     * @return void
 	 */
 	private function check() {
 
@@ -388,6 +444,7 @@ final class Intercessor_Requirements {
 	/**
 	 * Checks if all requirements have been met.
 	 *
+     * @access public
 	 * @since 1.0.0
 	 *
 	 * @return boolean
@@ -405,7 +462,7 @@ final class Intercessor_Requirements {
 		foreach ( $to_meet as $met ) {
 			if ( empty( $met ) ) {
 				$retval = false;
-				continue;
+				break;
 			}
 		}
 
@@ -416,7 +473,9 @@ final class Intercessor_Requirements {
 	/**
 	 * Plugin text-domain loader.
 	 *
+     * @access public
 	 * @since 1.0.0
+     *
 	 * @return void
 	 */
 	public function load_textdomain() {
@@ -429,7 +488,14 @@ final class Intercessor_Requirements {
 // Invoke the requirements checker.
 new Intercessor_Requirements();
 
+/**
+ * Runs the autoloader
+ *
+ * @since 1.0.0
+ *
+ * @return \Intercessor\Loader Returns the Intercessor loader object.
+ */
 function intercessor() {
 	$file = plugin_basename( INTERCESSOR_FILE );
-	return Loader::instance( $file );
+	return Loader::setup_instance( $file );
 }
