@@ -137,9 +137,7 @@ class Roles {
 
 			$wp_roles->add_cap( 'prayer_warrior', 'edit_prayers' );
 			$wp_roles->add_cap( 'prayer_warrior', 'read_private_prayers' );
-			$wp_roles->add_cap( 'prayer_warrior', 'view_prayer_reports' );
-			$wp_roles->add_cap( 'prayer_warrior', 'export_prayer_reports' );
-			$wp_roles->add_cap( 'prayer_warrior', 'edit_prayers' );
+			$wp_roles->add_cap( 'prayer_warrior', 'uplift_prayers' );
 		}
 	}
 
@@ -178,8 +176,7 @@ class Roles {
 			/** Prayer Warrior Capabilities */
 			$wp_roles->remove_cap( 'prayer_warrior', 'edit_prayers' );
 			$wp_roles->remove_cap( 'prayer_warrior', 'read_private_prayers' );
-			$wp_roles->remove_cap( 'prayer_warrior', 'view_prayer_reports' );
-			$wp_roles->remove_cap( 'prayer_warrior', 'export_prayer_reports' );
+			$wp_roles->remove_cap( 'prayer_warrior', 'uplift_prayers' );
 
 			/** Requester Capabilities */
 			$wp_roles->remove_cap( 'requester', 'read' );

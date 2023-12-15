@@ -1699,3 +1699,24 @@ if ( ! function_exists( 'intercessor_date_format' ) ) {
 		return apply_filters( 'intercessor_date_format', $date_format );
 	}
 }
+
+/********************************************
+ * Create Roles functions
+*/
+if ( ! function_exists( 'intercessor_can_uplift_prayer' ) ) {
+	/**
+	 * Define prayer warrior role
+	 *
+	 * @since 1.0.0
+	 * 
+	 * @return bool
+	 */
+	function intercessor_can_uplif_prayer() : bool {
+		// Check if user cannot uplift prayer from admin backend.
+		if ( current_user_can( 'uplift' ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}

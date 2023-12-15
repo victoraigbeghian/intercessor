@@ -44,9 +44,5 @@
     },
     "config": {
         "vendor-dir": "vendor/"
-    },
-    "require": {
-        "php": ">=7.0",
-        "tecnickcom/tcpdf": "^6.2"
     }
 }

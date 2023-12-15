@@ -384,19 +384,6 @@ class Table extends List_Table {
 
 		}
 
-		// View prayer request details.
-		$row_actions['view_details'] = '<a class="button-secondary" href="' . esc_url(
-			wp_nonce_url(
-				add_query_arg(
-					array(
-						'intercessor-action' => 'view_request_details',
-						'prayer'             => $prayer->id,
-					)
-				),
-				'intercessor_prayer_nonce'
-			)
-		) . '">' . esc_html__( 'View Prayer', 'intercessor' ) . '</a>';
-
 		// Delete prayer request.
 		$row_actions['delete'] = '<a href="' . esc_url(
 			wp_nonce_url(
@@ -440,6 +427,8 @@ class Table extends List_Table {
 		$requester    = \intercessor_process_item( 'requester', 'get', $requester_id, false );
 		$base         = $this->get_base_url();
 		$row_actions  = [];
+		$is_manager   = current_user_can( 'view_prayer_sensitive_data' );
+		$is_p_warrior = \intercessor_can_uplif_prayer();
 
 		// Check if requester exists.
 		if ( ! empty( $requester ) ) {
@@ -449,34 +438,22 @@ class Table extends List_Table {
 				? $requester->name
 				: esc_html__( 'No Name', 'intercessor' );
 
-			// Requester link.
-			$link = intercessor_get_admin_url(
-				'requesters',
-				array(
-					'view' => 'overview',
-					'id'   => $requester_id,
-				)
-			);
 
 			$name_value = '<a href="' . esc_url( $link ) . '">' . $name_value . '</a>';
 		} else {
 			$name_value = esc_html__( 'Requester missing', 'intercessor' );
 		}
 
-		// Process requester email.
-		if ( 'active' === $prayer->status && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg(
-				array(
-					'intercessor-action' => 'email_links',
-					'prayer_id'          => $prayer->id ),
-					$this->base_url
-				) . '">' . esc_html__( 'Resend Notification', 'intercessor' ) . '</a>';
-		}
-
 		$row_actions = apply_filters( 'intercessor_prayers_table_row_actions', $row_actions, $prayer );
 
+		// If no email available.
 		if ( empty( $email ) ) {
 			$email = esc_html__( '(unknown)', 'intercessor' );
+		}
+
+		// Do not show email to prayer warrior.
+		if ( $is_p_warrior ) {
+			$email = esc_html__( '********@****', 'intercessor' );
 		}
 
 		$email_value = $email . $this->row_actions( $row_actions );

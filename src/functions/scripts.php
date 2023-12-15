@@ -152,7 +152,6 @@ function intercessor_load_admin_styles() {
 	wp_register_style( 'intercessor-reports', $css_dir . 'intercessor-admin-reports' . $suffix . '.css', [], $version );
 
 	// Enqueue necessary styles.
-	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_style( 'thickbox' );
 	wp_enqueue_style( 'jquery-chosen' );
 	wp_enqueue_media();
@@ -192,9 +191,6 @@ function intercessor_load_admin_scripts() {
 	wp_enqueue_script( 'jquery-ui-datepicker' );
 	wp_enqueue_script( 'jquery-ui-dialog' );
 	wp_enqueue_script( 'jquery-ui-tooltip' );
-	wp_enqueue_script( 'media-upload' );
-	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_script( 'wp-color-picker' );
 
 	// Localize admin scripts.
 	wp_localize_script(
@@ -253,13 +249,6 @@ function intercessor_load_admin_scripts() {
 			],
 		]
 	);
-
-	// Register import and export scripts and styles.
-//	wp_enqueue_script( 'intercessor-requesters', $js_dir . 'admin/requesters/requester' . $suffix . '.js', $admin_deps, $version, false );
-	wp_register_script( 'intercessor-export', $js_dir . 'admin/export/export' . $suffix . '.js', $admin_deps, $version, false );
-	wp_register_script( 'intercessor-import', $js_dir . 'admin/import/import' . $suffix . '.js', $admin_deps, $version, false );
-	wp_register_script( 'intercessor-settings', $js_dir . 'admin/settings/index' . $suffix . '.js', $admin_deps, $version, false );
-	wp_register_script( 'intercessor-reports', $js_dir . 'admin/reports/index' . $suffix . '.js', $admin_deps, $version, false );
 }
 add_action( 'admin_enqueue_scripts', 'intercessor_load_admin_scripts' );
 
