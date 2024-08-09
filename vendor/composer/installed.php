@@ -3,7 +3,7 @@
         'name' => 'victoraigbeghian/wordpress-plugin',
         'pretty_version' => '1.1.0',
         'version' => '1.1.0.0',
-        'reference' => NULL,
+        'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'tecnickcom/tcpdf' => array(
-            'pretty_version' => '6.5.0',
-            'version' => '6.5.0.0',
-            'reference' => 'cc54c1503685e618b23922f53635f46e87653662',
+            'pretty_version' => '6.7.5',
+            'version' => '6.7.5.0',
+            'reference' => '951eabf0338ec2522bd0d5d9c79b08a3a3d36b36',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tecnickcom/tcpdf',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'victoraigbeghian/wordpress-plugin' => array(
             'pretty_version' => '1.1.0',
             'version' => '1.1.0.0',
-            'reference' => NULL,
+            'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
