@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 class Base {
 
 	/**
@@ -180,7 +181,7 @@ class Base {
 		$unspace = trim( $string );
 
 		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $unspace );
+		$accents = \remove_accents( $unspace );
 
 		// Only lowercase letters are allowed
 		$lower   = strtolower( $accents );
@@ -227,10 +228,10 @@ class Base {
 		$unspace = trim( $name );
 
 		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $unspace );
+		$accents = \remove_accents( $unspace );
 
 		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
-		$lower   = sanitize_key( $accents );
+		$lower   = \sanitize_key( $accents );
 
 		// Replace hyphens with single underscores
 		$under   = str_replace( '-',  '_', $lower );
@@ -329,7 +330,7 @@ class Base {
 			$retval = false;
 
 			// Bail if an error occurred
-		} elseif ( is_wp_error( $result ) ) {
+		} elseif ( \is_wp_error( $result ) ) {
 			$this->last_error = $result;
 			$retval           = false;
 
