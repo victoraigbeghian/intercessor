@@ -2,7 +2,7 @@
     "name": "victoraigbeghian/wordpress-plugin",
     "type": "wordpress-plugin",
     "description": "Intercessor - a WordPress prayer request management plugin",
-    "version": "1.1.1",
+    "version": "1.1.0",
     "authors": [
         {
              "name": "Victor Aigbeghian",
@@ -54,6 +54,6 @@
     },
     "require": {
         "php": ">=8.0",
-        "tecnickcom/tcpdf": "6.7.6.0"
+        "tecnickcom/tcpdf": "^6.2"
     }
 }

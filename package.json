@@ -10,8 +10,8 @@
 	"repository": "victoraigbeghian/intercessor",
 	"license": "GPL-3.0+",
 	"devDependencies": {
-		"gulp": "^4.0.0",
-		"gulp-babel": "^8.0.0",
+		"gulp": ">=4.0.0",
+		"gulp-babel": ">=8.0.0",
 		"gulp-checktextdomain": "^2.2.0",
 		"gulp-cheerio": "^0.6.3",
 		"gulp-concat": "^2.6.1",

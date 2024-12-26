@@ -20,10 +20,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param array $data Array of data to create prayer.
  *
- * @return false
  * @since 0.9.5
  */
-function intercessor_process_add_prayer( $data = [] ) {
+function intercessor_process_add_prayer( array $data = [] )
+{
 	// Bail if it is not admin.
 	if ( ! is_admin() ) {
 		return false;
@@ -47,7 +47,7 @@ function intercessor_process_add_prayer( $data = [] ) {
 		'message'      => ! empty( $data['message'] ) ? intercessor_sanitize_textarea( $data['message'] ) : '',
 		'status'       => ! empty( $data['status'] ) ? sanitize_text_field( $data['status'] ) : '',
 		'share'        => ! empty( $data['share'] ) ? sanitize_text_field( $data['share'] ) : 'freely',
-		'notify'       => isset( $data['notify'] ) ? $data['notify'] : '0',
+		'notify'       => $data['notify'] ?? '0',
 		'date_created' => date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ),
 		'date_active'  => ! empty( $data['date_active'] ) ? sanitize_text_field( $data['date_active'] ) : '',
 		'end_date'     => ! empty( $data['end_date'] ) ? sanitize_text_field( $data['end_date'] ) : '',
@@ -123,36 +123,12 @@ function intercessor_process_add_prayer( $data = [] ) {
 	// Attach the prayer to the requester and update prayer counts.
 	$requester->attach_prayer( $prayer_id, true );
 
-	$added = ! empty( $prayer_id )
+    // Redirect arguments.
+    $added = ! empty( $prayer_id )
 		? 'prayer_added'
 		: 'prayer_add_failed';
 
-/*
-	// Redirect.
-	if ( $prayer_id ) {
-
-		wp_safe_redirect(
-			intercessor_get_admin_url(
-				'prayers',
-				array(
-					'intercessor-message' => 'prayer_added',
-				)
-			)
-		);
-		intercessor_die();
-
-	} else {
-		wp_safe_redirect(
-			intercessor_get_admin_url(
-				'prayers',
-				array(
-					'intercessor-message' => 'prayer_add_failed',
-				)
-			)
-		);
-		intercessor_die();
-	}
-*/
+    // Redirect to prayer list page.
     intercessor_redirect( add_query_arg( 'intercessor-message', $added, $data['intercessor-redirect'] ) );
 }
 add_action( 'intercessor_admin_add_prayer', 'intercessor_process_add_prayer' );
@@ -284,7 +260,7 @@ function intercessor_delete_prayer( $data = [] ) {
 	}
 
 	// Retrieve prayer and requester.
-	$prayer_id = absint( $data['prayer_id'] );
+	$prayer_id = absint( $data['prayer'] );
 	$requester = intercessor_get_requester_from_prayer( $prayer_id );
 	$prayer    = intercessor_process_item( 'prayer', 'get', $prayer_id, false );
 	
