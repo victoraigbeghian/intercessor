@@ -1699,3 +1699,26 @@ if ( ! function_exists( 'intercessor_date_format' ) ) {
 		return apply_filters( 'intercessor_date_format', $date_format );
 	}
 }
+
+if ( ! function_exists( 'intercessor_verify_nonce' ) ) {
+    /**
+     * Checks if nonce has been verified.
+     *
+     * @param array $data Array of data.
+     *
+     * @since 1.1.0
+     * @return void
+     */
+    function intercessor_verify_nonce( array $data = [] ): void
+    {
+        // Bail if nonce did not verify.
+        if ( ! isset( $data['_wpnonce'] )
+            || ! wp_verify_nonce( $data['_wpnonce'], 'intercessor_prayer_nonce' ) ) {
+            wp_die(
+                esc_html__( 'Trying to cheat or something?', 'intercessor' ),
+                esc_html__( 'Error', 'intercessor' ),
+                [ 'response' => 403 ]
+            );
+        }
+    }
+}

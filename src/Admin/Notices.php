@@ -337,7 +337,7 @@ class Notices {
                 case 'prayer_deleted':
                     $this->add_notice( array(
                         'id'      => 'intercessor-prayer-deleted',
-                        'message' => esc_html__( 'Prayer request deleted.', 'intercessor' )
+                        'message' => esc_html__( 'Prayer request and prayed for counts deleted.', 'intercessor' )
                     ) );
                     break;
 				case 'prayer_delete_failed':

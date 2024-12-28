@@ -33,7 +33,7 @@ class Prayer_History {
 	 * @access protected
 	 * @var string
 	 */
-	protected $action = '';
+	protected string $action = '';
 
 	/**
 	 * Form errors.
@@ -41,7 +41,7 @@ class Prayer_History {
 	 * @access private
 	 * @var array
 	 */
-	private $errors;
+	private array $errors;
 
 	/**
 	 * Prayer statuses
@@ -49,7 +49,7 @@ class Prayer_History {
 	 * @access public
 	 * @var array
 	 */
-	public $status = [];
+	public array $status = [];
 	/**
 	 * Prayer_History constructor.
 	 *
@@ -69,7 +69,8 @@ class Prayer_History {
 	 *
 	 * @since 0.9.5
 	 */
-	public function add_error( int $error_id, $message = '' ) {
+	public function add_error(int $error_id, string $message = '' ): void
+    {
 		$this->errors[ $error_id ] = $message;
 	}
 
@@ -79,7 +80,8 @@ class Prayer_History {
 	 * @since 0.9.5
 	 * @return void
 	 */
-	public function print_errors() {
+	public function print_errors(): void
+    {
 		// Bailout if no error.
 		if ( empty( $this->errors ) ) {
 			return;
@@ -103,7 +105,8 @@ class Prayer_History {
 	 * @since 0.9.5
 	 * @return array
 	 */
-	public function get_errors() {
+	public function get_errors(): array
+    {
 		// Bailout if no error.
 		if ( empty( $this->errors ) ) {
 			return [];
@@ -118,7 +121,8 @@ class Prayer_History {
 	 *
 	 * @return string
 	 */
-	public function get_action() {
+	public function get_action(): string
+    {
 		return esc_url_raw( $this->action ? $this->action : wp_unslash( $_SERVER['REQUEST_URI'] ) );
 	}
 
@@ -127,10 +131,10 @@ class Prayer_History {
 	 *
 	 * @param string $redirect Page to redirect to.
 	 *
-	 * @since  0.9.5
 	 * @return mixed|void
+	 *@since  0.9.5
 	 */
-	public function get_history( $redirect = '' ) {
+	public function get_history( string $redirect = '' ) {
 		global $ipr_prayer_history_redirect;
 
 		if ( empty( $redirect ) ) {

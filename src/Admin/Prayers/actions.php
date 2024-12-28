@@ -234,13 +234,14 @@ add_action( 'intercessor_admin_edit_prayer', 'intercessor_admin_edit_prayer' );
  * Listens for when a prayer delete button is clicked and deletes the
  * prayer request
  *
- * @since 0.9.5
  * @param array $data Prayer request data.
  *
- * @uses \intercessor_process_item()
  * @return void
+ *@uses \intercessor_process_item()
+ * @since 0.9.5
  */
-function intercessor_delete_prayer( $data = [] ) {
+function intercessor_delete_prayer( array $data = [] ): void
+{
 
 	if ( ! isset( $data['_wpnonce'] )
 		|| ! wp_verify_nonce( $data['_wpnonce'], 'intercessor_prayer_nonce' ) ) {
@@ -267,9 +268,10 @@ function intercessor_delete_prayer( $data = [] ) {
 	// Try to delete prayer.
 	$deleted   = intercessor_process_item( 'prayer', 'delete', $prayer->id, false );
 	
-	// Recalculate stats for the requester.
+	// Recalculate stats for the requester and delete prayed counts.
 	if ( $deleted ) {
 		$requester->recalculate_stats();
+        intercessor_process_item( 'prayed', 'delete', $prayer_id, false );
 	}
 
 	// Setup array of arguments to display delete message.
@@ -298,13 +300,14 @@ add_action( 'intercessor_delete_prayer', 'intercessor_delete_prayer' );
  *
  * Sets a prayer request status to active
  *
- * @since 0.9.5
  * @param array $data Prayer request data.
  *
- * @uses intercessor_update_prayer_status()
  * @return void
+ *@uses intercessor_update_prayer_status()
+ * @since 0.9.5
  */
-function intercessor_activate_prayer( $data = [] ) {
+function intercessor_activate_prayer( array $data = [] ): void
+{
     // Bail if nonce did not verify.
 	if ( ! isset( $data['_wpnonce'] )
 		|| ! wp_verify_nonce( $data['_wpnonce'], 'intercessor_prayer_nonce' ) ) {
@@ -327,9 +330,8 @@ function intercessor_activate_prayer( $data = [] ) {
 	$prayer_id = absint( $data['prayer'] );
 
 
-	//$activated  = intercessor_update_prayer_status( $prayer_id, 'active' );
 	$activated = intercessor_do_prayer_activation( $prayer_id );
-	$arg         = ! empty( $activated )
+	$arg       = ! empty( $activated )
 		? 'prayer_activated'
 		: 'prayer_activation_failed';
 
@@ -351,22 +353,32 @@ add_action( 'intercessor_activate_prayer', 'intercessor_activate_prayer' );
  *
  * Sets a prayer request's status to deactivate
  *
- * @since 0.9.5
  * @param array $data Prayer request data.
  *
- * @uses intercessor_update_prayer_status()
  * @return void
-*/
-function intercessor_deactivate_prayer( $data = [] ) {
+*@uses intercessor_update_prayer_status()
+ * @since 0.9.5
+ */
+function intercessor_deactivate_prayer( array $data = [] ): void
+{
 
+    // Check if nonce data verified
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'intercessor_prayer_nonce' ) ) {
-		wp_die( esc_html__( 'Trying to cheat or something?', 'intercessor' ), esc_html__( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+		wp_die(
+            esc_html__( 'Trying to cheat or something?', 'intercessor' ),
+            esc_html__( 'Error', 'intercessor' ),
+            [ 'response' => 403 ]
+        );
 	}
 
 	if ( ! current_user_can( 'edit_prayers' ) ) {
-		wp_die( esc_html__( 'You do not have permission to create prayer requests', 'intercessor' ), array( 'response' => 403 ) );
+		wp_die(
+            esc_html__( 'You do not have permission to create prayer requests', 'intercessor' ),
+            [ 'response' => 403 ]
+        );
 	}
 
+    // Set up prayer query arguments.
 	$prayer_id   = absint( $data['prayer'] );
 	$new_status  = [
 		'status' => 'pending',
@@ -377,7 +389,12 @@ function intercessor_deactivate_prayer( $data = [] ) {
 			: 'prayer_deactivation_failed';
 
 	// Redirect.
-	wp_redirect( remove_query_arg( 'intercessor-action', add_query_arg( 'intercessor-message', $arg, $_SERVER['REQUEST_URI'] ) ) );
+	wp_redirect(
+        remove_query_arg(
+            'intercessor-action',
+            add_query_arg( 'intercessor-message', $arg, $_SERVER['REQUEST_URI'] )
+        )
+    );
 	intercessor_die();
 }
 add_action( 'intercessor_deactivate_prayer', 'intercessor_deactivate_prayer' );
@@ -394,7 +411,9 @@ add_action( 'intercessor_deactivate_prayer', 'intercessor_deactivate_prayer' );
  * @return void
  */
 function intercessor_uplift_prayer( $data = [] ) {
-
+    // Verify nonce.
+    intercessor_verify_nonce( $data );
+    /*
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'intercessor_prayer_nonce' ) ) {
 		wp_die(
 			esc_html__( 'Trying to cheat or something?', 'intercessor' ),
@@ -402,7 +421,7 @@ function intercessor_uplift_prayer( $data = [] ) {
 			array( 'response' => 403 )
 		);
 	}
-
+*/
 	if ( ! current_user_can( 'edit_prayers' ) ) {
 		wp_die( esc_html__( 'You do not have permission to edit prayer requests', 'intercessor' ), esc_html__( 'Error', 'intercessor' ), array( 'response' => 403 ) );
 	}

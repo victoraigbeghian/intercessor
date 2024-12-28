@@ -70,12 +70,13 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
 	 * Retrieve prayer requests by a specific user.
 	 *
 	 * @param int|string $user       User ID or email address.
-	 * @param bool       $pagination Use pagination for listing prayers. Default false.
+	 * @param bool $pagination Use pagination for listing prayers. Default false.
 	 *
-	 * @return Query[]|false Array of prayer requests, false otherwise.
+	 * @return array|false Array of prayer requests, false otherwise.
 	 * @since 0.9.5
 	 */
-	function intercessor_get_user_prayer_requests( $user = 0, $pagination = false ) {
+	function intercessor_get_user_prayer_requests(int|string $user = 0, bool $pagination = false ): array|bool
+    {
 
 		$status = [ 'active', 'personal', 'archived' ];
 
@@ -104,7 +105,7 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
 		}
 
 		// Format pagination if specified.
-		$paged = 1;
+		$paged = 0;
 		$page  = intercessor_get_current_page_number();
 
 		if ( $pagination ) {
@@ -123,7 +124,7 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
 			$args['nopaging'] = true;
 		}
 
-		// Fetch the prayer IDs.
+		// Fetch the prayer IDs and set up query arguments.
 		$number = apply_filters( 'intercessor_users_prayer_requests', 9999 );
 		$args   = [
 			'requester_id' => $requester->id,
@@ -134,10 +135,8 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
 			'orderby'      => 'id',
 			'order'        => 'DESC',
 		];
-/*
-		$query   = new \Intercessor\Database\Queries\Prayer();
-		$prayers = $query->query( $args );
-*/
+
+        // Retrieve all prayers.
 		$prayers = intercessor_get_items( 'prayer', $args );
 
 		// No prayers.
@@ -145,6 +144,7 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
 			return false;
 		}
 
+        // Return all retrieved prayer(s).
 		return $prayers;
 	}
 }
@@ -155,12 +155,12 @@ if ( ! function_exists( 'intercessor_get_user_prayer_requests' ) ) {
  * Retrieves the prayer count and the total amount spent for a specific user
  *
  * @access public
+ * @param int|string $user The ID or email of the requester to retrieve stats for.
+ * @return array
  * @since   0.9.5
  *
- * @param int|string $user - the ID or email of the requester to retrieve stats for.
- * @return      array
  */
-function intercessor_get_prayer_stats_by_user( $user = '' ) {
+function intercessor_get_prayer_stats_by_user( int|string $user = '' ): array {
 	$field = '';
 	if ( is_email( $user ) ) {
 		$field = 'email';
@@ -188,7 +188,7 @@ function intercessor_get_prayer_stats_by_user( $user = '' ) {
  * @param string $username The username to validate.
  * @return bool
  */
-function intercessor_validate_username( $username ) {
+function intercessor_validate_username( string $username ): bool {
 	$sanitized = sanitize_user( $username, false );
 	$valid     = ( $sanitized === $username );
 	return (bool) apply_filters( 'intercessor_validate_username', $valid, $username );
@@ -204,27 +204,35 @@ function intercessor_validate_username( $username ) {
  *
  * @param object $requester The \Intercessor\Requester object.
  *
- * @since  0.9.5
  * @return void
+ *@since  0.9.5
  */
-function intercessor_connect_guest_requester_to_existing_user( $requester ) {
-
+function intercessor_connect_guest_requester_to_existing_user( object $requester ): void
+{
+    // Bail if no user ID specified.
 	if ( ! empty( $requester->user_id ) ) {
 		return;
 	}
 
-	$user = get_user_by( 'email', $requester->email );
+    // Get the user by the requester email.
+	$user    = get_user_by( 'email', $requester->email );
+    $user_id = $user->ID;
 
+    // Bail if no user registered by that email.
 	if ( ! $user ) {
 		return;
 	}
 
+    // Update the requester by the user ID.
 	$requester->update(
 		array(
-			'user_id' => $user->ID,
+			'user_id' => $user_id,
 		)
 	);
 
+    // Set user status to pending to force account verification.
+    intercessor_make_user_pending( $user_id );
+    intercessor_send_user_verification_email( $user_id );
 }
 
 /**
@@ -234,7 +242,8 @@ function intercessor_connect_guest_requester_to_existing_user( $requester ) {
  * @param int $user_id The User ID that was created.
  * @return void
  */
-function intercessor_connect_existing_requester_to_new_user( $user_id ) {
+function intercessor_connect_existing_requester_to_new_user( int $user_id ): void
+{
 	$email = get_the_author_meta( 'user_email', $user_id );
 
 	// Update the user ID on the requester.
@@ -260,8 +269,8 @@ function intercessor_connect_existing_requester_to_new_user( $user_id ) {
  * @param       int $user_id - the new user's ID.
  * @return      void
  */
-function intercessor_add_past_prayers_to_new_user( $user_id ) {
-/*
+function intercessor_add_past_prayers_to_new_user( int $user_id ): void {
+    // User email if available.
 	$email   = get_the_author_meta( 'user_email', $user_id );
 
 	// Bail if email address is not supplied.
@@ -269,6 +278,7 @@ function intercessor_add_past_prayers_to_new_user( $user_id ) {
         return;
     }
 
+    // Prayer request search query arguments.
 	$prayers = intercessor_get_items(
 		'prayer',
 		array(
@@ -277,32 +287,41 @@ function intercessor_add_past_prayers_to_new_user( $user_id ) {
 		)
 	);
 
+    // Does the user have any prayer request.
 	if ( $prayers ) {
 
-		// Set a flag to force the account to be verified before prayer history can be accessed.
+        // Set user status to pending to force account verification.
+        intercessor_make_user_pending( $user_id );
+        intercessor_send_user_verification_email( $user_id );
 
 		foreach ( $prayers as $prayer ) {
-			if ( is_object( $prayer ) && $prayer instanceof Prayer ) {
+			if ($prayer instanceof Prayer) {
 				if ( intval( $prayer->user_id ) > 0 ) {
 					continue; // This prayer already associated with an account.
 				}
 
-				$prayer->user_id = $user_id;
-				$prayer->save();
+                // Set up arguments for update.
+                $update_args = [
+                    'user_id' => $user_id,
+                ];
+
+                // Process prayer update with user ID.
+                intercessor_process_item( 'prayer', 'update', $prayer->id, $update_args );
 			}
 		}
 	}
-*/
+
 }
 
 /**
  * When a user is deleted, detach that user id from the requester record
  *
- * @since  0.9.5
  * @param  int $user_id The User ID being deleted.
  * @return bool         If the detachment was successful
+ *@since  0.9.5
  */
-function intercessor_detach_deleted_user( $user_id ) {
+function intercessor_detach_deleted_user( int $user_id ): bool
+{
 
 	$requester = new Requester( $user_id, true );
 	$detached  = false;
@@ -316,17 +335,19 @@ function intercessor_detach_deleted_user( $user_id ) {
 	return $detached;
 }
 
+if ( ! function_exists( 'intercessor_enable_registration' ) ) {
+    /**
+     * Enable registration during prayer submission.
+     *
+     * @return bool $enable True if registration is enabled, false otherwise
+     * @since  0.9.5
+     */
+    function intercessor_enable_registration(): bool
+    {
+        $enable = intercessor_get_option('enable_registration', false);
+        return (bool)apply_filters('intercessor_enable_registration', $enable);
 
-/**
- * Enable registration during prayer submission.
- *
- * @since  0.9.5
- * @return bool $enable True if registration is enabled, false otherwise
- */
-function intercessor_enable_registration() {
-	$enable = intercessor_get_option( 'enable_registration', false );
-	return (bool) apply_filters( 'intercessor_enable_registration', $enable );
-
+    }
 }
 
 /**
@@ -695,10 +716,10 @@ function intercessor_generate_username() {
  *
  * @return bool
  */
-function intercessor_generate_password() {
-	return (bool) intercessor_get_option( 'generate_password' ) ? true : false;
+function intercessor_generate_password(): bool
+{
+	return (bool) intercessor_get_option( 'generate_password' );
 }
-
 
 /**
  * Prevent requesters from seeing the admin bar.
@@ -707,7 +728,8 @@ function intercessor_generate_password() {
  *
  * @return bool
  */
-function intercessor_disable_admin_bar( $show_admin_bar ) {
+function intercessor_disable_admin_bar( $show_admin_bar ): bool
+{
 	if ( apply_filters( 'intercessor_disable_admin_bar', true )
 		&& ! ( current_user_can( 'edit_posts' )
 		|| current_user_can( 'edit_prayers' ) )
@@ -718,3 +740,418 @@ function intercessor_disable_admin_bar( $show_admin_bar ) {
 	return $show_admin_bar;
 }
 add_filter( 'show_admin_bar', 'intercessor_disable_admin_bar', 10, 1 );
+
+if ( ! function_exists( 'intercessor_make_user_pending' ) ) {
+    /**
+     * Make a registered user pending before account verification.
+     *
+     * @param int $user_id User ID.
+     * @return bool
+     *@since 1.1.0
+     */
+    function intercessor_make_user_pending( int $user_id = 0 ): bool
+    {
+        // Bail if no user ID specified.
+        if ( empty( $user_id ) ) {
+            return false;
+        }
+
+        // Fires before a user status is set to pending.
+        do_action( 'intercessor_pre_make_user_pending', $user_id );
+
+        // Update the user meta.
+        $updated = (bool) update_user_meta( $user_id, '_intercessor_pending_verification', '1' );
+
+        // Fires after the user meta has been updated to reflect pending verification.
+        do_action( 'intercessor_post_make_user_pending', $user_id, $updated );
+
+        // Return the updated user meta.
+        return $updated;
+    }
+}
+
+if ( ! function_exists( 'intercessor_set_user_to_verified' ) ) {
+    /**
+     * Set the user from pending to active
+     *
+     * @param  integer $user_id The User ID to activate.
+     * @return bool             If the user was marked as active or otherwise.
+     *@since  1.1.0
+     */
+    function intercessor_set_user_to_verified( int $user_id = 0 ): bool
+    {
+
+        if ( empty( $user_id ) ) {
+            return false;
+        }
+
+        if ( ! intercessor_user_pending_verification( $user_id ) ) {
+            return false;
+        }
+
+        do_action( 'intercessor_pre_set_user_to_active', $user_id );
+
+        $update_successful = delete_user_meta( $user_id, '_intercessor_pending_verification', '1' );
+
+        do_action( 'intercessor_post_set_user_to_active', $user_id, $update_successful );
+
+        return $update_successful;
+    }
+}
+
+if ( ! function_exists( 'intercessor_user_pending_verification' ) ) {
+    /**
+     * Determines if the user account is pending verification. Pending accounts cannot view prayer history
+     *
+     * @param int|null $user_id
+     * @return bool
+     * @since  1.1.0
+     */
+    function intercessor_user_pending_verification( int $user_id = null ): bool
+    {
+
+        if( is_null( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+
+        // No need to run a DB lookup on an empty user id
+        if ( empty( $user_id ) ) {
+            return false;
+        }
+
+        $pending = get_user_meta( $user_id, '_intercessor_pending_verification', true );
+
+        return (bool) apply_filters( 'intercessor_user_pending_verification', ! empty( $pending ), $user_id );
+
+    }
+}
+
+if ( ! function_exists( 'intercessor_get_user_verification_url' ) ) {
+    /**
+     * Gets the activation URL for the specified user
+     *
+     * @param int $user_id User ID.
+     * @return bool|string
+     * @since   1.1.0
+     */
+    function intercessor_get_user_verification_url( int $user_id = 0 ): bool|string
+    {
+
+        if( empty( $user_id ) ) {
+            return false;
+        }
+
+        $base_url = add_query_arg(
+            [
+                'intercessor_action' => 'verify_user',
+                'user_id'            => absint( $user_id ),
+                'ttl'                => strtotime( '+24 hours' )
+            ],
+            untrailingslashit( intercessor_get_user_verification_page() )
+        );
+
+        $token = intercessor_get_user_verification_token( $base_url );
+        $url   = add_query_arg( 'token', $token, $base_url );
+
+        return apply_filters( 'intercessor_get_user_verification_url', $url, $user_id );
+
+    }
+}
+
+if ( ! function_exists( 'intercessor_get_user_verification_request_url' ) ) {
+    /**
+     * Gets the URL that triggers a new verification email to be sent
+     *
+     * @param int $user_id User ID.
+     * @since   1.1.0
+     * @return  string
+     */
+    function intercessor_get_user_verification_request_url( int $user_id = 0 ): string
+    {
+
+        if( empty( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
+
+        $url = esc_url( wp_nonce_url( add_query_arg( array(
+            'intercessor_action' => 'send_verification_email'
+        ) ), 'intercessor-request-verification' ) );
+
+        return apply_filters( 'intercessor_get_user_verification_request_url', $url, $user_id );
+
+    }
+}
+
+if ( ! function_exists( 'intercessor_send_user_verification_email' ) ) {
+    /**
+     * Sends an email to the specified user with a URL to verify their account
+     *
+     * @param int $user_id User ID.
+     *@since   1.1.0
+     */
+    function intercessor_send_user_verification_email( int $user_id = 0 ): void
+    {
+
+        if( empty( $user_id ) ) {
+            return;
+        }
+
+        if( ! intercessor_user_pending_verification( $user_id ) ) {
+            return;
+        }
+
+        $user_data  = get_userdata( $user_id );
+
+        if( ! $user_data ) {
+            return;
+        }
+
+        $name       = $user_data->display_name;
+        $url        = intercessor_get_user_verification_url( $user_id );
+        $from_name  = intercessor_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+        $from_email = intercessor_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
+        $subject    = apply_filters( 'intercessor_user_verification_email_subject', __( 'Verify your account', 'intercessor' ), $user_id );
+        $heading    = apply_filters( 'intercessor_user_verification_email_heading', __( 'Verify your account', 'intercessor' ), $user_id );
+        $message    = sprintf(
+            __( 'Hello %1$s,
+
+			Your account with %2$s needs to be verified before you can access your prayer history. <a href="%3$s">Click here</a> to verify your account.
+
+			Link missing? Visit the following URL: %3$s', 'intercessor' ),
+            $name,
+            $from_name,
+            esc_url_raw( $url )
+        );
+
+        $message    = apply_filters( 'intercessor_user_verification_email_message', $message, $user_id );
+
+        $emails     = new Intercessor\Emails;
+
+        $emails->__set( 'from_name', $from_name );
+        $emails->__set( 'from_email', $from_email );
+        $emails->__set( 'heading', $heading );
+
+        $emails->send( $user_data->user_email, $subject, $message );
+
+    }
+}
+
+if ( ! function_exists( 'intercessor_get_user_verification_token' ) ) {
+    /**
+     * Generates a token for a user verification URL.
+     *
+     * @param  string $url The URL to generate a token for.
+     * @return string The token for the URL.
+     *@since  1.1.0
+     *
+     */
+    function intercessor_get_user_verification_token( string $url = '' ): string
+    {
+
+        $args    = array();
+        $hash    = apply_filters( 'intercessor_get_user_verification_token_algorithm', 'sha256' );
+        $secret  = apply_filters( 'intercessor_get_user_verification_token_secret', hash( $hash, wp_salt() ) );
+
+        /*
+        * Add additional args to the URL for generating the token.
+        * Allows for restricting access to IP and/or user agent.
+        */
+        $parts   = parse_url( $url );
+        $options = array();
+
+        if ( isset( $parts['query'] ) ) {
+
+            wp_parse_str( $parts['query'], $query_args );
+
+            // o = option checks (ip, user agent).
+            if ( ! empty( $query_args['o'] ) ) {
+
+                // Multiple options can be checked by separating them with a colon in the query parameter.
+                $options = explode( ':', rawurldecode( $query_args['o'] ) );
+
+                if ( in_array( 'ip', $options ) ) {
+
+                    $args['ip'] = intercessor_get_ip();
+
+                }
+
+                if ( in_array( 'ua', $options ) ) {
+
+                    $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
+                    $args['user_agent'] = rawurlencode( $ua );
+
+                }
+
+            }
+
+        }
+
+        /*
+        * Filter to modify arguments and allow custom options to be tested.
+        */
+        $args = apply_filters( 'intercessor_get_user_verification_token_args', $args, $url, $options );
+
+        $args['secret'] = $secret;
+        $args['token']  = false; // Removes a token if present.
+
+        $url   = add_query_arg( $args, $url );
+        $parts = parse_url( $url );
+
+        // In the event there isn't a path, set an empty one so we can MD5 the token
+        if ( ! isset( $parts['path'] ) ) {
+
+            $parts['path'] = '';
+
+        }
+
+        return md5( $parts['path'] . '?' . $parts['query'] );
+
+    }
+}
+
+if ( ! function_exists( 'intercessor_validate_user_verification_token' ) ) {
+    /**
+     * Generate a token for a URL and match it against the existing token to make
+     * sure the URL hasn't been tampered with.
+     *
+     * @param  string $url URL to test.
+     * @return bool
+     * @since  1.1.0
+     */
+    function intercessor_validate_user_verification_token( string $url = '' ): bool
+    {
+
+        $ret        = false;
+        $parts      = parse_url( $url );
+        $query_args = array();
+
+        if ( isset( $parts['query'] ) ) {
+
+            wp_parse_str( $parts['query'], $query_args );
+
+            if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
+
+                do_action( 'intercessor_user_verification_token_expired' );
+
+                $link_text = sprintf(
+                    __( 'Sorry but your account verification link has expired. <a href="%s">Click here</a> to request a new verification URL.', 'intercessor' ),
+                    esc_url( intercessor_get_user_verification_request_url() )
+                );
+
+                wp_die( apply_filters( 'intercessor_verification_link_expired_text', $link_text ), __( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+
+            }
+
+            if ( isset( $query_args['token'] ) && $query_args['token'] == intercessor_get_user_verification_token( $url ) ) {
+
+                $ret = true;
+
+            }
+
+        }
+
+        return apply_filters( 'intercessor_validate_user_verification_token', $ret, $url, $query_args );
+    }
+}
+
+if ( ! function_exists( 'intercessor_process_user_verification_request' ) ) {
+    /**
+     * Processes a user account verification email request
+     *
+     * @since  1.1.0
+     *
+     * @return void
+     */
+    function intercessor_process_user_verification_request(): void
+    {
+
+        if( ! wp_verify_nonce( $_GET['_wpnonce'], 'intercessor-request-verification' ) ) {
+            wp_die( __( 'Nonce verification failed.', 'intercessor' ), __( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+        }
+
+        if( ! is_user_logged_in() ) {
+            wp_die( __( 'You must be logged in to verify your account.', 'intercessor' ), __( 'Notice', 'intercessor' ), array( 'response' => 403 ) );
+        }
+
+        if( ! intercessor_user_pending_verification( get_current_user_id() ) ) {
+            wp_die( __( 'Your account has already been verified.', 'intercessor' ), __( 'Notice', 'intercessor' ), array( 'response' => 403 ) );
+        }
+
+        intercessor_send_user_verification_email( get_current_user_id() );
+
+        $redirect = apply_filters(
+            'intercessor_user_account_verification_request_redirect',
+            add_query_arg( 'intercessor-verify-request', '1', intercessor_get_user_verification_page() )
+        );
+
+        intercessor_redirect( $redirect );
+    }
+}
+add_action( 'intercessor_send_verification_email', 'intercessor_process_user_verification_request' );
+
+if ( ! function_exists( 'intercessor_process_user_account_verification' ) ) {
+    /**
+     * Processes an account verification
+     *
+     * @since 1.1.0
+     *
+     * @return bool|void
+     */
+    function intercessor_process_user_account_verification() {
+
+        if( empty( $_GET['token'] ) ) {
+            return false;
+        }
+
+        if( empty( $_GET['user_id'] ) ) {
+            return false;
+        }
+
+        if( empty( $_GET['ttl'] ) ) {
+            return false;
+        }
+
+        $parts = parse_url( add_query_arg( array() ) );
+        wp_parse_str( $parts['query'], $query_args );
+        $url = add_query_arg( $query_args, untrailingslashit( intercessor_get_user_verification_page() ) );
+
+        if( ! intercessor_validate_user_verification_token( $url ) ) {
+
+            do_action( 'intercessor_invalid_user_verification_token' );
+
+            wp_die( __( 'Invalid verification token provided.', 'intercessor' ), __( 'Error', 'intercessor' ), array( 'response' => 403 ) );
+        }
+
+        intercessor_set_user_to_verified( absint( $_GET['user_id'] ) );
+
+        do_action( 'intercessor_user_verification_token_validated' );
+
+        $redirect = apply_filters(
+            'intercessor_user_account_verified_redirect',
+            add_query_arg( 'intercessor-verify-success', '1', intercessor_get_user_verification_page() )
+        );
+
+        intercessor_redirect( $redirect );
+    }
+}
+add_action( 'intercessor_verify_user', 'intercessor_process_user_account_verification' );
+
+if ( ! function_exists( 'intercessor_get_user_verification_page' ) ) {
+    /**
+     * Retrieves the prayer history page, or main URL for the account verification process
+     *
+     * @since  1.1.0
+     * @return string The base URL to use for account verification
+     */
+    function intercessor_get_user_verification_page(): string
+    {
+        $url            = home_url();
+        $prayer_history = intercessor_get_option( 'history_page', 0 );
+
+        if ( ! empty( $prayer_history ) ) {
+            $url = get_permalink( $prayer_history );
+        }
+
+        return apply_filters( 'intercessor_user_verification_base_url', $url );
+    }
+}

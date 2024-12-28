@@ -778,7 +778,7 @@ class Requester extends \Intercessor\Database\Rows\Requester {
     		foreach ( $prayers as $prayer ) {
     			intercessor_process_item( 'prayer', 'delete', $prayer->id, false );
 
-    			$metas = \intercessor_get_item_meta( 'prayer', $prayer->id, 'prayed_counts' );
+    			$metas = \intercessor_get_item_meta( 'prayer', $prayer->id, 'prayed_counts', false );
     			if ( ! empty( $metas ) ) {
     				foreach ( $metas as $meta ) {
     					intercessor_delete_item_meta_by_key( 'prayer', $meta );
@@ -787,15 +787,16 @@ class Requester extends \Intercessor\Database\Rows\Requester {
 		    }
 		}
 
-    	// Delete requester metas if available.
-	    $privacy_metas = intercessor_get_item_meta( 'requester', $this->id, 'agreed_to_privacy' );
+    	// Delete requester privacy meta if available.
+	    $privacy_metas = intercessor_get_item_meta( 'requester', $this->id, 'agreed_to_privacy', false );
     	if ( ! empty( $privacy_metas ) ) {
     		foreach ( $privacy_metas as $privacy_meta ) {
     			intercessor_delete_item_meta_by_key( 'requester', $privacy_meta );
 		    }
 	    }
 
-	    $terms_metas = intercessor_get_item_meta( 'requester', $this->id, 'agreed_to_terms' );
+        // Delete requester agreed to terms meta if available.
+	    $terms_metas = intercessor_get_item_meta( 'requester', $this->id, 'agreed_to_terms', false );
 	    if ( ! empty( $terms_metas ) ) {
 		    foreach ( $terms_metas as $terms_meta ) {
 			    intercessor_delete_item_meta_by_key( 'requester', $terms_meta );

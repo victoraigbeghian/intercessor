@@ -30,7 +30,6 @@ if ( is_user_logged_in() ) {
 	$user    = get_current_user_id();
 	$number  = 15;
 	$prayers = intercessor_user_prayers( $user, $number );
-//    $prayers = intercessor_get_user_prayer_requests( $user, true );
 }
 
 if ( ! empty( $prayers ) ) : ?>

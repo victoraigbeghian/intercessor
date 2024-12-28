@@ -1278,7 +1278,7 @@ class Query extends Base {
         }
 
         // Maybe search if columns are searchable.
-        if ( ! empty( $searchable ) && strlen( $this->query_vars['search'] ) ) {
+        if ( ! empty( $searchable ) && ! empty( $this->query_vars['search'] ) && strlen( $this->query_vars['search'] ) ) {
             $search_columns = array();
 
             // Intersect against known searchable columns
