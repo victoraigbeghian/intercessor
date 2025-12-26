@@ -1,51 +1,58 @@
-( function( wp ) {
-	// Compatibility fallbacks.
-	var registerBlockType = wp.blocks.registerBlockType;
-	var el = wp.element.createElement;
-	var Fragment = wp.element.Fragment;
-	var RichText = ( wp.blockEditor && wp.blockEditor.RichText ) || ( wp.editor && wp.editor.RichText );
+import './editor.css';
+import './style.css';
 
-	registerBlockType( 'intercessor/prayer-request', {
-		edit: function( props ) {
-			var attrs = props.attributes;
-			var setAttributes = props.setAttributes;
-			var className = props.className || '';
+import { registerBlockType } from '@wordpress/blocks';
+import { RichText } from '@wordpress/block-editor';
+import { Fragment } from '@wordpress/element';
 
-			return el(
-				Fragment,
-				null,
-				el(
-					'div',
-					{ className: className + ' intercessor-prayer-request-editor' },
-					el( RichText, {
-						tagName: 'h3',
-						placeholder: 'Prayer title…',
-						value: attrs.title,
-						onChange: function( value ) {
-							setAttributes( { title: value } );
-						}
-					} ),
-					el( RichText, {
-						tagName: 'p',
-						placeholder: 'Prayer details…',
-						value: attrs.content,
-						onChange: function( value ) {
-							setAttributes( { content: value } );
-						}
-					} )
-				)
-			);
+registerBlockType( 'intercessor/prayer-request', {
+	title: 'Prayer Request',
+	category: 'widgets',
+	icon: 'welcome-write-blog',
+	description: 'A block to submit/display a single prayer request (title + details).',
+	attributes: {
+		title: {
+			type: 'string',
+			source: 'html',
+			selector: 'h3',
 		},
-		save: function( props ) {
-			var attrs = props.attributes;
-			var className = props.className || '';
+		content: {
+			type: 'string',
+			source: 'html',
+			selector: 'p',
+		},
+	},
 
-			return el(
-				'div',
-				{ className: className + ' intercessor-prayer-request' },
-				el( RichText.Content, { tagName: 'h3', value: attrs.title } ),
-				el( RichText.Content, { tagName: 'p', value: attrs.content } )
-			);
-		}
-	} );
-} )( window.wp );
+	edit: ( props ) => {
+		const { attributes: { title, content }, setAttributes, className } = props;
+
+		return (
+			<Fragment>
+				<div className={ `${ className } intercessor-prayer-request-editor` }>
+					<RichText
+						tagName="h3"
+						placeholder="Prayer title…"
+						value={ title }
+						onChange={ ( value ) => setAttributes( { title: value } ) }
+					/>
+					<RichText
+						tagName="p"
+						placeholder="Prayer details…"
+						value={ content }
+						onChange={ ( value ) => setAttributes( { content: value } ) }
+					/>
+				</div>
+			</Fragment>
+		);
+	},
+
+	save: ( props ) => {
+		const { attributes: { title, content }, className } = props;
+		return (
+			<div className={ `${ className } intercessor-prayer-request` }>
+				<RichText.Content tagName="h3" value={ title } />
+				<RichText.Content tagName="p" value={ content } />
+			</div>
+		);
+	},
+} );
