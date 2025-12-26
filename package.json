@@ -10,6 +10,7 @@
 	"repository": "victoraigbeghian/intercessor",
 	"license": "GPL-3.0+",
 	"devDependencies": {
+		"@wordpress/scripts": "^24.0.0",
 		"gulp": "^4.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-checktextdomain": "^2.2.0",
@@ -35,6 +36,10 @@
 		"gulp-wp-pot": "^2.3.3"
 	},
 	"scripts": {
+		"build:blocks": "wp-scripts build src/blocks/prayer-request/index.js --output-path=src/blocks/prayer-request && wp-scripts build src/blocks/intercessor-list/index.js --output-path=src/blocks/intercessor-list",
+		"start:blocks": "wp-scripts start src/blocks/prayer-request/index.js --output-path=src/blocks/prayer-request & wp-scripts start src/blocks/intercessor-list/index.js --output-path=src/blocks/intercessor-list",
+		"build": "npm run build:blocks",
+		"start": "npm run start:blocks",
 		"test": "dockunit",
 		"preversion": "npm test",
 		"version": "grunt version && git add ."
