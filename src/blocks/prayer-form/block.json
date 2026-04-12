@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "intercessor/prayer-form",
+	"title": "Prayer Form",
+	"category": "widgets",
+	"icon": "heart",
+	"description": "Allow visitors to submit prayer requests.",
+	"keywords": ["prayer", "form", "request", "intercessor"],
+	"textdomain": "intercessor",
+	"editorScript": "file:./index.js",
+	"supports": {
+		"html": false,
+		"align": ["wide", "full"],
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"showAnonymousOption": {
+			"type": "boolean",
+			"default": true
+		},
+		"submitLabel": {
+			"type": "string",
+			"default": ""
+		},
+		"successMessage": {
+			"type": "string",
+			"default": ""
+		}
+	}
+}
