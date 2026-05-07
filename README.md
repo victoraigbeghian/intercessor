@@ -2,7 +2,7 @@
 
 > A complete WordPress plugin for managing prayer requests — with public submission, anonymous and private sharing, requester management, moderation workflows, exports, reports, and prayer activity tracking.
 
-[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.2-blue)](https://github.com/devLayerX/intercessor/releases)
+[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/victoraigbeghian/intercessor/releases)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![Requires PHP](https://img.shields.io/badge/PHP-8.0%2B-purple)](https://php.net)
 [![Requires WordPress](https://img.shields.io/badge/WordPress-6.3%2B-blue)](https://wordpress.org)
