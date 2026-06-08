@@ -2,7 +2,7 @@
 
 > A complete WordPress plugin for managing prayer requests — with public submission, anonymous and private sharing, requester management, moderation workflows, exports, reports, and prayer activity tracking.
 
-[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.2-blue)](https://github.com/victoraigbeghian/intercessor/releases)
+[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/victoraigbeghian/intercessor/releases)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![Requires PHP](https://img.shields.io/badge/PHP-8.0%2B-purple)](https://php.net)
 [![Requires WordPress](https://img.shields.io/badge/WordPress-6.3%2B-blue)](https://wordpress.org)
@@ -169,22 +169,21 @@ intercessor/
 │   ├── admin/
 │   │   ├── dashboard.php
 │   │   ├── request-detail.php         Single request + notes panel
-│   │   ├── requester-detail.php       Tabbed requester shell
 │   │   ├── requesters.php             List + branches to detail view
 │   │   ├── requests.php
-│   │   ├── settings.php
 │   │   └── tools/exports.php
 │   └── blocks/
 │       ├── prayer-form.php
-│       ├── prayer-history.php
-│       └── prayer-wall.php
+│       ├── prayer-wall.php
+│       └── user-prayer-history.php
 │
 ├── assets/
 │   ├── css/{admin,iconfont,public}.css
 │   ├── fonts/intercessor.{eot,svg,ttf,woff}
 │   └── js/
 │       ├── admin/admin.js
-│       └── blocks/{prayer-form,prayer-wall,prayer-history}/
+│       ├── blocks/{prayer-form,prayer-wall,prayer-history}/
+│       └── public/{prayer-form,prayer-wall,prayer-history}.js
 │
 ├── languages/
 └── tests/
@@ -270,6 +269,12 @@ npm run build
 # Watch for changes during development
 npm run start
 
+# Package for WordPress.org (builds + zips)
+npm run package
+
+# Zip without rebuilding
+npm run zip
+
 # Lint PHP (requires PHP_CodeSniffer + WordPress Coding Standards)
 ./vendor/bin/phpcs
 
@@ -303,17 +308,6 @@ Please open an issue before starting work on significant changes.
 ---
 
 ## Changelog
-
-### 1.0.2
-- Updated plugin description.
-
-### 1.0.1
-- Added tabbed requester detail view (Overview, Prayer Requests, History, Notes, Delete).
-- Added requester notes — private admin annotations on requester records with their own database table.
-- Added three custom WordPress roles: `prayer_manager`, `prayer_warrior`, `requester`.
-- Added six custom capabilities replacing all `manage_options` checks throughout the plugin.
-- Added `View` row action to the requesters list table.
-- Updated uninstall routine to clean up roles, caps, and the new table.
 
 ### 1.0.0
 - Initial public release.
