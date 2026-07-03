@@ -12,7 +12,6 @@ namespace Intercessor\Admin\Settings;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Validates and sanitizes settings input before it is stored.
  *

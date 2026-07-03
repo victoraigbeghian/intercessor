@@ -12,7 +12,6 @@ namespace Intercessor\Admin;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Database\Query\Requester_Query;
 use Intercessor\Http\Request;
 use WP_List_Table;

@@ -12,7 +12,6 @@ namespace Intercessor\Admin\Settings;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Defines the schema for tabs, sections, and fields.
  *

@@ -12,7 +12,6 @@ namespace Intercessor\Admin\Settings;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Reads and writes plugin settings via the WordPress Options API.
  *

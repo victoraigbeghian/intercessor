@@ -13,7 +13,6 @@ namespace Intercessor\Admin;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings\Registry;
 use Intercessor\Admin\Settings\Repository;
 use Intercessor\Admin\Settings\Sanitizer;

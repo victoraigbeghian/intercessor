@@ -12,7 +12,6 @@ namespace Intercessor\Admin;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Database\Query\Prayer_Note_Query;
 use Intercessor\Database\Query\Prayer_Request_Query;
 use Intercessor\Http\Request;

@@ -12,7 +12,6 @@ namespace Intercessor\Block;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Util\Recaptcha;
 

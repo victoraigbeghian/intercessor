@@ -13,7 +13,6 @@ namespace Intercessor\Database\Queries;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Generates SQL WHERE sub-clauses that filter BerlinDB query results by date.
  *

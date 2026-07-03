@@ -12,7 +12,6 @@ namespace Intercessor\Admin\Settings;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Http\Request;
 
 /**

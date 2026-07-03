@@ -12,7 +12,6 @@ namespace Intercessor\Block;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Registers all Intercessor Gutenberg blocks with WordPress.
  *

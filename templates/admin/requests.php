@@ -132,6 +132,8 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php $table->search_box( esc_html__( 'Search', 'intercessor' ), 'intercessor-search' ); ?>
 
+		<?php $table->views(); ?>
+		
 		<?php $table->display(); ?>
 
 	</form>
