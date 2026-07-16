@@ -1,6 +1,6 @@
 <?php
 /**
- * Prayer Wall block render callback.
+ * Prayer History block render callback.
  *
  * @package Intercessor
  * @since   1.0.0
@@ -9,111 +9,173 @@ declare(strict_types=1);
 
 namespace Intercessor\Block;
 
-// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayer_Request_Query;
+use Intercessor\Database\Query\Prayed_Count_Query;
 use Intercessor\Database\Query\Requester_Query;
-use Intercessor\Http\Request;
 
 /**
- * Server-side render callback for the intercessor/prayer-wall Gutenberg block.
+ * Server-side render callback for the intercessor/prayer-history Gutenberg block.
  *
- * Renders a paginated, filterable list of prayer requests on the front end.
- * Pagination is driven by the 'ipage' GET parameter to avoid conflicts with
- * WordPress's native paged parameter.
+ * Renders a user-facing dashboard of the logged-in user's own prayer requests.
+ * Guests see a combined login / register prompt and are redirected back after
+ * authentication. Authenticated users can view, edit, and delete their requests.
+ * Edits reset status to 'pending' for admin re-moderation.
  *
- * @since   1.0.0
+ * @since   1.1.0 Redesigned from a single-request timeline to the user history dashboard.
  * @package Intercessor
  */
-final class Prayer_Wall_Block {
+final class Prayer_History_Block {
 
-	/**
-	 * Return the default block attribute definitions.
-	 *
-	 * @since  1.0.0
-	 * @return array<string, array<string, mixed>> Map of attribute name to schema definition.
-	 */
 	public static function default_attributes(): array {
-		return array(
-			'limit'      => array( 'type' => 'integer', 'default' => 10 ),
-			'showDate'   => array( 'type' => 'boolean', 'default' => true ),
-			'showAuthor' => array( 'type' => 'boolean', 'default' => true ),
-			'status'     => array( 'type' => 'string',  'default' => 'approved' ),
-		);
+		return array();
 	}
 
-	/**
-	 * Render the paginated prayer request list on the front end.
-	 *
-	 * Block attributes are merged with the corresponding plugin settings so
-	 * editor-configured values take precedence over global defaults. The
-	 * $paged, $maxPages, $items, $requesterQuery, $showDate, and $showAuthor
-	 * variables are extracted into the template scope via the require statement.
-	 *
-	 * @since  1.0.0
-	 * @param  array<string, mixed> $attributes Block attributes from the block editor.
-	 * @param  string               $content    Inner block content (unused).
-	 * @return string                           Rendered HTML string.
-	 */
 	public function render( array $attributes, string $content ): string {
-		$limit      = absint( $attributes['limit']      ?? Settings::get( 'requests_per_page', 10 ) );
-		$showDate   = (bool) ( $attributes['showDate']   ?? Settings::get( 'show_date', true ) );
-		$showAuthor = (bool) ( $attributes['showAuthor'] ?? Settings::get( 'show_requester_name', true ) );
-		$status = sanitize_key( $attributes['status'] ?? 'approved' );
-
-		// Ensure the data-carrier handle exists (may not be registered when the
-		// block lives in a reusable block, FSE template, or query loop).
+		// ── Assets ────────────────────────────────────────────────────────
 		if ( ! wp_script_is( 'intercessor-public', 'registered' ) ) {
+			wp_register_script( 'intercessor-public', '', array(), INTERCESSOR_VERSION, true );
+		}
+		if ( ! wp_script_is( 'intercessor-prayer-history', 'registered' ) ) {
 			wp_register_script(
-				'intercessor-public',
-				'', // no src — data carrier only.
-				array(),
+				'intercessor-prayer-history',
+				INTERCESSOR_URL . 'assets/js/public/prayer-history.js',
+				array( 'intercessor-public' ),
 				INTERCESSOR_VERSION,
 				true
 			);
 		}
-
-		// Directly enqueue the data-carrier handle so the wp_add_inline_script()
-		// call in prayer-wall.php (which injects window.intercessorPray) is
-		// guaranteed to be printed. Relying on the dependency chain alone is not
-		// sufficient when has_block() returned false during wp_enqueue_scripts.
-		wp_enqueue_script( 'intercessor-public' );
-		wp_enqueue_script( 'intercessor-prayer-wall' );
 		wp_enqueue_style( 'intercessor-public' );
+		wp_enqueue_script( 'intercessor-public' );
 
-		// 'private' requests are never shown publicly regardless of the
-		// block attribute — force back to 'approved' for non-admin callers.
-		if ( $status === 'private' && ! current_user_can( 'edit_prayers' ) ) {
-			$status = 'approved';
+		// ── Guest: login + register prompt ────────────────────────────────
+		if ( ! is_user_logged_in() ) {
+			return $this->render_guest_prompt();
 		}
 
-		$paged = max( 1, get_query_var( 'intercessor_page', 1 ) );
-		$ipage = Request::capture()->get_int( 'ipage' );
-		if ( $ipage > 0 ) {
-			$paged = $ipage;
+		// ── JS config (once per page) ──────────────────────────────────────
+		if ( ! defined( 'INTERCESSOR_HISTORY_CONFIG_PRINTED' ) ) {
+			define( 'INTERCESSOR_HISTORY_CONFIG_PRINTED', true );
+
+			$cfg = wp_json_encode( array(
+				'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( 'intercessor_history' ),
+				'updateAction' => 'intercessor_update_own_request',
+				'deleteAction' => 'intercessor_delete_own_request',
+				'i18n'         => array(
+					'edit'          => esc_html__( 'Edit',     'intercessor' ),
+					'cancelEdit'    => esc_html__( 'Cancel',   'intercessor' ),
+					'pendingLabel'  => esc_html__( 'Pending review', 'intercessor' ),
+					'updateSuccess' => esc_html__( 'Saved — your request will be reviewed shortly.', 'intercessor' ),
+					'error'         => esc_html__( 'An error occurred. Please try again.', 'intercessor' ),
+					'networkError'  => esc_html__( 'Network error. Please try again.', 'intercessor' ),
+					'confirmDelete' => esc_html__( 'Are you sure you want to delete this prayer request? This cannot be undone.', 'intercessor' ),
+					'deleteError'   => esc_html__( 'Could not delete the prayer request.', 'intercessor' ),
+				),
+			) );
+
+			wp_add_inline_script( 'intercessor-public', 'window.intercessorHistory = ' . $cfg . ';', 'before' );
 		}
 
-		$query = new Prayer_Request_Query();
-		$items = $query->get_items(
-			array(
-				'status'    => $status,
-				'is_public' => 1,
-				'number'    => $limit,
-				'offset'    => ( $paged - 1 ) * $limit,
-				'orderby'   => 'date_created',
-				'order'     => 'DESC',
-			)
-		);
+		wp_enqueue_script( 'intercessor-prayer-history' );
 
-		$total    = $query->count_items( array( 'status' => $status, 'is_public' => 1 ) );
-		$maxPages = (int) ceil( $total / $limit );
+		// ── Requester lookup ───────────────────────────────────────────────
+		$requester_query = new Requester_Query();
+		$requester       = $requester_query->find_by_wp_user( get_current_user_id() );
 
-		$requesterQuery = new Requester_Query();
+		if ( ! $requester ) {
+			return '<div class="intercessor-user-history wp-block-intercessor-prayer-history">'
+				. '<p class="intercessor-empty">'
+				. esc_html__( "You haven't submitted any prayer requests yet.", 'intercessor' )
+				. '</p></div>';
+		}
+
+		// ── Fetch all requests (all statuses, newest first) ────────────────
+		$prayer_query = new Prayer_Request_Query();
+		$items        = $prayer_query->get_items( array(
+			'requester_id' => $requester->id,
+			'orderby'      => 'date_created',
+			'order'        => 'DESC',
+			'number'       => 100,
+		) );
+
+		$countQuery = new Prayed_Count_Query();
 
 		ob_start();
-		require INTERCESSOR_DIR . 'templates/blocks/prayer-wall.php';
+		require INTERCESSOR_DIR . 'templates/blocks/user-prayer-history.php';
 		return ob_get_clean() ?: '';
+	}
+
+	/**
+	 * Render the login + register prompt for guests.
+	 *
+	 * @since  1.1.0
+	 */
+	private function render_guest_prompt(): string {
+		$current_url  = $this->current_url();
+		$login_form   = wp_login_form( array(
+			'echo'           => false,
+			'redirect'       => $current_url,
+			'form_id'        => 'intercessor-history-loginform',
+			'label_username' => esc_html__( 'Username or Email Address', 'intercessor' ),
+			'label_password' => esc_html__( 'Password', 'intercessor' ),
+			'label_remember' => esc_html__( 'Remember Me', 'intercessor' ),
+			'label_log_in'   => esc_html__( 'Log In', 'intercessor' ),
+			'remember'       => true,
+		) );
+
+		$register_url = add_query_arg(
+			'redirect_to',
+			rawurlencode( $current_url ),
+			wp_registration_url()
+		);
+
+		ob_start();
+		?>
+		<div class="intercessor-guest-prompt wp-block-intercessor-prayer-history">
+
+			<div class="intercessor-guest-prompt__intro">
+				<span class="intercessor-guest-prompt__icon" aria-hidden="true"></span>
+				<h2 class="intercessor-guest-prompt__title">
+					<?php esc_html_e( 'Your Prayer History', 'intercessor' ); ?>
+				</h2>
+				<p class="intercessor-guest-prompt__message">
+					<?php esc_html_e( 'Log in to view, edit, or manage your prayer requests.', 'intercessor' ); ?>
+				</p>
+			</div>
+
+			<div class="intercessor-guest-prompt__login">
+				<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_login_form returns escaped WP core markup.
+				echo $login_form; ?>
+			</div>
+
+			<?php if ( get_option( 'users_can_register' ) ) : ?>
+				<div class="intercessor-guest-prompt__register">
+					<p>
+						<?php
+						printf(
+							/* translators: %s: link to registration page */
+							wp_kses( esc_html__( "Don't have an account? <a href=\"%s\">Register here</a>.", 'intercessor' ), array( 'a' => array( 'href' => array() ) ) ),
+							esc_url( $register_url )
+						);
+						?>
+					</p>
+				</div>
+			<?php endif; ?>
+
+		</div>
+		<?php
+		return ob_get_clean() ?: '';
+	}
+
+	/**
+	 * Return the current frontend URL for login redirect.
+	 */
+	private function current_url(): string {
+		$request_uri = isset( $_SERVER['REQUEST_URI'] )
+			? esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ) )
+			: '';
+		return home_url( $request_uri );
 	}
 }

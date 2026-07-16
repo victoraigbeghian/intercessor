@@ -12,7 +12,6 @@ namespace Intercessor\Http;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayer_Request_Query;
 use Intercessor\Database\Query\Requester_Query;
@@ -54,6 +53,7 @@ final class Submission_Service {
 	 * @param  string $subject     Sanitized subject line.
 	 * @param  string $content     Sanitized prayer request body.
 	 * @param  bool   $is_anonymous Whether to hide the requester's identity publicly.
+	 * @param  bool   $is_private   Whether the request should be kept private (not shown on the Prayer Wall).
 	 * @return int|WP_Error        New prayer request ID on success, or a WP_Error
 	 *                             whose 'status' data key carries the HTTP status code.
 	 */
@@ -63,7 +63,8 @@ final class Submission_Service {
 		string $last_name,
 		string $subject,
 		string $content,
-		bool $is_anonymous
+		bool $is_anonymous,
+		bool $is_private = false
 	): int|WP_Error {
 
 		// ── 1. Rate limit ─────────────────────────────────────────────────────
@@ -119,9 +120,9 @@ final class Submission_Service {
 			'requester_id'   => $requester_id,
 			'subject'        => $subject,
 			'content'        => $content,
-			'status'         => $initial_status,
+			'status'         => $is_private ? 'private' : $initial_status,
 			'is_anonymous'   => $is_anonymous ? 1 : 0,
-			'is_public'      => 1,
+			'is_public'      => $is_private ? 0 : 1,
 			'moderator_note' => $moderator_note,
 		) );
 

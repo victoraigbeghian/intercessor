@@ -12,10 +12,10 @@ namespace Intercessor\Database\Query;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\BerlinDB\Query;
 use Intercessor\Database\Row\Requester;
 use Intercessor\Database\Schema\Requesters_Schema;
+use Intercessor\Database\Query\Prayer_Request_Query;
 
 /**
  * Provides CRUD and domain-specific query methods for the requesters table.
@@ -148,5 +148,52 @@ final class Requester_Query extends Query {
 		);
 
 		return $results[0] ?? null;
+	}
+
+	/**
+	 * Check whether a requester (identified by email) has already submitted
+	 * a prayer request with the same subject line.
+	 *
+	 * Used by Submission_Pipeline to block duplicate submissions when the
+	 * "Prevent Duplicate Requests" setting is enabled.
+	 *
+	 * Returns false immediately when no requester record exists for the given
+	 * email — a first-time submitter can never have a duplicate.
+	 *
+	 * @since  1.0.1
+	 * @param  string $email   Sanitized email address of the submitter.
+	 * @param  string $subject Sanitized subject line of the new request.
+	 * @return bool            True when a duplicate exists; false otherwise.
+	 */
+	public function has_duplicate_subject( string $email, string $subject ): bool {
+		if ( '' === $email || '' === $subject ) {
+			return false;
+		}
+
+		$existing = $this->get_items(
+			array(
+				'email'  => $email,
+				'number' => 1,
+				'fields' => 'id',
+			)
+		);
+
+		if ( empty( $existing ) ) {
+			return false;
+		}
+
+		$requester_id = (int) $existing[0];
+
+		$prayer_query = new Prayer_Request_Query();
+		$matches      = $prayer_query->get_items(
+			array(
+				'requester_id' => $requester_id,
+				'subject'      => $subject,
+				'number'       => 1,
+				'fields'       => 'id',
+			)
+		);
+
+		return ! empty( $matches );
 	}
 }

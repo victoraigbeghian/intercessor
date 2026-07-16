@@ -12,7 +12,6 @@ namespace Intercessor\Public;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayed_Count_Query;
 use Intercessor\Database\Query\Prayer_Request_Query;
@@ -199,6 +198,8 @@ final class Public_Loader {
 		$subject    = $req->get_string( 'subject' );
 		$content    = $req->get_textarea( 'content' );
 		$anonymous  = (bool) $req->input( 'is_anonymous', false );
+		$is_private = (bool) Settings::get( 'allow_private_requests', false )
+			&& (bool) $req->input( 'is_private', false );
 
 		$errors = array();
 		if ( $first_name === '' )    { $errors[] = __( 'First name is required.', 'intercessor' ); }
@@ -211,7 +212,7 @@ final class Public_Loader {
 		}
 
 		// 5–7. Rate limit, profanity filter, DB insert, notifications.
-		$result = Submission_Pipeline::run( $email, $first_name, $last_name, $subject, $content, $anonymous );
+		$result = Submission_Pipeline::run( $email, $first_name, $last_name, $subject, $content, $anonymous, $is_private );
 
 		if ( is_wp_error( $result ) ) {
 			$status = (int) ( $result->get_error_data()['status'] ?? 500 );

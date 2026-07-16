@@ -184,6 +184,20 @@ final class Display_Page {
 							'default' => true,
 						],
 						[
+							'id'      => 'allow_private_requests',
+							'label'   => esc_html__( 'Allow Private Requests', 'intercessor' ),
+							'desc'    => esc_html__( 'Show a "Keep my prayer request private" checkbox on the submission form. Private requests are visible only to administrators and will never appear on the Prayer Wall.', 'intercessor' ),
+							'type'    => 'checkbox',
+							'default' => false,
+						],
+						[
+							'id'      => 'prevent_duplicate_requests',
+							'label'   => esc_html__( 'Prevent Duplicate Requests', 'intercessor' ),
+							'desc'    => esc_html__( 'Block a submitter from sending a new prayer request with the same subject as one they have already submitted.', 'intercessor' ),
+							'type'    => 'checkbox',
+							'default' => true,
+						],
+						[
 							'id'      => 'max_requests_per_day',
 							'label'   => esc_html__( 'Max Requests Per Email / Day', 'intercessor' ),
 							'desc'    => esc_html__( 'Maximum prayer requests one email address may submit in a 24-hour window. Set to 0 to disable rate limiting.', 'intercessor' ),
