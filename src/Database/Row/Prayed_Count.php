@@ -12,7 +12,6 @@ namespace Intercessor\Database\Row;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\BerlinDB\Row;
 
 /**

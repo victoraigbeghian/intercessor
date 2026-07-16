@@ -144,6 +144,7 @@ Other JavaScript files in `assets/js/public/` and `assets/js/admin/` are hand-wr
 * Added status filter bar (All / Pending / Approved / Rejected / Archived / Private) to the admin Prayer Requests list.
 * Fixed "Settings saved." notice not appearing after saving settings.
 * Fixed double blank lines throughout PHP source files.
+* Redesigned the Prayer History block — guest login prompt is now a styled card with icon; authenticated view replaced the data table with a card-per-request layout showing status, date, prayer count, and inline edit/delete actions.
 
 = 1.0.0 =
 * Initial release.

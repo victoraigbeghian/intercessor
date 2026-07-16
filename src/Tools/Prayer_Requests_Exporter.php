@@ -12,7 +12,6 @@ namespace Intercessor\Tools;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayer_Request_Query;
 use Intercessor\Database\Query\Requester_Query;

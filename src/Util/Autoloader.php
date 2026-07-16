@@ -12,7 +12,6 @@ namespace Intercessor\Util;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Multi-namespace PSR-4 autoloader for the Intercessor plugin.
  *

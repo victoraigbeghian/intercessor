@@ -12,7 +12,6 @@ namespace Intercessor\Tools;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Exports all Intercessor plugin settings to a timestamped CSV file.
  *

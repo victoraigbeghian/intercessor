@@ -12,7 +12,6 @@ namespace Intercessor\Tools;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Http\Request;
 
 /**
