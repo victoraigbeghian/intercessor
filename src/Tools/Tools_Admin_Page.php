@@ -12,7 +12,6 @@ namespace Intercessor\Tools;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Registers the Tools admin submenu page and dispatches CSV export and import requests.
  *

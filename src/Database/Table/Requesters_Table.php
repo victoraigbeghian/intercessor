@@ -12,7 +12,6 @@ namespace Intercessor\Database\Table;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\BerlinDB\Table;
 use Intercessor\Database\Schema\Requesters_Schema;
 

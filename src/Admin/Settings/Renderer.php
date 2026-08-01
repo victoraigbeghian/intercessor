@@ -143,16 +143,25 @@ class Renderer {
 	public function sanitize( $input ): array {
 		$req = Request::capture();
 
-		if ( ! $req->verify_nonce( 'intercessor_settings-options' ) ) {
-			return $this->repository->all();
-		}
-
-		$tab = $req->get_key( 'tab' ) ?: 'general';
+		$tab   = $req->get_key( 'tab' ) ?: 'general';
 		$clean = $this->sanitizer->sanitize( (array) $input, $tab );
 
 		// Preserve all existing keys from other tabs so a save on one tab
 		// never erases settings from a different tab.
-		return array_merge( $this->repository->all(), $clean );
+		$merged = array_merge( $this->repository->all(), $clean );
+
+		// Add the "Settings saved." notice that settings_errors() will render.
+		// options.php already verified the nonce before invoking this callback,
+		// so a second nonce check here is redundant and was silently preventing
+		// the notice from ever appearing.
+		add_settings_error(
+			'intercessor_settings',
+			'intercessor_settings_saved',
+			__( 'Settings saved.', 'intercessor' ),
+			'updated'
+		);
+
+		return $merged;
 	}
 
 	/**

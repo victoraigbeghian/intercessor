@@ -315,6 +315,7 @@ Please open an issue before starting work on significant changes.
 * Added status filter bar to the admin Prayer Requests list (All / Pending / Approved / Rejected / Archived / Private).
 * Fixed "Settings saved." notice not appearing after saving settings.
 * Fixed double blank lines throughout PHP source files.
+* Redesigned the Prayer History block — guest login prompt is now a styled card with icon; authenticated view uses a card-per-request layout.
 
 ### 1.0.0
 - Initial public release.

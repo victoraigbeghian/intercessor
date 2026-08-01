@@ -12,7 +12,6 @@ namespace Intercessor;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Database\Table_Registry;
 use Intercessor\Roles;
 use Intercessor\Util\Cron_Handler;
