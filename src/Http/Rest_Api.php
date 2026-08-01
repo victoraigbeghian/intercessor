@@ -12,7 +12,6 @@ namespace Intercessor\Http;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayer_History_Query;
 use Intercessor\Database\Query\Prayer_Note_Query;
@@ -324,17 +323,21 @@ final class Rest_Api {
 	 * @since  1.0.0
 	 * @since  1.0.1 Delegates to Submission_Service (was duplicating logic).
 	 * @param  WP_REST_Request $request REST request with email, first_name, last_name,
-	 *                                  subject, content, is_anonymous.
+	 *                                  subject, content, is_anonymous, is_private.
 	 * @return WP_REST_Response         201 with new ID, or 4xx/500 on failure.
 	 */
 	public function create_request( WP_REST_Request $request ): WP_REST_Response {
+		$allow_private = (bool) Settings::get( 'allow_private_requests', false );
+		$is_private    = $allow_private && (bool) $request->get_param( 'is_private' );
+
 		$result = Submission_Pipeline::run(
 			(string) $request->get_param( 'email' ),
 			(string) ( $request->get_param( 'first_name' ) ?? '' ),
 			(string) ( $request->get_param( 'last_name' )  ?? '' ),
 			(string) $request->get_param( 'subject' ),
 			(string) $request->get_param( 'content' ),
-			(bool)   $request->get_param( 'is_anonymous' )
+			(bool)   $request->get_param( 'is_anonymous' ),
+			$is_private
 		);
 
 		// The pipeline returns a WP_Error on any failure, with an appropriate message and status code.
@@ -687,6 +690,7 @@ final class Rest_Api {
 			'subject'      => array( 'type' => 'string',  'required' => true,  'sanitize_callback' => 'sanitize_text_field' ),
 			'content'      => array( 'type' => 'string',  'required' => true,  'sanitize_callback' => 'sanitize_textarea_field' ),
 			'is_anonymous' => array( 'type' => 'boolean', 'default'  => false ),
+			'is_private'   => array( 'type' => 'boolean', 'default'  => false ),
 		);
 	}
 }

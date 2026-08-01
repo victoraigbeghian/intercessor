@@ -12,7 +12,6 @@ namespace Intercessor\Admin;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Thin read-only facade over the Intercessor settings option.
  *

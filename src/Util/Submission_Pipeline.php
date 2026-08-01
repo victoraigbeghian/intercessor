@@ -12,7 +12,6 @@ namespace Intercessor\Util;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Settings;
 use Intercessor\Database\Query\Prayer_Request_Query;
 use Intercessor\Database\Query\Requester_Query;
@@ -26,11 +25,13 @@ use Intercessor\Reports\Prayer_Request_Stats;
  * submission path enforces the same rules in the same order:
  *
  *   1. Rate limiting (per-email daily cap).
- *   2. Profanity filter — flags matching requests to 'pending' with a
+ *   2. Duplicate-subject check — blocks resubmission of the same subject
+ *      when the "Prevent Duplicate Requests" setting is enabled.
+ *   3. Profanity filter — flags matching requests to 'pending' with a
  *      moderator note; does NOT block the submission.
- *   3. Find or create a requester record by email.
- *   4. Insert the prayer request row.
- *   5. Email notifications (admin new-request, requester acknowledgement).
+ *   4. Find or create a requester record by email.
+ *   5. Insert the prayer request row.
+ *   6. Email notifications (admin new-request, requester acknowledgement).
  *
  * Nonce/reCAPTCHA/login checks are transport-specific and remain in the
  * calling handler; they must be applied BEFORE calling run().
@@ -51,6 +52,7 @@ final class Submission_Pipeline {
 	 * @param  string $subject      Sanitized subject line.
 	 * @param  string $content      Sanitized prayer request body.
 	 * @param  bool   $is_anonymous Whether the requester wishes to remain anonymous.
+	 * @param  bool   $is_private   Whether the request should be kept private (never shown on the Prayer Wall).
 	 *
 	 * @return int|\WP_Error  New prayer request ID on success; WP_Error on failure.
 	 *                        The WP_Error data array always contains 'status' (HTTP
@@ -63,7 +65,8 @@ final class Submission_Pipeline {
 		string $last_name,
 		string $subject,
 		string $content,
-		bool $is_anonymous = false
+		bool $is_anonymous = false,
+		bool $is_private = false
 	): int|\WP_Error {
 
 		// ── 1. Rate limit ──────────────────────────────────────────────────
@@ -86,7 +89,19 @@ final class Submission_Pipeline {
 			);
 		}
 
-		// ── 2. Profanity filter ────────────────────────────────────────────
+		// ── 2. Duplicate-subject check ─────────────────────────────────────
+		if ( (bool) Settings::get( 'prevent_duplicate_requests', true ) ) {
+			$requester_query = new Requester_Query();
+			if ( $requester_query->has_duplicate_subject( $email, $subject ) ) {
+				return new \WP_Error(
+					'intercessor_duplicate_request',
+					__( 'You have already submitted a prayer request with this subject. Please use a different subject or update your existing request.', 'intercessor' ),
+					array( 'status' => 409 )
+				);
+			}
+		}
+
+		// ── 3. Profanity filter ────────────────────────────────────────────
 		$auto_approve   = (bool) Settings::get( 'auto_approve', false );
 		$initial_status = $auto_approve ? 'approved' : 'pending';
 		$moderator_note = '';
@@ -105,7 +120,7 @@ final class Submission_Pipeline {
 			}
 		}
 
-		// ── 3. Find or create requester ────────────────────────────────────
+		// ── 4. Find or create requester ────────────────────────────────────
 		$requester_query = new Requester_Query();
 		$requester_id    = $requester_query->find_or_create( $email, $first_name, $last_name );
 
@@ -117,16 +132,16 @@ final class Submission_Pipeline {
 			);
 		}
 
-		// ── 4. Insert prayer request ───────────────────────────────────────
+		// ── 5. Insert prayer request ───────────────────────────────────────
 		$prayer_query = new Prayer_Request_Query();
 		$new_id       = $prayer_query->add_item(
 			array(
 				'requester_id'   => $requester_id,
 				'subject'        => $subject,
 				'content'        => $content,
-				'status'         => $initial_status,
+				'status'         => $is_private ? 'private' : $initial_status,
 				'is_anonymous'   => $is_anonymous ? 1 : 0,
-				'is_public'      => 1,
+				'is_public'      => $is_private ? 0 : 1,
 				'moderator_note' => $moderator_note,
 			)
 		);
@@ -139,7 +154,7 @@ final class Submission_Pipeline {
 			);
 		}
 
-		// ── 5. Notifications ───────────────────────────────────────────────
+		// ── 6. Notifications ───────────────────────────────────────────────
 		Notifier::notify_admin_new_request( $new_id );
 		Notifier::notify_requester_received( $new_id );
 

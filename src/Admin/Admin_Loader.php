@@ -12,7 +12,6 @@ namespace Intercessor\Admin;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Prayer_Request_List_Table;
 use Intercessor\Admin\Requester_List_Table;
 use Intercessor\Admin\Requester_View;

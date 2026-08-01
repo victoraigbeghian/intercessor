@@ -4,7 +4,7 @@ Tags:              prayer, prayer request, church, ministry, community
 Requires at least: 6.3
 Tested up to:      7.0
 Requires PHP:      8.0
-Stable tag:        1.0.0
+Stable tag:        1.0.1
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,6 +137,14 @@ The Gutenberg block editor scripts in `assets/js/blocks/` are built from their u
 Other JavaScript files in `assets/js/public/` and `assets/js/admin/` are hand-written and shipped unminified.
 
 == Changelog ==
+
+= 1.0.1 =
+* Added "Keep my prayer request private" option on the submission form. Private requests are visible only to administrators and never appear on the Prayer Wall.
+* Added "Prevent Duplicate Requests" setting to block resubmission of the same subject line by the same requester.
+* Added status filter bar (All / Pending / Approved / Rejected / Archived / Private) to the admin Prayer Requests list.
+* Fixed "Settings saved." notice not appearing after saving settings.
+* Fixed double blank lines throughout PHP source files.
+* Redesigned the Prayer History block — guest login prompt is now a styled card with icon; authenticated view replaced the data table with a card-per-request layout showing status, date, prayer count, and inline edit/delete actions.
 
 = 1.0.0 =
 * Initial release.

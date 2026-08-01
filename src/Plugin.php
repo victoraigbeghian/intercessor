@@ -12,7 +12,6 @@ namespace Intercessor;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Admin\Admin_Loader;
 use Intercessor\Block\Block_Loader;
 use Intercessor\Http\Rest_Api;

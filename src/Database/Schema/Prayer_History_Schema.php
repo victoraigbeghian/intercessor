@@ -12,7 +12,6 @@ namespace Intercessor\Database\Schema;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\BerlinDB\Schema;
 
 /**

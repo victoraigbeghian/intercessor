@@ -40,6 +40,7 @@ $terms_url    = (string) Settings::get( 'terms_url', '' );
 $show_privacy = (bool) Settings::get( 'show_privacy_policy', false );
 $privacy_label = (string) Settings::get( 'privacy_label', '' );
 $privacy_url  = (string) Settings::get( 'privacy_url', '' );
+$show_private_option = (bool) Settings::get( 'allow_private_requests', false );
 ?>
 <div class="intercessor-prayer-form wp-block-intercessor-prayer-form" data-intercessor-form>
 
@@ -118,6 +119,18 @@ $privacy_url  = (string) Settings::get( 'privacy_url', '' );
 				<input type="checkbox" name="is_anonymous" value="1">
 				<?php esc_html_e( 'Keep my name anonymous on the public list', 'intercessor' ); ?>
 			</label>
+		</div>
+		<?php endif; ?>
+
+		<?php if ( $show_private_option ) : ?>
+		<div class="intercessor-field intercessor-field--checkbox intercessor-field--private">
+			<label>
+				<input type="checkbox" name="is_private" value="1" id="intercessor-is-private">
+				<?php esc_html_e( 'Keep my prayer request private', 'intercessor' ); ?>
+			</label>
+			<p class="intercessor-field-hint">
+				<?php esc_html_e( 'Private requests are seen only by our prayer team and will not appear on the public Prayer Wall.', 'intercessor' ); ?>
+			</p>
 		</div>
 		<?php endif; ?>
 

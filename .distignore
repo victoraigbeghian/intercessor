@@ -1,0 +1,37 @@
+# Files and directories excluded from the WordPress.org SVN distribution.
+# Mirrors the exclude lists in scripts/package-plugin.js.
+# Used by 10up/action-wordpress-plugin-deploy.
+
+# Build tooling & config
+node_modules
+package.json
+package-lock.json
+webpack.config.js
+composer.json
+composer.lock
+phpcs.xml
+phpunit.xml
+phpunit.xml.dist
+.npmrc
+
+# Webpack block source (built output is assets/js/blocks/)
+# src/blocks is intentionally INCLUDED so human-readable source ships with the plugin.
+
+# CI / repo meta
+.github
+.gitignore
+README.md
+
+# Tests
+tests
+
+# Packaging script & output
+scripts
+dist
+
+# Wiki
+wiki
+
+# Misc
+*.zip
+.DS_Store

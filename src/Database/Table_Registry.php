@@ -12,7 +12,6 @@ namespace Intercessor\Database;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\Database\Table\Prayer_Requests_Table;
 use Intercessor\Database\Table\Requesters_Table;
 use Intercessor\Database\Table\Prayer_History_Table;

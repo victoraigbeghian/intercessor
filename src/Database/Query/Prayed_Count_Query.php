@@ -12,7 +12,6 @@ namespace Intercessor\Database\Query;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 use Intercessor\BerlinDB\Query;
 use Intercessor\Database\Row\Prayed_Count;
 use Intercessor\Database\Schema\Prayed_Counts_Schema;

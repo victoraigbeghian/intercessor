@@ -136,6 +136,7 @@ final class Prayer_History_Block {
 		<div class="intercessor-guest-prompt wp-block-intercessor-prayer-history">
 
 			<div class="intercessor-guest-prompt__intro">
+				<span class="intercessor-guest-prompt__icon" aria-hidden="true"></span>
 				<h2 class="intercessor-guest-prompt__title">
 					<?php esc_html_e( 'Your Prayer History', 'intercessor' ); ?>
 				</h2>

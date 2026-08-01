@@ -1,20 +1,26 @@
-name: Sync README to Wiki
+name: Sync wiki to GitHub Wiki
 
+# Pushes the contents of wiki/ to the repo's GitHub Wiki on every
+# commit to main that touches a wiki file.
 on:
   push:
     branches: [main]
-    paths: [README.md]
+    paths:
+      - 'wiki/**'
 
 jobs:
   sync:
+    name: Publish wiki pages
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Push README to wiki
-        uses: nicoulaj/github-markdown-wiki@v1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push wiki/ directory to GitHub Wiki
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
         with:
-          files: README.md
-          wiki-page-name: Home
+          path: wiki
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO:      ${{ github.repository }}

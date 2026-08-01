@@ -42,137 +42,149 @@ $status_label = static function ( string $status ): string {
 <div class="intercessor-user-history wp-block-intercessor-prayer-history">
 
 	<?php if ( empty( $items ) ) : ?>
-		<p class="intercessor-empty">
-			<?php esc_html_e( "You haven't submitted any prayer requests yet.", 'intercessor' ); ?>
-		</p>
+
+		<div class="intercessor-user-history__empty">
+			<span class="intercessor-user-history__empty-icon" aria-hidden="true"></span>
+			<p class="intercessor-user-history__empty-text">
+				<?php esc_html_e( "You haven't submitted any prayer requests yet.", 'intercessor' ); ?>
+			</p>
+		</div>
 
 	<?php else : ?>
 
-		<h2 class="intercessor-user-history__title">
-			<?php esc_html_e( 'Your Prayer Requests', 'intercessor' ); ?>
-		</h2>
+		<div class="intercessor-user-history__header">
+			<h2 class="intercessor-user-history__title">
+				<?php esc_html_e( 'Your Prayer Requests', 'intercessor' ); ?>
+			</h2>
+			<span class="intercessor-user-history__count">
+				<?php echo absint( count( $items ) ); ?>
+			</span>
+		</div>
 
 		<div class="intercessor-user-history__notice" aria-live="polite"></div>
 
-		<table class="intercessor-user-history__table">
-			<thead>
-				<tr>
-					<th class="ipr-col-id"><?php esc_html_e( '#', 'intercessor' ); ?></th>
-					<th class="ipr-col-date"><?php esc_html_e( 'Date', 'intercessor' ); ?></th>
-					<th class="ipr-col-details"><?php esc_html_e( 'Prayer Details', 'intercessor' ); ?></th>
-					<th class="ipr-col-prayed"><?php esc_html_e( 'Prayed', 'intercessor' ); ?></th>
-					<th class="ipr-col-status"><?php esc_html_e( 'Status', 'intercessor' ); ?></th>
-					<th class="ipr-col-actions"><?php esc_html_e( 'Actions', 'intercessor' ); ?></th>
-				</tr>
-			</thead>
+		<div class="intercessor-user-history__list">
 
-			<tbody>
-				<?php foreach ( $items as $item ) :
-					$prayed_total = $countQuery->get_total_for_request( $item->id );
-					$item_date    = $item->date_created
-						? mysql2date( $dateFormat, $item->date_created )
-						: '';
-				?>
-					<tr class="ipr-user-row intercessor-status-<?php echo esc_attr( $item->status ); ?>">
+			<?php foreach ( $items as $item ) :
+				$prayed_total = $countQuery->get_total_for_request( $item->id );
+				$item_date    = $item->date_created
+					? mysql2date( $dateFormat, $item->date_created )
+					: '';
+			?>
 
-						<td class="ipr-col-id" data-label="<?php esc_attr_e( '#', 'intercessor' ); ?>">
-							#<?php echo absint( $item->id ); ?>
-						</td>
+			<div class="ipr-user-row intercessor-user-history__card intercessor-status-<?php echo esc_attr( $item->status ); ?>">
 
-						<td class="ipr-col-date" data-label="<?php esc_attr_e( 'Date', 'intercessor' ); ?>">
-							<?php if ( $item_date ) : ?>
-								<time datetime="<?php echo esc_attr( $item->date_created ); ?>">
-									<?php echo esc_html( $item_date ); ?>
-								</time>
-							<?php endif; ?>
-						</td>
+				<div class="intercessor-user-history__card-accent"></div>
 
-						<td class="ipr-col-details" data-label="<?php esc_attr_e( 'Prayer Details', 'intercessor' ); ?>">
-							<p class="ipr-row-subject">
-								<strong><?php echo esc_html( $item->subject ); ?></strong>
-							</p>
-							<p class="ipr-row-content">
-								<?php echo esc_html( wp_trim_words( $item->content, 20, '…' ) ); ?>
-							</p>
+				<div class="intercessor-user-history__card-body">
 
-							<?php // ── Inline edit form (hidden until Edit is clicked) ── ?>
-							<div class="ipr-edit-form" hidden>
-								<form class="ipr-update-form">
-									<input type="hidden" name="request_id" value="<?php echo absint( $item->id ); ?>" />
+					<div class="intercessor-user-history__card-head">
+						<p class="ipr-row-subject intercessor-user-history__subject">
+							<?php echo esc_html( $item->subject ); ?>
+						</p>
+						<span class="ipr-status-badge intercessor-status-<?php echo esc_attr( $item->status ); ?>">
+							<?php echo esc_html( $status_label( $item->status ) ); ?>
+						</span>
+					</div>
 
-									<p>
-										<label for="ipr-subject-<?php echo absint( $item->id ); ?>">
-											<?php esc_html_e( 'Subject', 'intercessor' ); ?>
-										</label>
-										<input
-											type="text"
-											id="ipr-subject-<?php echo absint( $item->id ); ?>"
-											name="subject"
-											class="intercessor-input"
-											value="<?php echo esc_attr( $item->subject ); ?>"
-											required
-										/>
-									</p>
+					<div class="intercessor-user-history__meta">
+						<?php if ( $item_date ) : ?>
+						<span class="intercessor-user-history__meta-item">
+							<span class="intercessor-user-history__meta-icon" aria-hidden="true">&#128197;</span>
+							<time datetime="<?php echo esc_attr( $item->date_created ); ?>">
+								<?php echo esc_html( $item_date ); ?>
+							</time>
+						</span>
+						<?php endif; ?>
+						<span class="intercessor-user-history__meta-item">
+							<span class="intercessor-user-history__meta-icon ipr-meta-praying" aria-hidden="true"></span>
+							<?php
+							echo esc_html(
+								sprintf(
+									/* translators: %d: number of people who prayed */
+									_n( '%d person prayed', '%d people prayed', $prayed_total, 'intercessor' ),
+									$prayed_total
+								)
+							);
+							?>
+						</span>
+					</div>
 
-									<p>
-										<label for="ipr-content-<?php echo absint( $item->id ); ?>">
-											<?php esc_html_e( 'Prayer Request', 'intercessor' ); ?>
-										</label>
-										<textarea
-											id="ipr-content-<?php echo absint( $item->id ); ?>"
-											name="content"
-											class="intercessor-input"
-											rows="4"
-											required
-										><?php echo esc_textarea( $item->content ); ?></textarea>
-									</p>
+					<p class="ipr-row-content intercessor-user-history__excerpt">
+						<?php echo esc_html( wp_trim_words( $item->content, 25, '…' ) ); ?>
+					</p>
 
-									<p class="ipr-form-msg" role="status" aria-live="polite"></p>
+					<?php // ── Inline edit form (hidden until Edit is clicked) ── ?>
+					<div class="ipr-edit-form intercessor-user-history__edit-form" hidden>
+						<form class="ipr-update-form">
+							<input type="hidden" name="request_id" value="<?php echo absint( $item->id ); ?>" />
 
-									<p class="ipr-form-notice">
-										<?php esc_html_e( 'Your request will be sent back for review after saving.', 'intercessor' ); ?>
-									</p>
-
-									<button type="submit" class="wp-element-button intercessor-submit">
-										<?php esc_html_e( 'Save Changes', 'intercessor' ); ?>
-									</button>
-								</form>
+							<div class="intercessor-user-history__edit-field">
+								<label for="ipr-subject-<?php echo absint( $item->id ); ?>">
+									<?php esc_html_e( 'Subject', 'intercessor' ); ?>
+								</label>
+								<input
+									type="text"
+									id="ipr-subject-<?php echo absint( $item->id ); ?>"
+									name="subject"
+									class="intercessor-input"
+									value="<?php echo esc_attr( $item->subject ); ?>"
+									required
+								/>
 							</div>
-						</td>
 
-						<td class="ipr-col-prayed" data-label="<?php esc_attr_e( 'Prayed', 'intercessor' ); ?>">
-							<?php echo absint( $prayed_total ); ?>
-						</td>
+							<div class="intercessor-user-history__edit-field">
+								<label for="ipr-content-<?php echo absint( $item->id ); ?>">
+									<?php esc_html_e( 'Prayer Request', 'intercessor' ); ?>
+								</label>
+								<textarea
+									id="ipr-content-<?php echo absint( $item->id ); ?>"
+									name="content"
+									class="intercessor-input"
+									rows="4"
+									required
+								><?php echo esc_textarea( $item->content ); ?></textarea>
+							</div>
 
-						<td class="ipr-col-status" data-label="<?php esc_attr_e( 'Status', 'intercessor' ); ?>">
-							<span class="ipr-status-badge intercessor-status-<?php echo esc_attr( $item->status ); ?>">
-								<?php echo esc_html( $status_label( $item->status ) ); ?>
-							</span>
-						</td>
+							<p class="intercessor-user-history__edit-notice">
+								<?php esc_html_e( 'Your request will be sent back for review after saving.', 'intercessor' ); ?>
+							</p>
 
-						<td class="ipr-col-actions" data-label="<?php esc_attr_e( 'Actions', 'intercessor' ); ?>">
-							<button
-								type="button"
-								class="wp-element-button intercessor-btn--secondary ipr-btn-edit"
-								data-ipr-action="edit"
-							>
-								<?php esc_html_e( 'Edit', 'intercessor' ); ?>
-							</button>
+							<p class="ipr-form-msg" role="status" aria-live="polite"></p>
 
-							<button
-								type="button"
-								class="wp-element-button intercessor-btn--danger ipr-btn-delete"
-								data-ipr-action="delete"
-								data-request-id="<?php echo absint( $item->id ); ?>"
-							>
-								<?php esc_html_e( 'Delete', 'intercessor' ); ?>
-							</button>
-						</td>
+							<div class="intercessor-user-history__edit-actions">
+								<button type="submit" class="wp-element-button intercessor-submit">
+									<?php esc_html_e( 'Save Changes', 'intercessor' ); ?>
+								</button>
+							</div>
+						</form>
+					</div>
 
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+					<div class="intercessor-user-history__actions">
+						<button
+							type="button"
+							class="intercessor-user-history__action-btn intercessor-user-history__action-btn--edit"
+							data-ipr-action="edit"
+						>
+							<?php esc_html_e( 'Edit', 'intercessor' ); ?>
+						</button>
+						<button
+							type="button"
+							class="intercessor-user-history__action-btn intercessor-user-history__action-btn--delete"
+							data-ipr-action="delete"
+							data-request-id="<?php echo absint( $item->id ); ?>"
+						>
+							<?php esc_html_e( 'Delete', 'intercessor' ); ?>
+						</button>
+					</div>
+
+				</div>
+
+			</div>
+
+			<?php endforeach; ?>
+
+		</div>
 
 	<?php endif; ?>
 

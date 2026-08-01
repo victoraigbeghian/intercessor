@@ -13,7 +13,6 @@ namespace Intercessor\Database\Queries;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Generates SQL WHERE sub-clauses that filter BerlinDB query results by date.
  *
@@ -575,7 +574,6 @@ class Date {
 	protected function get_sql_for_clause( array $query = array(), array $parent_query = array() ): array {
 		global $wpdb;
 
-
 		$where_parts   = array();
 		$now           = $this->get_now( $query );
 		$column        = $this->get_column( $query );
@@ -885,7 +883,6 @@ class Date {
 	 */
 	public function build_time_query( string $column, string $compare, ?int $hour, ?int $minute, ?int $second ) {
 		global $wpdb;
-
 
 		if ( is_null( $hour ) && is_null( $minute ) && is_null( $second ) ) {
 			return false;
