@@ -25,10 +25,11 @@
         "webpack-cli": "^5.1.4"
     },
     "dependencies": {
-        "@wordpress/block-editor": "*",
+        "@wordpress/block-editor": "^16.1.0",
         "@wordpress/blocks": "*",
         "@wordpress/components": "*",
         "@wordpress/element": "*",
-        "@wordpress/i18n": "*"
+        "@wordpress/i18n": "*",
+        "@wordpress/upload-media": "^0.37.0"
     }
 }
