@@ -18,6 +18,7 @@ use Intercessor\Admin\Requester_View;
 use Intercessor\Admin\Display_Page;
 use Intercessor\Admin\Dashboard_Widget;
 use Intercessor\Admin\Requester_Note_Handler;
+use Intercessor\Admin\Admin_Add_Request_Handler;
 use Intercessor\Reports\Reports_Page;
 use Intercessor\Http\Request;
 use Intercessor\Tools\Tools_Admin_Page;
@@ -96,6 +97,9 @@ final class Admin_Loader {
 		// Requester notes.
 		add_action( 'admin_post_intercessor_add_requester_note',    array( Requester_Note_Handler::class, 'handle_add' ) );
 		add_action( 'admin_post_intercessor_delete_requester_note', array( Requester_Note_Handler::class, 'handle_delete' ) );
+
+		// Admin add request form.
+		add_action( 'admin_post_intercessor_admin_add_request',     array( Admin_Add_Request_Handler::class, 'handle' ) );
 
 		// Export handlers.
 		( new Tools_Admin_Page() )->register();

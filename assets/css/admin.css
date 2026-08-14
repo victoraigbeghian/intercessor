@@ -1285,3 +1285,195 @@
     align-items: center;
     gap: 0.5rem;
 }
+
+/* ==========================================================================
+   Intercessor — Add Prayer Request modal
+   ========================================================================== */
+
+.intercessor-modal-open {
+    overflow: hidden;
+}
+
+.intercessor-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intercessor-modal[hidden] {
+    display: none;
+}
+
+.intercessor-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+.intercessor-modal__box {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.22);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Header ── */
+.intercessor-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #dcdcde;
+    flex-shrink: 0;
+}
+
+.intercessor-modal__title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1d2327;
+}
+
+.intercessor-modal__close {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: #787c82;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 3px;
+    transition: color 0.12s, background 0.12s;
+}
+
+.intercessor-modal__close:hover {
+    color: #1d2327;
+    background: #f0f0f1;
+}
+
+/* ── Body ── */
+.intercessor-modal__body {
+    padding: 1.25rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.intercessor-modal__fieldset {
+    margin: 0 0 1rem;
+    padding: 0;
+    border: none;
+}
+
+.intercessor-modal__label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #1d2327;
+    margin-bottom: 0.35rem;
+}
+
+.intercessor-modal__required {
+    color: #b32d2e;
+    margin-left: 2px;
+}
+
+.intercessor-modal__radio-group {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.intercessor-modal__radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.intercessor-modal__other-fields {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.intercessor-modal__field {
+    margin-bottom: 1rem;
+}
+
+.intercessor-modal__field:last-child {
+    margin-bottom: 0;
+}
+
+.intercessor-modal__row {
+    display: grid;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.intercessor-modal__row--two {
+    grid-template-columns: 1fr 1fr;
+}
+
+.intercessor-modal__field input[type="text"],
+.intercessor-modal__field input[type="email"],
+.intercessor-modal__field textarea,
+.intercessor-modal__field select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.intercessor-modal__field--checkbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.intercessor-modal__checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.intercessor-modal__hint {
+    margin: 0.3rem 0 0;
+    font-size: 0.8rem;
+    color: #50575e;
+    font-style: italic;
+}
+
+/* ── Footer ── */
+.intercessor-modal__footer {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1.25rem;
+    border-top: 1px solid #dcdcde;
+    flex-shrink: 0;
+    background: #f6f7f7;
+}
+
+@media (max-width: 640px) {
+    .intercessor-modal__box {
+        max-width: calc(100vw - 2rem);
+        margin: 1rem;
+    }
+
+    .intercessor-modal__row--two {
+        grid-template-columns: 1fr;
+    }
+}
