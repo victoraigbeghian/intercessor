@@ -387,6 +387,37 @@ final class Prayer_Request_List_Table extends WP_List_Table {
 			esc_html__( 'View', 'intercessor' )
 		);
 
-		return $approve . ' ' . $reject . ' ' . $view;
+		$pray = $this->render_admin_pray_button( $id );
+
+		return $approve . ' ' . $reject . ' ' . $view . ' ' . $pray;
+	}
+
+	/**
+	 * Render the admin "I prayed for this" button for a single row.
+	 *
+	 * Unlike the public Prayer Wall button, this is available for requests
+	 * in any status — including 'private' ones, which are never shown on
+	 * the front end and so can never be prayed for via the public button.
+	 * The click is handled entirely by admin.js via AJAX (intercessor_admin_record_prayer);
+	 * no page reload or nonce field is needed per-row since the shared
+	 * nonce is localized once via Admin_Loader::enqueue_assets().
+	 *
+	 * @since  1.2.0
+	 * @param  int $id Prayer request primary key.
+	 * @return string  HTML button markup.
+	 */
+	private function render_admin_pray_button( int $id ): string {
+		$total = ( new \Intercessor\Database\Query\Prayed_Count_Query() )->get_total_for_request( $id );
+
+		return sprintf(
+			'<button type="button" class="button button-small intercessor-admin-pray-btn" data-request-id="%1$d">
+				<span class="ipr-icon ipr-icon-praying" aria-hidden="true"></span>
+				<span class="intercessor-admin-pray-label">%2$s</span>
+				<span class="intercessor-admin-pray-count">%3$d</span>
+			</button>',
+			$id,
+			esc_html__( 'I prayed for this', 'intercessor' ),
+			absint( $total )
+		);
 	}
 }

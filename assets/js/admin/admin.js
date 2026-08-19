@@ -66,71 +66,58 @@
 	}
 
 	/**
-	 * Add Prayer Request modal — open, close, and "for type" toggle.
+	 * Wire up the admin "I prayed for this" buttons (list table row actions
+	 * and the single-request detail view). Records the interaction via AJAX
+	 * against intercessor_admin_record_prayer and updates the visible count
+	 * in place — no page reload. Works for requests in any status, including
+	 * 'private' ones that never appear on the public Prayer Wall.
 	 */
-	function initAddRequestModal() {
-		var $modal      = $( '#intercessor-add-modal' );
-		var $backdrop   = $( '#intercessor-modal-backdrop' );
-		var $openBtn    = $( '#intercessor-add-request-btn' );
-		var $closeBtn   = $( '#intercessor-modal-close' );
-		var $cancelBtn  = $( '#intercessor-modal-cancel' );
-		var $forRadios  = $modal.find( '[name="for_type"]' );
-		var $otherFlds  = $( '#intercessor-modal-other-fields' );
-		var $emailFld   = $( '#ipr-add-email' );
-		var $firstFld   = $( '#ipr-add-first-name' );
-		var $lastFld    = $( '#ipr-add-last-name' );
+	function bindAdminPrayButtons() {
+		var config = window.intercessorAdmin && window.intercessorAdmin.adminPray
+			? window.intercessorAdmin.adminPray
+			: {};
+		var i18n = config.i18n || {};
 
-		if ( ! $modal.length ) {
-			return;
-		}
+		$( 'body' ).on( 'click', '.intercessor-admin-pray-btn', function () {
+			var $btn   = $( this );
+			var $label = $btn.find( '.intercessor-admin-pray-label' );
+			var $count = $btn.find( '.intercessor-admin-pray-count' );
+			var orig   = $label.text();
 
-		function openModal() {
-			$modal.removeAttr( 'hidden' );
-			$modal.find( '#ipr-add-subject' ).trigger( 'focus' );
-			$( 'body' ).addClass( 'intercessor-modal-open' );
-		}
+			if ( $btn.prop( 'disabled' ) ) {
+				return;
+			}
 
-		function closeModal() {
-			$modal.attr( 'hidden', true );
-			$( 'body' ).removeClass( 'intercessor-modal-open' );
-			$modal[0].querySelector( 'form' ).reset();
-			$otherFlds.attr( 'hidden', true );
-		}
+			$btn.prop( 'disabled', true ).addClass( 'intercessor-admin-pray-btn--loading' );
+			$label.text( i18n.praying || 'Recording\u2026' );
 
-		function applyForType() {
-			var type = $forRadios.filter( ':checked' ).val();
-			var user = window.intercessorAdmin && window.intercessorAdmin.currentUser
-				? window.intercessorAdmin.currentUser : {};
-
-			if ( type === 'self' ) {
-				$otherFlds.attr( 'hidden', true );
-				$emailFld.removeAttr( 'required' );
-				$firstFld.removeAttr( 'required' );
-			} else {
-				$otherFlds.removeAttr( 'hidden' );
-				$emailFld.attr( 'required', true );
-				$firstFld.attr( 'required', true );
-				// Pre-clear if switching back from self
-				if ( $emailFld.val() === ( user.email || '' ) ) {
-					$emailFld.val( '' );
-					$firstFld.val( '' );
-					$lastFld.val( '' );
+			$.post(
+				config.ajaxUrl || ajaxurl,
+				{
+					action:     config.action || 'intercessor_admin_record_prayer',
+					nonce:      config.nonce || '',
+					request_id: $btn.data( 'requestId' ),
 				}
-				$emailFld.trigger( 'focus' );
-			}
-		}
-
-		$openBtn.on( 'click', openModal );
-		$closeBtn.on( 'click', closeModal );
-		$cancelBtn.on( 'click', closeModal );
-		$backdrop.on( 'click', closeModal );
-		$forRadios.on( 'change', applyForType );
-
-		// Close on Escape key.
-		$( document ).on( 'keydown', function ( e ) {
-			if ( e.key === 'Escape' && ! $modal.attr( 'hidden' ) ) {
-				closeModal();
-			}
+			).done( function ( response ) {
+				if ( response && response.success ) {
+					$label.text( i18n.prayed || 'Prayed for' );
+					$count.text( response.data.total );
+					$btn.addClass( 'intercessor-admin-pray-btn--prayed' );
+					$btn.prop( 'disabled', false );
+				} else {
+					$label.text( orig );
+					$btn.prop( 'disabled', false );
+					window.alert( // eslint-disable-line no-alert
+						( response && response.data && response.data.message ) || i18n.error || 'Could not record your prayer. Please try again.'
+					);
+				}
+			} ).fail( function () {
+				$label.text( orig );
+				$btn.prop( 'disabled', false );
+				window.alert( i18n.error || 'Could not record your prayer. Please try again.' ); // eslint-disable-line no-alert
+			} ).always( function () {
+				$btn.removeClass( 'intercessor-admin-pray-btn--loading' );
+			} );
 		} );
 	}
 
@@ -138,7 +125,7 @@
 		autoDismissNotices();
 		confirmBulkDelete();
 		highlightActiveTab();
-		initAddRequestModal();
+		bindAdminPrayButtons();
 	} );
 
 } )( jQuery );

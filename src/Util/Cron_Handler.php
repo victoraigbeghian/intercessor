@@ -216,12 +216,17 @@ final class Cron_Handler {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Execute the notification run: query all approved requests, check prayed
-	 * counts, and email requesters whose counts have grown since the last run.
+	 * Execute the notification run: query all approved and private requests,
+	 * check prayed counts, and email requesters whose counts have grown
+	 * since the last run.
 	 *
 	 * Fires on the 'intercessor_pray_notification' cron event.
 	 *
 	 * @since  1.0.0
+	 * @since  1.2.0 Includes 'private' status requests so requesters whose
+	 *               requests are hidden from the public Prayer Wall are
+	 *               still notified when an admin/prayer warrior prays for
+	 *               them via Admin_Loader::handle_admin_record_prayer().
 	 * @return void
 	 */
 	public function run(): void {
@@ -243,12 +248,18 @@ final class Cron_Handler {
 		$count_query  = new Prayed_Count_Query();
 		$req_query    = new Requester_Query();
 
-		// Fetch all approved public requests. No arbitrary limit — cron runs
-		// in the background so memory budget is the only practical constraint.
+		// Fetch all approved (public) and private requests. Private requests
+		// never appear on the public Prayer Wall — the only way they ever
+		// accumulate a prayed-for count is via the admin "I prayed for this"
+		// button (Admin_Loader::handle_admin_record_prayer()) — but their
+		// requesters still deserve to know someone prayed for them, so they
+		// are swept into the same notification batch as public ones.
+		// Pending/rejected/archived requests are intentionally excluded.
+		// No arbitrary limit — cron runs in the background so memory budget
+		// is the only practical constraint.
 		$requests = $prayer_query->get_items( array(
-			'status'    => 'approved',
-			'is_public' => 1,
-			'number'    => 0,
+			'status' => array( 'approved', 'private' ),
+			'number' => 0,
 		) );
 
 		foreach ( $requests as $request ) {
