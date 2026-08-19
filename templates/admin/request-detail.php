@@ -18,6 +18,7 @@ if ( ! current_user_can( 'edit_prayers' ) ) {
 	wp_die( esc_html__( 'You do not have permission to access this page.', 'intercessor' ) );
 }
 
+use Intercessor\Database\Query\Prayed_Count_Query;
 use Intercessor\Database\Query\Prayer_Note_Query;
 use Intercessor\Database\Query\Prayer_Request_Query;
 use Intercessor\Database\Query\Requester_Query;
@@ -45,6 +46,12 @@ $requester      = $request->requester_id > 0 ? $requesterQuery->get_item( $reque
 // ── Resolve notes ─────────────────────────────────────────────────────────────
 $noteQuery = new Prayer_Note_Query();
 $notes     = $noteQuery->get_for_request( $requestId );
+
+// ── Resolve prayed-for total ────────────────────────────────────────────────
+// Shown here (and prayable from here) regardless of status, so private
+// requests — never displayed on the public Prayer Wall — can still be
+// prayed for and counted from wp-admin.
+$prayedTotal = ( new Prayed_Count_Query() )->get_total_for_request( $requestId );
 
 // ── Formatting helpers ────────────────────────────────────────────────────────
 $dateFormat = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
@@ -201,6 +208,43 @@ $backUrl = admin_url( 'admin.php?page=intercessor-requests' );
 						<?php echo wp_kses_post( wpautop( $request->moderator_note ) ); ?>
 					</div>
 				<?php endif; ?>
+			</div>
+
+			<?php // ── Prayer activity box ────────────────────────────── ?>
+			<div class="intercessor-box">
+				<h2 class="intercessor-box__title">
+					<span class="ipr-icon ipr-icon-praying ipr-icon-inline" aria-hidden="true"></span>
+					<?php esc_html_e( 'Prayer Activity', 'intercessor' ); ?>
+				</h2>
+
+				<p class="intercessor-prayed-total">
+					<?php
+					echo esc_html(
+						sprintf(
+							/* translators: %d: number of times this request has been prayed for */
+							_n(
+								'Prayed for %d time so far.',
+								'Prayed for %d times so far.',
+								$prayedTotal,
+								'intercessor'
+							),
+							$prayedTotal
+						)
+					);
+					?>
+				</p>
+
+				<?php if ( $request->is_private_status() ) : ?>
+					<p class="description">
+						<?php esc_html_e( 'This request is private and never appears on the public Prayer Wall, so it can only be prayed for here.', 'intercessor' ); ?>
+					</p>
+				<?php endif; ?>
+
+				<button type="button" class="button intercessor-admin-pray-btn" data-request-id="<?php echo absint( $requestId ); ?>">
+					<span class="ipr-icon ipr-icon-praying" aria-hidden="true"></span>
+					<span class="intercessor-admin-pray-label"><?php esc_html_e( 'I prayed for this', 'intercessor' ); ?></span>
+					<span class="intercessor-admin-pray-count"><?php echo absint( $prayedTotal ); ?></span>
+				</button>
 			</div>
 
 			<?php // ── Moderation actions box ─────────────────────────── ?>

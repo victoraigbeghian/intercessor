@@ -24,13 +24,14 @@ defined( 'ABSPATH' ) || exit;
 <div class="wrap">
 
 	<h1 class="wp-heading-inline"><?php esc_html_e( 'Prayer Requests', 'intercessor' ); ?></h1>
+
+	<button type="button" class="page-title-action" id="intercessor-add-request-btn">
+		<?php esc_html_e( '+ Add Prayer Request', 'intercessor' ); ?>
+	</button>
+
 	<hr class="wp-header-end">
 
-	<?php
-	// ── Flash notices ────────────────────────────────────────────────────────
-
-	// Single-row moderation (approve / reject from inline buttons or detail view).
-	if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	<?php if ( isset( $_GET['updated'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php esc_html_e( 'Request updated.', 'intercessor' ); ?></p>
@@ -139,3 +140,130 @@ defined( 'ABSPATH' ) || exit;
 	</form>
 
 </div>
+
+<?php if ( isset( $_GET['added'] ) ) : // phpcs:ignore WordPress.Security.NonceVerification.Recommended ?>
+<script>
+document.addEventListener( 'DOMContentLoaded', function () {
+	var n = document.createElement( 'div' );
+	n.className = 'notice notice-success is-dismissible';
+	n.innerHTML = '<p><?php echo esc_js( __( 'Prayer request added successfully.', 'intercessor' ) ); ?></p>';
+	var h = document.querySelector( '.wp-header-end' );
+	if ( h ) h.after( n );
+} );
+</script>
+<?php endif; ?>
+
+<?php // ── Add Prayer Request modal ──────────────────────────────────────── ?>
+<div id="intercessor-add-modal" class="intercessor-modal" role="dialog" aria-modal="true" aria-labelledby="intercessor-modal-title" hidden>
+	<div class="intercessor-modal__backdrop" id="intercessor-modal-backdrop"></div>
+	<div class="intercessor-modal__box">
+
+		<div class="intercessor-modal__header">
+			<h2 class="intercessor-modal__title" id="intercessor-modal-title">
+				<?php esc_html_e( 'Add Prayer Request', 'intercessor' ); ?>
+			</h2>
+			<button type="button" class="intercessor-modal__close" id="intercessor-modal-close" aria-label="<?php esc_attr_e( 'Close', 'intercessor' ); ?>">&#10005;</button>
+		</div>
+
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" class="intercessor-modal__form">
+			<input type="hidden" name="action" value="intercessor_admin_add_request">
+			<?php wp_nonce_field( 'intercessor_admin_add_request' ); ?>
+
+			<div class="intercessor-modal__body">
+
+				<?php // ── For ──────────────────────────────────────────── ?>
+				<fieldset class="intercessor-modal__fieldset">
+					<legend class="intercessor-modal__label"><?php esc_html_e( 'This request is for', 'intercessor' ); ?></legend>
+					<div class="intercessor-modal__radio-group">
+						<label class="intercessor-modal__radio-label">
+							<input type="radio" name="for_type" value="self" checked>
+							<?php esc_html_e( 'Myself', 'intercessor' ); ?>
+						</label>
+						<label class="intercessor-modal__radio-label">
+							<input type="radio" name="for_type" value="other">
+							<?php esc_html_e( 'Someone else', 'intercessor' ); ?>
+						</label>
+					</div>
+				</fieldset>
+
+				<?php // ── Name + Email (shown for "someone else") ─────── ?>
+				<div id="intercessor-modal-other-fields" class="intercessor-modal__other-fields" hidden>
+					<div class="intercessor-modal__row intercessor-modal__row--two">
+						<div class="intercessor-modal__field">
+							<label class="intercessor-modal__label" for="ipr-add-first-name">
+								<?php esc_html_e( 'First Name', 'intercessor' ); ?>
+							</label>
+							<input type="text" id="ipr-add-first-name" name="first_name" class="regular-text">
+						</div>
+						<div class="intercessor-modal__field">
+							<label class="intercessor-modal__label" for="ipr-add-last-name">
+								<?php esc_html_e( 'Last Name', 'intercessor' ); ?>
+							</label>
+							<input type="text" id="ipr-add-last-name" name="last_name" class="regular-text">
+						</div>
+					</div>
+					<div class="intercessor-modal__field">
+						<label class="intercessor-modal__label" for="ipr-add-email">
+							<?php esc_html_e( 'Email', 'intercessor' ); ?>
+							<span class="intercessor-modal__required" aria-hidden="true">*</span>
+						</label>
+						<input type="email" id="ipr-add-email" name="email" class="regular-text" autocomplete="off">
+					</div>
+				</div>
+
+				<?php // ── Subject ──────────────────────────────────────── ?>
+				<div class="intercessor-modal__field">
+					<label class="intercessor-modal__label" for="ipr-add-subject">
+						<?php esc_html_e( 'Subject', 'intercessor' ); ?>
+						<span class="intercessor-modal__required" aria-hidden="true">*</span>
+					</label>
+					<input type="text" id="ipr-add-subject" name="subject" class="large-text" required>
+				</div>
+
+				<?php // ── Prayer Request ───────────────────────────────── ?>
+				<div class="intercessor-modal__field">
+					<label class="intercessor-modal__label" for="ipr-add-content">
+						<?php esc_html_e( 'Prayer Request', 'intercessor' ); ?>
+						<span class="intercessor-modal__required" aria-hidden="true">*</span>
+					</label>
+					<textarea id="ipr-add-content" name="content" rows="5" class="large-text" required></textarea>
+				</div>
+
+				<?php // ── Options row ──────────────────────────────────── ?>
+				<div class="intercessor-modal__row intercessor-modal__row--two">
+					<div class="intercessor-modal__field">
+						<label class="intercessor-modal__label" for="ipr-add-status">
+							<?php esc_html_e( 'Status', 'intercessor' ); ?>
+						</label>
+						<select id="ipr-add-status" name="status" class="regular-text">
+							<option value="pending"><?php esc_html_e( 'Pending', 'intercessor' ); ?></option>
+							<option value="approved"><?php esc_html_e( 'Approved', 'intercessor' ); ?></option>
+							<option value="private"><?php esc_html_e( 'Private', 'intercessor' ); ?></option>
+						</select>
+					</div>
+					<div class="intercessor-modal__field intercessor-modal__field--checkbox">
+						<label class="intercessor-modal__checkbox-label">
+							<input type="checkbox" name="is_anonymous" value="1">
+							<?php esc_html_e( 'Anonymous', 'intercessor' ); ?>
+						</label>
+						<p class="intercessor-modal__hint">
+							<?php esc_html_e( 'Hide requester name on the Prayer Wall.', 'intercessor' ); ?>
+						</p>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="intercessor-modal__footer">
+				<button type="submit" class="button button-primary">
+					<?php esc_html_e( 'Add Request', 'intercessor' ); ?>
+				</button>
+				<button type="button" class="button" id="intercessor-modal-cancel">
+					<?php esc_html_e( 'Cancel', 'intercessor' ); ?>
+				</button>
+			</div>
+
+		</form>
+	</div>
+</div>
+

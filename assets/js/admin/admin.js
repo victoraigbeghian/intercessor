@@ -65,10 +65,67 @@
 		} );
 	}
 
+	/**
+	 * Wire up the admin "I prayed for this" buttons (list table row actions
+	 * and the single-request detail view). Records the interaction via AJAX
+	 * against intercessor_admin_record_prayer and updates the visible count
+	 * in place — no page reload. Works for requests in any status, including
+	 * 'private' ones that never appear on the public Prayer Wall.
+	 */
+	function bindAdminPrayButtons() {
+		var config = window.intercessorAdmin && window.intercessorAdmin.adminPray
+			? window.intercessorAdmin.adminPray
+			: {};
+		var i18n = config.i18n || {};
+
+		$( 'body' ).on( 'click', '.intercessor-admin-pray-btn', function () {
+			var $btn   = $( this );
+			var $label = $btn.find( '.intercessor-admin-pray-label' );
+			var $count = $btn.find( '.intercessor-admin-pray-count' );
+			var orig   = $label.text();
+
+			if ( $btn.prop( 'disabled' ) ) {
+				return;
+			}
+
+			$btn.prop( 'disabled', true ).addClass( 'intercessor-admin-pray-btn--loading' );
+			$label.text( i18n.praying || 'Recording\u2026' );
+
+			$.post(
+				config.ajaxUrl || ajaxurl,
+				{
+					action:     config.action || 'intercessor_admin_record_prayer',
+					nonce:      config.nonce || '',
+					request_id: $btn.data( 'requestId' ),
+				}
+			).done( function ( response ) {
+				if ( response && response.success ) {
+					$label.text( i18n.prayed || 'Prayed for' );
+					$count.text( response.data.total );
+					$btn.addClass( 'intercessor-admin-pray-btn--prayed' );
+					$btn.prop( 'disabled', false );
+				} else {
+					$label.text( orig );
+					$btn.prop( 'disabled', false );
+					window.alert( // eslint-disable-line no-alert
+						( response && response.data && response.data.message ) || i18n.error || 'Could not record your prayer. Please try again.'
+					);
+				}
+			} ).fail( function () {
+				$label.text( orig );
+				$btn.prop( 'disabled', false );
+				window.alert( i18n.error || 'Could not record your prayer. Please try again.' ); // eslint-disable-line no-alert
+			} ).always( function () {
+				$btn.removeClass( 'intercessor-admin-pray-btn--loading' );
+			} );
+		} );
+	}
+
 	$( function () {
 		autoDismissNotices();
 		confirmBulkDelete();
 		highlightActiveTab();
+		bindAdminPrayButtons();
 	} );
 
 } )( jQuery );

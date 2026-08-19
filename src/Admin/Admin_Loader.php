@@ -74,6 +74,11 @@ final class Admin_Loader {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'print_menu_icon_style' ) );
 
+		// Admin "I prayed for this" interaction (list table + detail view).
+		// Logged-in only — no _nopriv variant — since it requires the
+		// edit_prayers capability and must work for private requests.
+		add_action( 'wp_ajax_intercessor_admin_record_prayer', array( $this, 'handle_admin_record_prayer' ) );
+
 		// Plugins list page: action links and row meta.
 		add_filter( 'plugin_action_links_' . INTERCESSOR_BASENAME, array( $this, 'add_action_links' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'add_row_meta' ), 10, 4 );
@@ -356,11 +361,85 @@ final class Admin_Loader {
 			'intercessor-admin',
 			'intercessorAdmin',
 			array(
-				'i18n' => array(
+				'i18n'      => array(
 					'confirmDelete' => __( 'Permanently delete the selected prayer requests? This cannot be undone.', 'intercessor' ),
+				),
+				'adminPray' => array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'intercessor_admin_record_prayer' ),
+					'action'  => 'intercessor_admin_record_prayer',
+					'i18n'    => array(
+						'praying' => __( 'Recording…',        'intercessor' ),
+						'prayed'  => __( 'Prayed for',        'intercessor' ),
+						'pray'    => __( 'I prayed for this', 'intercessor' ),
+						'error'   => __( 'Could not record your prayer. Please try again.', 'intercessor' ),
+					),
 				),
 			)
 		);
+	}
+
+	// -------------------------------------------------------------------------
+	// AJAX: admin "I prayed for this" interaction
+	// -------------------------------------------------------------------------
+
+	/**
+	 * AJAX handler that records a "prayed for" interaction from wp-admin.
+	 *
+	 * Unlike the public Public_Loader::handle_record_prayer() handler, this
+	 * is gated by the `edit_prayers` capability rather than by the request's
+	 * public/approved state — it is the only way for a private prayer
+	 * request (never shown on the front-end Prayer Wall) to accumulate
+	 * prayed-for interactions. The count is attributed to the current
+	 * WordPress user, the same as any other logged-in front-end prayer.
+	 *
+	 * Recorded counts are picked up by the existing Cron_Handler prayed-for
+	 * notification job, so requesters whose requests are marked private
+	 * still learn that someone has prayed for them.
+	 *
+	 * @since  1.2.0
+	 * @return void
+	 */
+	public function handle_admin_record_prayer(): void {
+		if ( ! current_user_can( 'edit_prayers' ) ) {
+			wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'intercessor' ) ), 403 );
+		}
+
+		$req = Request::capture();
+
+		if ( ! $req->verify_nonce( 'intercessor_admin_record_prayer', 'nonce' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Security check failed.', 'intercessor' ) ), 403 );
+		}
+
+		$requestId = $req->get_int( 'request_id' );
+
+		if ( $requestId === 0 ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'intercessor' ) ), 400 );
+		}
+
+		$prayerQuery = new \Intercessor\Database\Query\Prayer_Request_Query();
+		$request     = $prayerQuery->get_item( $requestId );
+
+		// No is_public()/is_approved() gate here — admins and prayer
+		// warriors may record a prayer on a request in any status,
+		// including 'private', which the public handler always rejects.
+		if ( ! $request ) {
+			wp_send_json_error( array( 'message' => __( 'Prayer request not found.', 'intercessor' ) ), 404 );
+		}
+
+		$countQuery = new \Intercessor\Database\Query\Prayed_Count_Query();
+		$recorded   = $countQuery->record_prayer( $requestId, get_current_user_id() );
+
+		if ( ! $recorded ) {
+			wp_send_json_error( array( 'message' => __( 'Could not record your prayer.', 'intercessor' ) ), 500 );
+		}
+
+		$total = $countQuery->get_total_for_request( $requestId );
+
+		wp_send_json_success( array(
+			'message' => __( 'Your prayer has been recorded.', 'intercessor' ),
+			'total'   => $total,
+		) );
 	}
 
 	// ── Action handlers ───────────────────────────────────────────────────────

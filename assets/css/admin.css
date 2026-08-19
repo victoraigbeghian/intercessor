@@ -64,6 +64,51 @@
     margin: 0 2px;
 }
 
+/* ── Admin "I prayed for this" button (list table + detail view) ── */
+.intercessor-admin-pray-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    vertical-align: middle;
+}
+
+.intercessor-admin-pray-btn .ipr-icon-praying {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.intercessor-admin-pray-btn .intercessor-admin-pray-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    min-width: 20px;
+    height: 16px;
+    padding: 0 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.intercessor-admin-pray-btn--prayed {
+    background: #d1e7dd !important;
+    border-color: #a3cfbb !important;
+    color: #0a3622 !important;
+}
+
+.intercessor-admin-pray-btn--prayed .intercessor-admin-pray-count {
+    background: rgba(10, 54, 34, 0.15);
+}
+
+.intercessor-admin-pray-btn--loading {
+    opacity: 0.7;
+}
+
+.intercessor-prayed-total {
+    font-size: 1rem;
+}
+
 /* ── General spacing ── */
 .intercessor-dashboard h1 {
     margin-bottom: 0.25rem;
