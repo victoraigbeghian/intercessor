@@ -4,7 +4,7 @@ Tags:              prayer, prayer request, church, ministry, community
 Requires at least: 6.3
 Tested up to:      7.0
 Requires PHP:      8.0
-Stable tag:        1.0.1
+Stable tag:        1.1.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,6 +137,15 @@ The Gutenberg block editor scripts in `assets/js/blocks/` are built from their u
 Other JavaScript files in `assets/js/public/` and `assets/js/admin/` are hand-written and shipped unminified.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added single prayer request detail page in the admin — moderators can view all request details, add private or public notes, and see the live prayer count in one place.
+* Added prayer-level notes with optional private flag — notes are visible only to administrators when marked private.
+* Added anonymous prayer recording — visitors who are not logged in can now use the "I prayed for this" button on the Prayer Wall; interactions are tracked by a session fingerprint and counted toward the prayer total.
+* Improved "I prayed for this" tracking — repeat interactions by the same user or visitor increment a running count rather than inserting duplicate rows.
+* Notification cron job now reschedules automatically when the frequency or send time is changed in Settings, without requiring plugin reactivation.
+* Internal: centralised settings schema into a dedicated Registry class for consistency across Renderer, Sanitizer, and Settings Exporter.
+* Fixed missing class imports in Admin_Loader that would have caused fatal errors when moderating, performing bulk actions, or managing prayer notes.
 
 = 1.0.1 =
 * Added "Keep my prayer request private" option on the submission form. Private requests are visible only to administrators and never appear on the Prayer Wall.

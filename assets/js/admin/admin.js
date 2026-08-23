@@ -50,6 +50,75 @@
 	}
 
 	/**
+	 * Add Prayer Request modal — open, close, and "for type" toggle.
+	 */
+	function initAddRequestModal() {
+		var $modal      = $( '#intercessor-add-modal' );
+		var $backdrop   = $( '#intercessor-modal-backdrop' );
+		var $openBtn    = $( '#intercessor-add-request-btn' );
+		var $closeBtn   = $( '#intercessor-modal-close' );
+		var $cancelBtn  = $( '#intercessor-modal-cancel' );
+		var $forRadios  = $modal.find( '[name="for_type"]' );
+		var $otherFlds  = $( '#intercessor-modal-other-fields' );
+		var $emailFld   = $( '#ipr-add-email' );
+		var $firstFld   = $( '#ipr-add-first-name' );
+		var $lastFld    = $( '#ipr-add-last-name' );
+
+		if ( ! $modal.length ) {
+			return;
+		}
+
+		function openModal() {
+			$modal.removeAttr( 'hidden' );
+			$modal.find( '#ipr-add-subject' ).trigger( 'focus' );
+			$( 'body' ).addClass( 'intercessor-modal-open' );
+		}
+
+		function closeModal() {
+			$modal.attr( 'hidden', true );
+			$( 'body' ).removeClass( 'intercessor-modal-open' );
+			$modal[0].querySelector( 'form' ).reset();
+			$otherFlds.attr( 'hidden', true );
+		}
+
+		function applyForType() {
+			var type = $forRadios.filter( ':checked' ).val();
+			var user = window.intercessorAdmin && window.intercessorAdmin.currentUser
+				? window.intercessorAdmin.currentUser : {};
+
+			if ( type === 'self' ) {
+				$otherFlds.attr( 'hidden', true );
+				$emailFld.removeAttr( 'required' );
+				$firstFld.removeAttr( 'required' );
+			} else {
+				$otherFlds.removeAttr( 'hidden' );
+				$emailFld.attr( 'required', true );
+				$firstFld.attr( 'required', true );
+				// Pre-clear if switching back from self
+				if ( $emailFld.val() === ( user.email || '' ) ) {
+					$emailFld.val( '' );
+					$firstFld.val( '' );
+					$lastFld.val( '' );
+				}
+				$emailFld.trigger( 'focus' );
+			}
+		}
+
+		$openBtn.on( 'click', openModal );
+		$closeBtn.on( 'click', closeModal );
+		$cancelBtn.on( 'click', closeModal );
+		$backdrop.on( 'click', closeModal );
+		$forRadios.on( 'change', applyForType );
+
+		// Close on Escape key.
+		$( document ).on( 'keydown', function ( e ) {
+			if ( e.key === 'Escape' && ! $modal.attr( 'hidden' ) ) {
+				closeModal();
+			}
+		} );
+	}
+
+	/**
 	 * Highlight the currently active status filter tab link.
 	 */
 	function highlightActiveTab() {
@@ -125,6 +194,7 @@
 		autoDismissNotices();
 		confirmBulkDelete();
 		highlightActiveTab();
+		initAddRequestModal();
 		bindAdminPrayButtons();
 	} );
 
